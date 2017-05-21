@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.AttendanceDao">
+	<insert id="addStaffClockInInfo" parameterType="attendance" useGeneratedKeys="true" keyProperty="userId">
+		insert into `attendance`(gridStaffId,recordDate,start_time,start_site,start_memo,attendance_pic)
+		values(#{gridStaffId},#{recordDate},#{start_time},#{start_site},#{start_memo},#{attendance_pic})
+	</insert>
+	
+	<select id="validateSignIn" resultType="attendance">
+		select * from attendance where gridStaffId=#{gridStaffId} and recordDate=#{recordDate}
+	</select>
+
+</mapper>

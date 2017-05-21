@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>framework.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+  	<div class="bjui-pageContent">
+    	<div class="editClass" class="bs-callout bs-callout-danger">
+        	<h4>
+        		<i class='am-icon-thumb-tack sidebar-nav-link-logo'></i>辖区概况　
+        		<i class='am-icon-angle-double-right sidebar-nav-link-logo'></i>
+        		<i class='am-icon-pencil-square-o sidebar-nav-link-logo'></i>组织架构
+        	</h4>
+        	<div style="margin: 0 auto; width: 1080px; min-width: 1080px;height: auto;padding-top: 10px;">
+        		<div id="frameworkView"></div>
+        	</div>
+        </div>
+    </div>
+    <div class="bjui-pageFooter">
+  		<div class="dialogFooterBtn">
+  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+		</div>
+	</div>
+  	<script type="text/javascript">
+  		$(function(){
+  			$.ajax({
+  				type:"get",
+  				url:"info/getOneAreaIntrInfo.do?" + (new Date()).getTime(),
+  				data:{"infoTypeId":2},
+  			    dataType:'json',
+  			    cache:false,
+  			    success:function(data){
+  			    	$("#frameworkView").html(data.infoContent);
+  			    }
+  			});
+  		});
+  	</script>
+  </body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>grid.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/grid.js"></script>
+	<style type="text/css">
+		#gridDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#gridDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#gridDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+	</style>
+  </head>
+  
+  <body>
+  	<table id="gridInfo" class="table table-bordered"></table>
+  	
+  	<!--增加修改弹窗  -->
+  	<div id="addGrid" data-noinit="true" class="hide">
+  		<div class="bjui-pageContent">
+	  		<form id="addGridInfo">
+	  			<div class="row-input required">
+	  				<label class="row-label">所属区域&nbsp;</label>
+	            	<input type="text" class="input-nm" id="gr_areaName" size="25" value="" data-rule="所属区域:required" placeholder="必填项"
+	            		readonly data-toggle="selectztree" data-tree="#gr_areaNameMenu"/>
+	            	<ul id="gr_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+	            		data-radio-type="all" data-on-check="Grid_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+	            	</ul>  
+	            	<input type="hidden" name="areaId" id="gr_areaId" value="">        	
+	  			</div>
+	  			<div class="row-input required">
+	  				<label class="row-label">网格名称&nbsp;</label>
+	  				<input type="text" name="gridName" id="gr_gridName" data-rule="网格名称:required" placeholder="必填项" class="input-nm" value="" size="25">
+	  				<input type="hidden" name="gridId" id="gr_gridId" value="">
+	  			</div>
+	  			<div class="row-input required">
+	  				<label class="row-label">网&ensp;格&ensp;长&nbsp;</label>
+	  				<input type="text" name="gridAdmitor" id="gr_gridAdmitor" data-rule="网格长:required" placeholder="必填项" class="input-nm" value="" size="25">
+	  			</div>
+	  			<div class="row-input">
+		    		<label class="row-label">编辑时间&nbsp;</label>
+		    		<input type="text" data-toggle="datepicker" id="editGridDate" class="input-nm" size="25" data-pattern="yyyy年MM月dd日 HH:mm:ss" value="" placeholder="2017年02月25日 16:05:03"> 
+		    	</div>
+	  			<div class="row-input required">
+	  				<label class="row-label">服务范围&nbsp;</label>
+	  				<textarea cols="25" rows="4" id="gr_gridScope" name="gridScope" data-rule="服务范围:required;" placeholder="示例：鲁能西路社区五街区第X-X栋"  ></textarea>
+	  			</div>
+	  		</form>
+  		</div>
+  		<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+		  		<button type="button" id="submitBtngr" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	
+  	<!--查看弹窗  -->
+  	 <div id="gridDetail" class="hide">
+  	 	<div class="bjui-pageContent">
+	  	 	<table id="gridDetailTab" border="1">
+	  	 		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">网&ensp;格&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    			</tr>
+	  	 		<tr>
+	  	 			<td><label class="row-label">网格名称</label></td>
+	  	 			<td id="sg_gridName"></td>
+	  	 			<td><label class="row-label">所属区域</label></td>
+	  	 			<td id="sg_areaName"></td>
+	  	 		</tr>
+	  	 		<tr>
+	  	 			<td><label class="row-label">网&ensp;格&ensp;长&nbsp;</label></td>
+	  	 			<td id="sg_gridAdmitor"></td>
+	  	 			<td><label class="row-label">网&ensp;格&ensp;员&nbsp;</label></td>
+	  	 			<td id="sg_gridStaffCount"></td>
+	  	 		</tr>
+	  	 		<tr>
+	  	 			<td><label class="row-label">编&ensp;辑&ensp;人</label></td>
+	  	 			<td id="sg_editGridName"></td>
+	  	 			<td><label class="row-label">编辑时间</label></td>
+	  	 			<td id="sg_editGridDate"></td>
+	  	 		</tr>
+	  	 		<tr>
+	  	 			<td><label class="row-label">审核状态</label></td>
+	  	 			<td id="sg_gridAudit" colspan="3"></td>
+	  	 		</tr>
+	  	 		<tr style="height: 60px;">
+	  	 			<td><label class="row-label">服务范围</label></td>
+	  	 			<td id="sg_gridScope" colspan="3"></td>
+	  	 		</tr>
+	  	 	</table>
+	  	</div>
+	  	<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	 </div>
+  	 
+  	 <!--网格员基本信息弹窗  -->
+  	 <div id="gridSuGridStaff" class="hide">
+  	 	<table id="gridStaffView" class="table table-bordered"></table>
+  	 </div>
+  	 
+  	 <!--重新为网格员配置网格  -->
+  	  <div id="editBlockGrid" class="hide" data-noinit="true">
+  	  	<div class="bjui-pageContent">
+	    	<form id="editBlockGridInfo">
+	    		<div class="row-input required">
+	    			<label class="row-label">楼栋网格&nbsp;</label>
+	    			<select data-toggle="selectpicker" id="block_gridId" data-width="140">
+	        		</select>
+	    			<label class="row-label">网格员网格&nbsp;</label>
+	    			<select data-toggle="selectpicker" id="gridStaff_gridId" data-width="140">
+	        		</select>
+	        		<label class="row-label">人口网格&nbsp;</label>
+	        		<select data-toggle="selectpicker" id="pop_gridId" data-width="140">
+	        		</select>
+	    		</div>
+	    	</form>
+    	</div>
+    	<div class="bjui-pageFooter">
+    		<div class="dialogFooterBtn">
+		  		<button type="button" id="submitBtngrt" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+    </div>
+  </body>
+</html>

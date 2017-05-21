@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>event.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="js/event.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style type="text/css">
+		#eventDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#eventDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#eventDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+    	#addEventInfo .odddiv{display: inline-block;width: 405px;}
+    	#addEventInfo .evendiv{float: right;width: 405px;}
+    	.eventTable{border:1px #E5E5E5 solid; width: 690px;background: white; }
+	</style>
+  </head>
+  
+  <body>
+    <table id="eventInfo" class="table table-bordered"></table>
+    
+    
+   	<!--添加事件弹窗  -->
+  	<div id="addEvent" class="hide" data-noinit="true">
+		<div class="bjui-pageContent">
+        	<form id="addEventInfo">
+        		<div class="row-input required odddiv">
+	    			<label class="row-label">所属区域&nbsp;</label>
+	    			<input type="text" class="input-nm" id="event_areaName" value="" size="30" data-rule="所属区域:required" placeholder="必填项"
+            			readonly data-toggle="selectztree" data-tree="#event_areaNameList"/>
+            		<ul id="event_areaNameList"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+            			data-radio-type="all" data-on-check="Event_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+            		</ul>          	
+            		<input type="hidden" name="areaId" id="event_areaId" value="">
+            		<input type="hidden" name="eventId" id="eventId" value="">
+	   			</div>
+	   			<div class="row-input required evendiv">
+	   				<label class="row-label">所属网格&nbsp;</label>
+	   				<select data-toggle="selectpicker" id="event_gridId" name="gridId" data-rule="所属网格:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required odddiv">
+	   				<label class="row-label">网&ensp;格&ensp;员&nbsp;</label>
+	        		<select data-toggle="selectpicker" id="event_gridStaffId" name="gridStaffId" data-rule="信息类别:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required evendiv">
+	   				<label class="row-label">事件等级&nbsp;</label>
+	   				<select data-toggle="selectpicker" id="eventLevelId" name="eventLevelId" data-rule="信息类别:required;" data-width="300"></select>
+	   			</div>
+		   		<div class="row-input required evendiv">
+	   				<label class="row-label">事件来源&nbsp;</label>
+	   				<select data-toggle="selectpicker" id="sourceTypeId" name="sourceTypeId" data-rule="信息类别:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required odddiv">
+	   				<label class="row-label">事件类型&nbsp;</label>
+	   				<select data-toggle="selectpicker" id="eventTypeId" name="eventTypeId" data-rule="信息类别:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required odddiv">
+	   				<label class="row-label">编辑时间&nbsp;</label>
+	        		<input type="text" class="input-nm" name="editEventDate" id="editEventDate" data-toggle="datepicker" size="30" data-pattern="yyyy年MM月dd日 HH:mm:ss" value=""  data-rule="时间:required;" placeholder="必填项">
+	   			</div>
+	   			<div class="row-input evendiv" >
+		   			<label class="row-label">重点督办&nbsp;</label>　
+	        		<input type="radio" name="isImportant" id="isImportant" value="0" data-rule="checked" data-toggle="icheck" checked="checked" data-label="否">　
+	        		<input type="radio" name="isImportant" id="isImportant1" value="1" data-toggle="icheck" data-label="是">
+   				</div>
+	   			<div class="row-input required">
+	        		<label class="row-label">标　　题&nbsp;</label>
+	        		<input type="text" name="eventTitle" class="input-nm" id="eventTitle" data-rule="标题:required;" size="78" value="" placeholder="必填项"/>
+   				</div>
+   				<div style="width:850px;margin-left: 12px;margin-top: 20px;">
+	   				<div style="font-size: 10px;">　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+	   					<a href="#" id="clearEventBtn">清空内容</a>&emsp;&emsp;
+	   					字数统计：<span id="eventCount"></span>
+        			</div>
+        			<textarea id="eventContent" name="eventContent" style="height:300px;"></textarea>
+        			<input type="hidden" name="eventPic" id="eventPic" value="">
+        		</div>
+   			</form>
+        </div>
+        <div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+		  		<button type="button" id="eventBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+   	
+   	<!--查看弹窗  -->
+   	<div id="eventDetail" class="hide">
+  		<div class="bjui-pageContent">
+  			<table id="eventDetailTab" border="1">
+  				<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">事&ensp;件&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    			</tr>
+    			<tr>
+    				<td><label class="row-label">标&emsp;&emsp;题</label></td>
+    				<td id="te_eventTitle"></td>
+    				<td><label class="row-label">网&ensp;格&ensp;员</label></td>
+    				<td id="te_gridStaffId"></td>
+    			</tr>
+    			<tr>
+	    			<td><label class="row-label">所属区域</label></td>
+	    			<td id="te_areaName"></td>
+	    			<td><label class="row-label">所属网格</label></td>
+	    			<td id="te_grid"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">事件等级</label></td>
+	    			<td id="te_eventLevelId"></td>
+	    			<td><label class="row-label">重点督办</label></td>
+	    			<td id="te_isImportant"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">事件来源</label></td>
+	    			<td id="te_sourceTypeId"></td>
+	    			<td><label class="row-label">事件类型</label></td>
+	    			<td id="te_eventTypeId"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">编&ensp;辑&ensp;人</label></td>
+	    			<td id="te_editEventLogName"></td>
+	    			<td><label class="row-label">处理状态</label></td>
+	    			<td id="te_solveStatusName"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">编辑时间</label></td>
+	    			<td id="te_editEventDate"  colspan="3"></td>
+	    		</tr>
+	    		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">事&ensp;件&ensp;详&ensp;细&ensp;内&ensp;容</td>
+    			</tr>
+    			<tr>
+	    			<td id="te_eventContent" colspan="4" style="background-color:white;padding: 10px;text-align: left;padding-left:20px;"></td>
+	    		</tr>
+	    		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">事&ensp;件&ensp;跟&ensp;踪&ensp;信&ensp;息</td>
+    			</tr>
+    			<tr>
+    				<td colspan="4">
+    					<table border="1" class="eventTable" >
+    						<tr id="eventLogTr">
+    							<td style="width: 100px;background: #F7F7F9;"><label class="row-label">处理状态</label></td>
+	    						<td style="width: 150px;background: #F7F7F9;"><label class="row-label">处理时间</label></td>
+	    						<td style="width: 440px;background: #F7F7F9;"><label class="row-label">回复内容</label></td>
+    						</tr>
+    					</table>
+    				</td>
+    			</tr>
+    			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;" class="hide" id="eventLogInfo">
+    				<td colspan="6">事&ensp;件&ensp;处&ensp;理&ensp;信&ensp;息</td>
+    			</tr>
+    			<tr class="hide" id="addEventLog">
+    				<td colspan="4">
+    				<form id="addEventLogInfo">
+    					<table border="1" class="eventTable" style="text-align: left;">
+    						<tr>
+    							<td>
+    								<label class="row-label">处理状态&nbsp;</label>
+    							</td>
+    							<td colspan="3" >
+    								<input type="radio" name="solveStatusId" id="solveStatusId1" value="1" data-rule="checked" checked="checked">&ensp;暂受理&emsp;
+		        					<input type="radio" name="solveStatusId" id="solveStatusId2" value="2" />&ensp;已办结
+		        				</td>
+    						</tr>
+    						<tr>
+	    						<td>
+	    							<label class="row-label">回复内容&nbsp;</label>
+	    						</td>
+	    						<td colspan="3" style="height:80px;">
+	    							<textarea cols="57.5" rows="3" id="eventLogContent" name="eventLogContent" data-rule="required"></textarea>
+					   				<input type="hidden" name="eventId" id="el_eventId" value="">
+					   				<input type="hidden" name="eventTitle" id="l_eventTitle" value="">
+	    						</td>
+    						</tr>
+    					</table>
+    					</form>
+    				</td>
+    			</tr>
+    		</table>
+    	</div>
+    	<div class="bjui-pageFooter hide" id="elBtn">
+	  		<div class="dialogFooterBtn">
+		  		<button type="button" id="eventLogBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div> 
+  	</div>
+  	
+  </body>
+</html>

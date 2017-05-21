@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.CompanyDao">
+	<resultMap type="company" id="companyResult">
+		<id property="companyId" column="companyId"/>
+		<result property="tradeId" column="tradeId"/>
+		<result property="scaleId" column="scaleId"/>
+		<result property="natureId" column="natureId"/>
+		<result property="companyName" column="companyName"/>
+		<result property="companyMan" column="companyMan"/>
+		<result property="companyIntro" column="companyIntro"/>
+		<result property="companyTel" column="companyTel"/>
+		<result property="companySite" column="companySite"/>
+		<result property="creditCode" column="creditCode"/>
+		<result property="registerOffice" column="registerOffice"/>
+		<result property="companyAudit" column="companyAudit"/>
+		<result property="editComName" column="editComName"/>
+		<result property="editComDate" column="editComDate"/>
+		<result property="companyPic" column="companyPic"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+		<association property="companyNature" column="companyNature" javaType="company_nature">
+			<result property="natureName" column="natureName" />
+		</association>
+		<association property="companyScale" column="companyScale" javaType="company_scale">
+			<result property="scaleName" column="scaleName" />
+		</association>
+		<association property="companyTrade" column="companyTrade" javaType="company_trade">
+			<result property="tradeName" column="tradeName" />
+		</association>
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	<select id="getAllCompanyByAreaId" resultMap="companyResult">
+		select c.companyId,a.areaName,c.tradeId,c.scaleId,c.natureId,c.companyName,c.companyMan,c.companyIntro,c.companyTel,c.companySite,c.creditCode,c.registerOffice,c.companyAudit,c.editComName,c.editComDate,c.companyPic,n.natureName,s.scaleName,t.tradeName
+		from company c,`area` a,company_nature n,company_scale s,company_trade t where a.areaId=c.areaId and n.natureId=c.natureId and s.scaleId=c.scaleId and t.tradeId=c.tradeId and c.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by c.companyId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllCompanyCount" resultType="int">
+		select count(*) from company where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<insert id="saveCompany" parameterType="company">
+		insert into company(tradeId,scaleId,areaId,natureId,companyName,companyMan,companyIntro,companyTel,companySite,creditCode,registerOffice,editComName,editComDate,companyPic)
+		values(#{tradeId},#{scaleId},#{areaId},#{natureId},#{companyName},#{companyMan},#{companyIntro},#{companyTel},#{companySite},#{creditCode},#{registerOffice},#{editComName},#{editComDate},#{companyPic}) 
+	</insert>
+	
+	<select id="getCompanyById" parameterType="int" resultMap="companyResult">
+		select companyId,tradeId,scaleId,areaId,natureId,companyName,companyMan,companyIntro,companyTel,companySite,creditCode,registerOffice,companyAudit,editComName,editComDate,companyPic
+		from company where companyId=#{companyId}
+	</select>
+	
+	<update id="editCompanyById" parameterType="company">
+		update company set areaId=#{areaId},tradeId=#{tradeId},scaleId=#{scaleId},natureId=#{natureId},companyName=#{companyName},companyMan=#{companyMan},companyIntro=#{companyIntro},companyTel=#{companyTel},companySite=#{companySite},creditCode=#{creditCode},registerOffice=#{registerOffice},editComName=#{editComName},editComDate=#{editComDate},companyPic=#{companyPic}
+		where companyId=#{companyId}
+	</update>
+	
+	<delete id="deleteCompany" parameterType="list">
+		delete from company where companyId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateAuditCompany" parameterType="list">
+		update company set companyAudit='0' where companyId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getOneRoadById" parameterType="company" resultMap="companyResult">
+		select companyId,tradeId,scaleId,areaId,natureId,companyName,companyMan,companyIntro,companyTel,companySite,creditCode,registerOffice,companyAudit,editComName,editComDate,companyPic
+		from company where companyId=#{companyId}
+	</select>
+	
+	<select id="getCompanyNature" parameterType="int" resultType="Company_nature">
+		select natureId,natureName from company_nature where natureId=#{natureId}
+	</select>
+	<select id="getCompanyScale" parameterType="int" resultType="Company_scale">
+		select scaleId,scaleName from company_scale where scaleId=#{scaleId}
+	</select>
+	<select id="getCompanyTrade" parameterType="int" resultType="Company_trade">
+		select tradeId,tradePerId,tradeName from company_trade where tradeId=#{tradeId}
+	</select>
+	
+	<select id="getAllCompanyNature" resultType="Company_nature">
+		select natureId,natureName from company_nature
+	</select>
+	
+	<select id="getAllCompanyScale" resultType="Company_scale">
+		select scaleId,scaleName from company_scale
+	</select>
+	
+	<select id="getAllCompanyTrade" resultType="Company_trade">
+		select tradeId,tradePerId,tradeName from company_trade
+	</select>
+	
+	<select id="getCompanyName" resultType="string">
+		select companyName from company where companyId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

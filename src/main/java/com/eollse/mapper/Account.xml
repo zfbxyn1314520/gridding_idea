@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.AccountDao">
+	<resultMap type="account" id="accountResult">
+		<id property="accountId" column="accountId"/>
+		<result property="accountHolder" column="accountHolder"/>
+		<result property="accountSite" column="accountSite"/>
+		<result property="memberCount" column="memberCount"/>
+		<result property="editAccountName" column="editAccountName"/>
+		<result property="editAccountDate" column="editAccountDate"/>
+		<result property="accountAudit" column="accountAudit"/>
+		<result property="holderTel" column="holderTel"/>
+		<result property="holderCard" column="holderCard"/>
+		<association property="house" javaType="house" resultMap="houseResult"/>
+	</resultMap>
+	<resultMap type="house" id="houseResult">
+		<id property="houseId" column="houseId"/>
+		<result property="houseNum" column="houseNum"/>
+		<result property="statusId" column="statusId"/>
+		<result property="typeId" column="typeId"/>
+		<result property="houseArea" column="houseArea"/>
+		<result property="houseSite" column="houseSite"/>
+		<result property="editHouseName" column="editHouseName"/>
+		<result property="editHouseDate" column="editHouseDate"/>
+		<result property="houseAudit" column="houseAudit"/>
+		<result property="houseHolder" column="houseHolder"/>
+		<association property="houseStatus" column="houseStatus" javaType="house_status">
+			<result property="statusName" column="statusName" />
+		</association>
+		<association property="houseType" column="houseType" javaType="house_type">
+			<result property="typeName" column="typeName" />
+		</association>
+		<association property="unit" javaType="unit" resultMap="unitResult" />
+	</resultMap>
+	<resultMap type="unit" id="unitResult">
+		<id property="unitId" column="unitId"/>
+		<result property="blockId" column="blockId"/>
+		<result property="unitName" column="unitName"/>
+		<result property="floorCount" column="floorCount"/>
+		<association property="block" javaType="block" resultMap="blockResult" />
+	</resultMap>
+	<resultMap type="block" id="blockResult">
+		<id property="blockId" column="blockbId"/>
+		<result property="blockName" column="blockName"/>
+		<association property="court" column="courtId" javaType="court">
+			<id property="courtId" column="courtId" />
+			<result property="courtName" column="courtName" />
+		</association>
+	</resultMap>
+	<resultMap type="population" id="popResult">
+		<id property="popId" column="popId" />
+		<result property="gridId" column="gridId" />
+		<result property="popName" column="popName" />
+		<result property="popSex" column="popSex" />
+		<result property="popCode" column="popCode" />
+		<result property="popTel" column="popTel" />
+		<result property="popAudit" column="popAudit" />
+		<association property="area" column="areaId" javaType="area">
+			<id property="areaId" column="areaId" />
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="grid" column="gridId" javaType="grid">
+			<id property="gridId" column="gridId" />
+			<result property="gridName" column="gridName" />
+		</association>
+		<association property="gridStaff" column="gridStaffId"
+			javaType="grid_staff">
+			<id property="gridStaffId" column="gridStaffId" />
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+		<association property="account" column="accountId"
+			javaType="account">
+			<id property="accountId" column="accountId" />
+			<result property="accountHolder" column="accountHolder" />
+		</association>
+	</resultMap>
+  	
+  	
+  	<select id="getAllAccountByHouseId" resultMap="accountResult">
+  		select a.accountId,a.accountHolder,a.editAccountName,a.editAccountDate,a.accountAudit,a.holderTel,a.holderCard,h.houseNum,h.houseSite from account a,house h where a.houseId=h.houseId and a.houseId in
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by a.accountId desc limit #{x},#{y}; 
+  	</select>
+  	
+  	<select id="getAllAccountCount" resultType="int">
+  		select count(*) from account where houseId in
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+  	</select>
+  	
+  	
+  	<select id="getAccountById" parameterType="int" resultMap="accountResult">
+		select a.houseId,h.unitId,h.statusId,h.typeId,h.houseNum,h.houseArea,h.houseSite,h.editHouseName,h.editHouseDate,h.houseAudit,a.accountId,a.accountHolder,a.accountSite,a.memberCount,a.holderTel,a.holderCard from house h,account a
+		where h.houseId=a.houseId and a.accountId=#{accountId}
+	</select>
+	
+	<update id="updateAuditAccount" parameterType="list">
+		update account set accountAudit='0' where accountId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach> 
+	</update>
+	
+	<select id="getAccountByAccountId" resultMap="accountResult">
+		select a.accountId,a.accountHolder,a.accountSite,a.editAccountName,a.editAccountDate,a.accountAudit,a.holderTel,a.holderCard,h.unitId,hs.statusName,ht.typeName,u.unitName,h.houseNum,h.houseArea,
+			h.houseSite,h.editHouseName,h.editHouseDate,h.houseAudit,h.houseHolder,c.courtName,b.blockName,u.unitName from account a,house h,house_status hs,house_type ht,unit u,block b,court c where h.houseId=a.houseId and h.statusId=hs.statusId and h.typeId=ht.typeId and h.unitId=u.unitId and b.blockId=u.blockId and b.courtId=c.courtId and a.accountId=#{0}
+	</select>
+	
+	<select id="getAccountPopByAccountId" resultMap="popResult">
+		select
+		p.popId,p.popName,p.popSex,p.popCode,p.popTel,p.popAudit,a.areaName,g.gridName,s.gridStaffName
+		from `population` p,`area` a,`grid` g,`grid_staff` s
+		where p.areaId=a.areaId and p.gridId=g.gridId and s.gridStaffId=p.gridStaffId and p.accountId=#{accountId}
+		limit #{x},#{y};
+	</select>
+	
+	<select id="getAccountPopCount" resultType="int">
+		select count(*) from population where accountId=#{0}
+	</select>
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.StoreDao">
+	<resultMap type="store" id="storeResult">
+		<id property="storeId" column="storeId"/>
+		<result property="storeName" column="storeName"/>
+		<result property="storeScope" column="storeScope"/>
+		<result property="storeArea" column="storeArea"/>
+		<result property="storeSite" column="storeSite"/>
+		<result property="storeAudit" column="storeAudit"/>
+		<result property="storeTel" column="storeTel"/>
+		<result property="linlkMan" column="linlkMan"/>
+		<result property="storePic" column="storePic"/>
+		<result property="editStoreName" column="editStoreName"/>
+		<result property="editStoreDate" column="editStoreDate"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	
+	<select id="getAllStoreByAreaId" resultMap="storeResult">
+		select s.storeId,a.areaName,s.storeName,s.storeScope,s.storeTel,s.storeArea,s.storeSite,s.linlkMan,s.storePic,s.storeAudit,s.editStoreName,s.editStoreDate
+		from store s,`area` a where a.areaId=s.areaId and s.areaId in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by s.storeId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllStoresCount" resultType="int">
+		select count(*) from store where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>;
+	</select>
+	
+	<select id="findStoreByStoreName" parameterType="String" resultType="store">
+		select storeId,areaId,storeName,storeScope,storeTel,storeArea,storeSite,linlkMan,storePic,storeAudit,editStoreName,editStoreDate
+		from store where storeName=#{storeName} and areaId=#{areaId}
+	</select>
+	
+	<insert id="saveStore" parameterType="store">
+		insert into store(areaId,
+			storeName,
+			storeScope,
+			storeTel,
+			storeArea,
+			storeSite,
+			linlkMan,
+			editStoreName,
+			editStoreDate) values(#{areaId},#{storeName},#{storeScope},#{storeTel},#{storeArea},#{storeSite},#{linlkMan},#{editStoreName},#{editStoreDate})
+	</insert>
+
+	<delete id="deleteStoreByStoreId" parameterType="list">
+		delete from store where storeId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getStoreById" parameterType="int" resultMap="storeResult">
+		select storeId,areaId,storeName,storeScope,storeTel,storeArea,storeSite,linlkMan,storePic,storeAudit,editStoreName,editStoreDate
+		from store where storeId=#{storeId}
+	</select>
+	
+	<update id="editStoreById" parameterType="store">
+		update store set areaId=#{areaId},storeName=#{storeName},storeScope=#{storeScope},storeArea=#{storeArea},linlkMan=#{linlkMan},storeTel=#{storeTel},storeSite=#{storeSite},editStoreName=#{editStoreName},editStoreDate=#{editStoreDate}
+		where storeId=#{storeId}
+	</update>
+	
+	<update id="updateAuditStore" parameterType="list">
+		update store set storeAudit='0' where storeId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getOneStoreById" parameterType="store" resultMap="storeResult">
+		select storeId,areaId,storeName,storeScope,storeTel,storeArea,storeSite,linlkMan,storePic,storeAudit,editStoreName,editStoreDate
+		from store where storeId=#{storeId}
+	</select>
+	
+	<select id="getStoreNameById" resultType="string">
+		select storeName from store where storeId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>
+

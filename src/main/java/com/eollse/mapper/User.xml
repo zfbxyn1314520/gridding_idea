@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.UserDao">
+
+	<resultMap type="user" id="userResult">
+		<id property="userId" column="userId"/>
+		<result property="areaId" column="areaId"/>
+		<result property="roleId" column="roleId"/>
+		<result property="userName" column="userName"/>
+		<result property="headIcon" column="headIcon"/>
+		<result property="mobileTel" column="mobileTel"/>
+		<result property="officeTel" column="officeTel"/>
+		<result property="editUserName" column="editUserName"/>
+		<result property="editUserDate" column="editUserDate"/>
+		<result property="user_enable" column="user_enable"/>
+		<result property="user_login_ip" column="user_login_ip"/>
+		<result property="user_last_login" column="user_last_login"/>
+		<association property="area" javaType="area">
+			<id property="areaId" column="areaId"/>
+			<result property="areaName" column="areaName"/>
+		</association>
+		<association property="role" javaType="role">
+			<id property="roleId" column="roleId"/>
+			<result property="roleName" column="roleName"/>
+			<result property="roleLevel" column="roleLevel"/>
+		</association>
+	</resultMap>
+	
+
+	<select id="validateUser" parameterType="user" resultMap="userResult">
+    	SELECT u.userId,a.areaId,a.areaName,u.roleId,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
+		FROM `user` u,`area` a WHERE u.areaId=a.areaId 
+			AND (userName=#{userName} OR mobileTel=#{userName}) AND PASSWORD=#{password} AND user_enable=1
+  	</select>
+  	
+  	<select id="getUserPerMenu" resultType="role_per">
+  		select roleId,menuId,perId from role_per where roleId=#{user.roleId} and menuId=#{menuId}
+  	</select>
+  	
+  	<select id="getAllUserByAreaId" resultMap="userResult">
+		select u.userId,a.areaName,r.roleName,r.roleLevel,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.user_enable,u.user_last_login,u.user_login_ip
+		from `user` u,`area` a,role r where a.areaId=u.areaId and u.roleId=r.roleId and u.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by u.userId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllUsersCount" resultType="int">
+		select count(*) from `user` where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>;
+	</select>
+	
+	<select id="getLastUserId" resultType="int">
+		select max(userId) from `user`
+	</select>
+	
+	<insert id="addUserStaffInfo" parameterType="int">
+  		insert into `user_staff`(userId,gridStaffId) values(#{userId},#{gridStaffId})
+  	</insert>
+  	
+  	<delete id="deleteUserByUserId" parameterType="int">
+    	delete from `user` where userId=#{userId}
+  	</delete>
+	
+	<select id="getOneUserInfo" parameterType="user" resultType="user">
+   		select userId,areaId,roleId,userName,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable,user_last_login,user_login_ip from `user`
+   		<where>
+   			<if test="userId==null">
+   				userName=#{userName}
+   			</if>
+   			<if test="userName==null">
+   				userId=#{userId}
+   			</if>
+   		</where> 
+    </select>
+    
+    <select id="getAppUserInfo" parameterType="int" resultMap="userResult">
+   		SELECT u.userId,a.areaId,a.areaName,u.roleId,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserDate,u.user_enable
+		FROM `user` u,`area` a WHERE u.areaId=a.areaId AND u.userId=#{userId}
+    </select>
+  
+  	<insert id="addNewUser" parameterType="user" useGeneratedKeys="true" keyProperty="userId">
+  		insert into `user`(areaId,roleId,userName,password,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable) 
+    	values(#{areaId},#{roleId},#{userName},#{password},#{headIcon},#{mobileTel},#{officeTel},#{editUserName},#{editUserDate},#{user_enable})
+  	</insert>
+  	
+  	<update id="alterUserInfo" parameterType="user">
+    	update `user` set areaId=#{areaId},roleId=#{roleId},userName=#{userName},headIcon=#{headIcon},
+    	mobileTel=#{mobileTel},officeTel=#{officeTel},editUserName=#{editUserName},editUserDate=#{editUserDate},user_enable=#{user_enable}
+    	where userId=#{userId}
+  	</update>
+  	
+  	<update id="alterAuditStatus" parameterType="user">
+    	update `user` set user_enable=#{user_enable} where userId=#{userId}
+  	</update>
+  	
+  	<update id="alterUserStatusOfRole">
+    	update `user` set user_enable=0 where user_enable=1 and userId in
+    	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item.userId}
+		</foreach>
+  	</update>
+  	
+  	<delete id="deleteUserById" parameterType="int">
+    	delete from `user` where userId=#{userId}
+  	</delete>
+  	
+  	<delete id="deleteUserStaffById" parameterType="int">
+    	delete from `user_staff` where userId=#{userId}
+  	</delete>
+  	
+  	<select id="userCountByRoleId" resultMap="userResult">
+		select u.userId,a.areaName,r.roleName,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
+		from `user` u,`area` a,role r where a.areaId=u.areaId and u.roleId=r.roleId and r.roleId=#{role.roleId} and u.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<update id="alterUserByRoleId">
+    	update `user` set roleId=#{roleId} where roleId in
+    	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</update>
+  	
+  	<update id="updateUserLoginInfo">
+    	update `user` set user_login_ip=#{user_login_ip},user_last_login=#{user_last_login} where userId=#{userId}
+  	</update>
+  	
+  	<select id="getUserIdOfAppUser" parameterType="int" resultType="int">
+   		SELECT userId FROM `user_staff` WHERE gridStaffId=#{gridStaffId}
+    </select>
+    
+    <select id="getStaffIdByUserId" parameterType="int" resultType="int">
+  		SELECT gridStaffId FROM user_staff WHERE userId=#{userId};
+  	</select>
+    
+    <select id="getUserIdByAreaId" resultType="int">
+    	select userId from user where areaId in
+    	<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+    </select>
+    
+</mapper>

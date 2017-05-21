@@ -1,0 +1,195 @@
+.boy{
+    width: 560px;
+    height: 350px;
+    position: relative;
+    margin: 20px auto 0px;
+}
+.boy .boy_top{
+    width: 346px;
+    height: 305px;
+    background-image: url("../images/boy.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    background-size: 100%;
+    position: absolute;
+    left: 47px;
+    z-index: 2;
+    -moz-animation: 2s ease 0s normal none infinite boy;
+    -moz-transform-origin: center top;
+    -webkit-animation:boy 2s infinite ease-in-out;
+    -webkit-transform-origin:bottom;
+    -o-animation: 2s ease 0s normal none infinite boy;
+    -o-transform-origin: center top;
+    -o-animation:boy 2s infinite ease-in-out;
+    -o-transform-origin:bottom;
+    -ms-animation: 2s ease 0s normal none infinite boy;
+    -ms-transform-origin: center top;
+    -ms-animation:boy 2s infinite ease-in-out;
+    -ms-transform-origin:bottom;
+    animation: 2s ease 0s normal none infinite boy;
+    transform-origin: center top;
+    animation:boy 2s infinite ease-in-out;
+    transform-origin:bottom;
+}
+@-moz-keyframes boy {
+    0%{-moz-transform:rotate(-2deg)}
+    50%{-moz-transform:rotate(2deg)}
+    100%{-moz-transform:rotate(-2deg)}
+}
+
+@-webkit-keyframes boy {
+    0%{-webkit-transform:rotate(-2deg)}
+    50%{-webkit-transform:rotate(2deg)}
+    100%{-webkit-transform:rotate(-2deg)}
+}
+
+@-o-keyframes boy {
+    0%{-o-transform:rotate(-2deg)}
+    50%{-o-transform:rotate(2deg)}
+    100%{-o-transform:rotate(-2deg)}
+}
+
+@-ms-keyframes boy {
+    0%{-ms-transform:rotate(-2deg)}
+    50%{-ms-transform:rotate(2deg)}
+    100%{-ms-transform:rotate(-2deg)}
+}
+
+@keyframes boy {
+    0%{transform:rotate(-2deg)}
+    50%{transform:rotate(2deg)}
+    100%{transform:rotate(-2deg)}
+}
+.boy .drop{
+    width: 25px;
+    height: 40px;
+    background-image: url("../images/drop.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    background-size: 100%;
+    position: absolute;
+    z-index: 3;
+    top: 33px;
+    left: 375px;
+    -moz-animation: 2s ease 0s normal none infinite drop;
+    -moz-transform-origin: center center;
+    -webkit-animation:drop 2s infinite linear;
+    -webkit-transform-origin:center;
+    -o-animation: 2s ease 0s normal none infinite drop;
+    -o-transform-origin: center center;
+    -o-animation:drop 2s infinite linear;
+    -o-transform-origin:top;
+    -ms-animation: 2s ease 0s normal none infinite drop;
+    -ms-transform-origin: center center;
+    -ms-animation:drop 2s infinite linear;
+    -ms-transform-origin:center;
+    animation: 2s ease 0s normal none infinite drop;
+    transform-origin: center center;
+    animation:drop 2s infinite linear;
+    transform-origin:center;
+}
+@-moz-keyframes drop {
+    0%{
+        top: 33px;
+        opacity: 1;
+    }
+    30%{
+        top: 80px;
+        opacity: 0.7;
+    }
+    70%{
+        top: 120px;
+        opacity: 0.3;
+    }
+    100%{
+        top: 160px;
+        opacity: 0;
+    }
+}
+@-webkit-keyframes drop {
+    0%{
+        top: 33px;
+        opacity: 1;
+    }
+    30%{
+        top: 80px;
+        opacity: 0.7;
+    }
+    70%{
+        top: 120px;
+        opacity: 0.3;
+    }
+    100%{
+        top: 160px;
+        opacity: 0;
+    }
+}
+@-o-keyframes drop {
+    0%{
+        top: 33px;
+        opacity: 1;
+    }
+    30%{
+        top: 80px;
+        opacity: 0.7;
+    }
+    70%{
+        top: 120px;
+        opacity: 0.3;
+    }
+    100%{
+        top: 160px;
+        opacity: 0;
+    }
+}
+@-ms-keyframes drop {
+    0%{
+        top: 33px;
+        opacity: 1;
+    }
+    30%{
+        top: 80px;
+        opacity: 0.7;
+    }
+    70%{
+        top: 120px;
+        opacity: 0.3;
+    }
+    100%{
+        top: 160px;
+        opacity: 0;
+    }
+}
+@keyframes drop {
+    0%{
+        top: 33px;
+        opacity: 1;
+    }
+    30%{
+        top: 80px;
+        opacity: 0.7;
+    }
+    70%{
+        top: 120px;
+        opacity: 0.3;
+    }
+    100%{
+        top: 160px;
+        opacity: 0;
+    }
+}
+
+.boy .boy_footer{
+    width: 507px;
+    height: 199px;
+    background-image: url("../images/boy_bottom.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    background-size: 100%;
+    position: absolute;
+    top: 142px;
+    z-index: 1;
+}

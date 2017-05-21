@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>menu.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <script type="text/javascript" src="js/menu.js"></script>
+    <style type="text/css">
+    	#mainMenu .selectpicker{height:auto; min-height: 32px;}
+    	#addMenuInfo input[type=text]{width: 455px;}
+    </style>
+
+  </head>
+  
+  <body>
+  	<table id="menuInfo" class="table table-bordered"></table>
+  	
+  	<!-- 增加/编辑 弹框容器 -->
+    <div id="addMenu" data-noinit="true" class="hide">
+    	<div class="bjui-pageContent">
+	  		<form id="addMenuInfo">
+	  			<div class="row-input required">
+		        	<label class="row-label">菜单名称&nbsp;</label>
+		        	<input type="text" name="menuName" class="input-nm" id="menuName" size="35" value="" data-rule="菜单名称:required" placeholder="必填项">
+		        	<input type="hidden" name="menuId" id="menuId" value=""> 
+		    	</div>
+		    	<div class="row-input required">
+		        	<label class="row-label">菜单图标&nbsp;</label>
+		        	<input type="text" name="menuIcon" class="input-nm" id="menuIcon" size="35" value="" onclick="getAllIcon(this);" 
+		        		data-rule="菜单图标:required; text;" data-rule-text="[/^am-icon(-[a-z]+){1,3}$/, '格式不正确']" placeholder="点击文本框进入图标库">
+		        	<span id="icon"></span>
+		    	</div>
+		    	<div class="row-input">
+		        	<label class="row-label">菜单级别&nbsp;</label>　
+	        		<input type="radio" name="checked" id="menu_1"  data-toggle="icheck" data-label="一级菜单" data-rule="checked">　　　
+	        		<input type="radio" name="checked" id="menu_2" data-toggle="icheck" data-label="二级菜单" checked="checked">
+		    	</div>
+		    	<div class="row-input" id="mainMenu">
+		        	<label class="row-label">父级菜单&nbsp;</label>
+		        	<select name="parentMenuId" data-toggle="selectpicker" id="parentMenuId" data-width="350" data-rule="父级菜单:required">
+		        	</select>
+		    	</div>
+		    	<div class="row-input required" id="menuUriDiv">
+		        	<label class="row-label">菜单地址&nbsp;</label>
+		        	<input type="text" name="menuUri" class="input-nm" id="menuUri" size="35" value="" data-rule="菜单地址:required" placeholder="必填项"/>
+		    	</div>
+		    	<div class="row-input">
+		        	<label class="row-label">菜单功能&nbsp;</label>
+		        	<span id="perIcheck"></span>
+		    	</div>
+	  		</form>
+  		</div>
+  		<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" id="menuBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  </body>
+</html>

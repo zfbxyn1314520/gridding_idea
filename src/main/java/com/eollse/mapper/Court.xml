@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.CourtDao">
+	<resultMap type="court" id="courtResult">  	
+		<id property="courtId" column="courtId"/>
+		<result property="courtName" column="courtName"/>
+		<result property="propertyName" column="propertyName"/>
+		<result property="courtSite" column="courtSite"/>
+		<result property="courtArea" column="courtArea"/>
+		<result property="blockCount" column="blockCount"/>
+		<result property="courtAudit" column="courtAudit"/>
+		<result property="editCourtName" column="editCourtName"/>
+		<result property="editCourtDate" column="editCourtDate"/>
+		<result property="courtPic" column="courtPic"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	
+	<select id="getAllCourtByAreaId" resultMap="courtResult">
+		select c.courtId,a.areaName,c.courtName,c.propertyName,c.courtSite,c.courtArea,c.blockCount,c.courtAudit,c.editCourtName,c.editCourtDate,c.courtPic
+		from court c,`area` a where a.areaId=c.areaId and c.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by c.courtId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllCourtCount" resultType="int">
+		select count(*) from court where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<insert id="saveCourt" parameterType="court">
+		insert into court(areaId,courtName,propertyName,courtSite,courtArea,blockCount,editCourtName,editCourtDate,courtPic)
+		values(#{areaId},#{courtName},#{propertyName},#{courtSite},#{courtArea},#{blockCount},#{editCourtName},#{editCourtDate},#{courtPic})
+	</insert>
+	
+	<select id="getCourtById" parameterType="int" resultMap="courtResult">
+		select courtId,areaId,courtName,propertyName,courtSite,courtArea,editCourtName,editCourtDate,courtPic
+		from court where courtId=#{courtId}
+	</select>
+	
+	<update id="editCourtById" parameterType="court">
+		update court set areaId=#{areaId},courtName=#{courtName},propertyName=#{propertyName},courtSite=#{courtSite},courtArea=#{courtArea},blockCount=#{blockCount},editCourtName=#{editCourtName},editCourtDate=#{editCourtDate},courtPic=#{courtPic}
+		where courtId=#{courtId}
+	</update>
+	
+	<delete id="deleteCourt" parameterType="list">
+		delete from court where courtId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateAuditCourt" parameterType="list">
+		update court set courtAudit='0' where courtId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getOneCourtById" parameterType="court" resultMap="courtResult">
+		select courtId,areaId,courtName,propertyName,courtSite,courtArea,blockCount,editCourtName,editCourtDate,courtAudit,courtPic
+		from court where courtId=#{courtId}
+	</select>
+	
+	<select id="getAllCourtsByAreaId" resultMap="courtResult">
+		select c.courtId,a.areaName,c.courtName,c.propertyName,c.courtSite,c.courtArea,c.blockCount,c.courtAudit,c.editCourtName,c.editCourtDate,c.courtPic
+		from court c,`area` a where a.areaId=c.areaId and c.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAllCourtId" resultType="int">
+		select courtId from court where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+</mapper>

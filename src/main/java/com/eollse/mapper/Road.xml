@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.RoadDao">
+	<resultMap type="road" id="roadResult">
+		<id property="roadId" column="roadId"/>
+		<result property="roadGradeId" column="roadGradeId"/>
+		<result property="roadName" column="roadName"/>
+		<result property="roadName" column="roadName"/>
+		<result property="roadLength" column="roadLength"/>
+		<result property="roadWidth" column="roadWidth"/>
+		<result property="laneNum" column="laneNum"/>
+		<result property="singleLane" column="singleLane"/>
+		<result property="roadPic" column="roadPic"/>
+		<result property="roadAudit" column="roadAudit"/>
+		<result property="editRoadName" column="editRoadName"/>
+		<result property="editRoadDate" column="editRoadDate"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	<select id="getAllRoadByAreaId" resultMap="roadResult">
+		select r.roadId,a.areaName,r.roadName,r.roadGradeId,r.roadLength,r.roadWidth,r.laneNum,r.singleLane,r.roadPic,r.roadAudit,r.editRoadName,r.editRoadDate
+		from road r,`area` a where a.areaId=r.areaId and r.areaId in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by r.roadId desc limit #{x},#{y};
+	</select>
+	<select id="getAllRoadsCount" resultType="int">
+		select count(*) from road where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getRoadGradeById" parameterType="int" resultType="Road_grade">
+		select roadGradeId,roadGradeName from road_grade where roadGradeId=#{roadGradeId};
+	</select>
+	
+	<insert id="saveRoad" parameterType="road">
+		insert into road(
+			areaId,roadGradeId,roadName,roadLength,roadWidth,laneNum,singleLane,roadPic,editRoadName,editRoadDate
+		) values(#{areaId},#{roadGradeId},#{roadName},#{roadLength},#{roadWidth},#{laneNum},#{singleLane},#{roadPic},#{editRoadName},#{editRoadDate}) 
+	</insert>
+	
+	<update id="updateAuditRoad" parameterType="list">
+		update road set roadAudit='0' where roadId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<delete id="deleteRoad" parameterType="list">
+		delete from road where roadId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getOneRoadById" parameterType="road" resultMap="roadResult">
+		select roadId,areaId,roadGradeId,roadName,roadLength,roadWidth,laneNum,singleLane,roadPic,roadAudit,editRoadName,editRoadDate
+		from road where roadId=#{roadId};	
+	</select>
+	
+	<update id="editRoadById" parameterType="road">
+		update road set areaId=#{areaId},roadName=#{roadName},roadLength=#{roadLength},roadWidth=#{roadWidth},laneNum=#{laneNum},singleLane=#{singleLane},roadGradeId=#{roadGradeId},editRoadName=#{editRoadName},editRoadDate=#{editRoadDate}
+		where roadId=#{roadId}
+	</update>
+	
+	<select id="getRoadById" parameterType="int" resultMap="roadResult">
+		select roadId,areaId,roadGradeId,roadName,roadLength,roadWidth,laneNum,singleLane,roadPic,roadAudit,editRoadName,editRoadDate
+		from road where roadId=#{roadId};	
+	</select>
+	<select id="getAllRoadGrade" resultType="Road_grade">
+		select roadGradeId,roadGradeName from road_grade
+	</select>
+	
+	<select id="getRoadNameById" resultType="string">
+		select roadName from road where roadId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

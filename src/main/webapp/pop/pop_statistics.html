@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>pop_statistics.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+  </head>
+  
+  <body>
+    <div style="margin:15px auto 0; width:96%;">
+        <div class="row" style="padding: 0 8px;">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>饼/漏斗图 </h3></div>
+                    <div class="panel-body">
+                       <div style="mini-width:400px;height:350px" data-toggle="echarts" data-type="pie,funnel"
+                       		data-theme="macarons" id="main"></div>
+                    </div>
+                    <script type="text/javascript">
+                    console.log($("#main").data("url","pop/echarts-pieData.html"))
+                   	$("#main").data("url","pop/echarts-pieData.html")
+                    </script>
+                </div>
+            </div>
+            <!-- <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>中国地图 </h3></div>
+                    <div class="panel-body">
+                        <div style="mini-width:400px;height:350px" data-toggle="echarts" data-type="map" data-url="pop/echarts-mapData.html"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title"><i class="fa fa-bar-chart-o fa-fw"></i>柱状/拆线图 </h3></div>
+                    <div class="panel-body">
+                        <div style="mini-width:400px;height:350px" data-toggle="echarts" data-type="bar,line" data-url="pop/echarts-barData.html"></div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+  </body>
+</html>

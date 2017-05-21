@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.GridStaffDao">
+	<resultMap type="grid" id="gridResult">
+		<id property="gridId" column="gridId"/>
+		<result property="gridName" column="gridName"/>
+		<result property="gridScope" column="gridScope"/>
+		<result property="editGridName" column="editGridName"/>
+		<result property="editGridDate" column="editGridDate"/>
+		<result property="gridAudit" column="gridAudit"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	<resultMap type="grid_staff" id="gridStaffResult">
+		<id property="gridStaffId" column="gridStaffId"/>
+		<result property="gridId" column="gridId"/>
+		<result property="gridStaffName" column="gridStaffName"/>
+		<result property="gridStaffSex" column="gridStaffSex"/>
+		<result property="gridStaffAge" column="gridStaffAge"/>
+		<result property="gridStaffCard" column="gridStaffCard"/>
+		<result property="gridStaffTel" column="gridStaffTel"/>
+		<result property="gridStaffIcon" column="gridStaffIcon"/>
+		<result property="gridStaffScope" column="gridStaffScope"/>
+		<result property="editStaffName" column="editStaffName"/>
+		<result property="editStaffDate" column="editStaffDate"/>
+		<result property="gridStaffAudit" column="gridStaffAudit"/>
+		<result property="appUser" column="appUser"/>
+		<association property="gridPost" javaType="grid_post" resultMap="gridPostResult" />
+		<association property="grid" javaType="grid" resultMap="gridResult" />
+	</resultMap>
+	<resultMap type="grid_post" id="gridPostResult">
+		<id property="gridPostId" column="gridPostId"/>
+		<result property="gridPostName" column="gridPostName"/>
+	</resultMap>
+  	
+  	<select id="getAllGridStaffByAreaId" resultMap="gridStaffResult">
+  		SELECT s.gridStaffId,s.gridId,s.gridPostId,p.gridPostName,s.gridStaffName,s.gridStaffSex,s.gridStaffAge,s.gridStaffCard,
+ 			s.gridStaffTel,s.gridStaffIcon,s.gridStaffScope,s.editStaffName,s.editStaffDate,s.gridStaffAudit,s.appUser,a.areaId,a.areaName
+ 		FROM grid_staff s,grid_post p,grid g,`area` a WHERE s.gridPostId=p.gridPostId AND a.areaId=g.areaId AND g.gridId=s.gridId AND s.gridId in
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+  		 order by s.gridStaffId desc limit #{x},#{y};
+  	</select>
+  	
+  	<select id="getGridNameById" parameterType="int" resultMap="gridResult">
+  		select gridId,gridName,areaId from grid where areaId=#{areaId}
+  	</select>
+  	
+  	<select id="getGridCount" resultType="int">
+  		select count(*) from grid where areaId in
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+  	</select>
+  	
+  	<select id="getAllGridStaffByGridId" parameterType="int" resultMap="gridStaffResult">
+  		select s.gridStaffId,s.gridId,s.gridPostId,p.gridPostName,s.gridStaffName,s.gridStaffSex,s.gridStaffAge,s.gridStaffCard,s.gridStaffTel,s.gridStaffIcon,s.gridStaffScope,s.editStaffName,s.editStaffDate,s.gridStaffAudit
+  		from grid_staff s,grid_post p where s.gridPostId=p.gridPostId and s.gridId=#{gridId} limit #{x},#{y};
+  	</select>
+  	
+  	<select id="getGridPostById" parameterType="int" resultType="grid_post">
+  		select gridPostId,gridPostName from grid_post where gridPostId=#{gridPostId};
+  	</select>
+  	
+  	<select id="getGridPostName" resultMap="gridPostResult">
+  		select gridPostId,gridPostName from grid_post
+  	</select>
+  	
+  	<insert id="saveGridStaff" parameterType="grid_staff">
+  		insert into grid_staff(gridId,gridPostId,gridStaffName,gridStaffSex,gridStaffAge,gridStaffCard,gridStaffTel,gridStaffIcon,gridStaffScope,editStaffName,editStaffDate)
+  		values(#{gridId},#{gridPostId},#{gridStaffName},#{gridStaffSex},#{gridStaffAge},#{gridStaffCard},#{gridStaffTel},#{gridStaffIcon},#{gridStaffScope},#{editStaffName},#{editStaffDate})
+  	</insert>
+  	
+  	<select id="getGridStaffCount" parameterType="int" resultType="int">
+  		select count(*) from grid_staff where gridStaffId=#{gridStaffId}
+  	</select>
+  	
+  	<select id="getGridStaffById" parameterType="int" resultMap="gridStaffResult">
+  		select gridStaffId,gridId,gridPostId,gridStaffName,gridStaffSex,gridStaffAge,gridStaffCard,gridStaffTel,gridStaffIcon,gridStaffScope,editStaffName,editStaffDate from grid_staff where gridStaffId=#{gridStaffId}
+  	</select>
+  	
+  	<update id="editGridStaffById" parameterType="grid_staff">
+  		update grid_staff set gridId=#{gridId},gridPostId=#{gridPostId},gridStaffName=#{gridStaffName},gridStaffSex=#{gridStaffSex},gridStaffAge=#{gridStaffAge},gridStaffCard=#{gridStaffCard},gridStaffTel=#{gridStaffTel},gridStaffIcon=#{gridStaffIcon},gridStaffScope=#{gridStaffScope},editStaffName=#{editStaffName},editStaffDate=#{editStaffDate} where gridStaffId=#{gridStaffId}
+  	</update>
+  	
+  	<select id="getBlockByGridId" parameterType="int" resultType="Block">
+  		select blockId,blockName,gridId from block where gridId=#{gridId}
+  	</select>
+  	
+  	<select id="getGridStaffNameById" resultType="string">
+  		select gridStaffName from grid_staff where gridStaffId=#{gridStaffId}
+  	</select>
+  	
+  	<delete id="deleteGridStaff" parameterType="int">
+  		delete from grid_staff where gridStaffId=#{0}
+  	</delete>
+  	
+  	<update id="updateAuditGridStaff" parameterType="list">
+  		update grid_staff set gridStaffAudit='0' where gridStaffId in
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+  	</update>
+  	
+  	<select id="getOneGridStaffById" parameterType="grid_staff" resultMap="gridStaffResult">
+  		select gridStaffId,gridId,gridPostId,gridStaffName,gridStaffSex,gridStaffAge,gridStaffCard,gridStaffTel,gridStaffIcon,gridStaffScope,editStaffName,editStaffDate,gridStaffAudit from grid_staff where gridStaffId=#{gridStaffId}
+  	</select>
+  	
+  	<select id="getGridById" parameterType="int" resultType="grid">
+  		select gridId,gridName,gridScope from grid where gridId=#{gridId}
+  	</select>
+  	
+  	<select id="getAllGridStaffById" resultType="gridStaffApp">
+		SELECT gridStaffId,gridId,gridStaffName,gridStaffTel,gridStaffSex,gridStaffScope FROM grid_staff WHERE gridId IN
+   		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+   		<if test="field!=''">
+   			AND gridStaffId IN
+			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%'))
+   		</if>
+		ORDER BY gridStaffId DESC LIMIT #{x},#{y}
+	</select>
+	
+	<select id="getAllGridStaffByIdCount" resultType="int">
+		SELECT COUNT(gridStaffId) FROM grid_staff WHERE gridId IN
+  		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+   		<if test="field!=''">
+   			AND gridStaffId IN
+			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%'))
+   		</if>
+	</select>
+  	
+  	<select id="getGridIdByGridStaffId" parameterType="int" resultType="int">
+  		select gridId from grid_staff where gridStaffId=#{gridStaffId}
+  	</select>
+  
+  	<select id="getAllGridStaff" parameterType="int" resultMap="gridStaffResult">
+  		select gridStaffId,gridStaffName from grid_staff where gridId=#{gridId}
+  	</select>
+  	
+  	<select id="getGridStaffCountById" parameterType="int" resultMap="gridStaffResult">
+  		select s.gridStaffId,p.gridPostName,s.gridStaffName,s.gridStaffSex,s.gridStaffAge,s.gridStaffCard,s.gridStaffTel,s.gridStaffIcon,s.gridStaffScope,s.editStaffName,s.editStaffDate,s.gridStaffAudit from grid_staff s,grid_post p where s.gridId=#{gridId}
+  	</select>
+  	
+  	<update id="editGridStaffGrid">
+		update grid_staff set gridId=#{newId} where gridId=#{oldId}
+	</update>
+	
+	<select id="getGridCountByGridId" resultType="int">
+		select count(*) from grid_staff where gridId=#{gridId}
+	</select>
+	
+	<select id="getAllGridByAreaId" resultMap="gridResult">
+		select gridId,gridName from grid where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAllGridStaffIdByAreaId" resultType="int">
+		SELECT gridStaffId FROM grid_staff WHERE gridId IN
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<update id="alterAppUserStatusOfStaff" parameterType="int">
+  		update grid_staff set appUser=#{appUser} where gridStaffId=#{gridStaffId}
+  	</update>
+  	
+  	<select id="getAllGridStaffOfGrid" parameterType="int" resultType="gridStaffApp">
+  		SELECT gridStaffId,gridStaffName FROM grid_staff WHERE gridId = (
+  			SELECT gridId FROM grid_staff WHERE gridStaffId = #{gridStaffId}
+		)
+  	</select>
+  	
+</mapper>

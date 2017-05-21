@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>小区信息</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/court.js"></script>
+	<style type="text/css">
+		#courtDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#courtDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#courtDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+		#addCourtInfo .odddiv{display: inline-block;width: 305px;}
+    	#addCourtInfo .evendiv{float: right;width: 305px;}
+	</style>
+  </head>
+  
+  <body>
+  	<!--显示小区基本信息表  -->
+  	<table id="courtInfo" class="table table-bordered"></table>
+  	
+  	<div id="addCourt" data-noinit="true" class="hide">
+  		<div class="bjui-pageContent">
+	  		<form id="addCourtInfo">
+	  			<div class="row-input required odddiv">
+					<label class="row-label">所属区域&nbsp;</label>
+	            	<input type="text" class="input-nm" id="co_areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
+	            		readonly data-toggle="selectztree" data-tree="#co_areaNameMenu"/>
+	            	<ul id="co_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+	            		data-radio-type="all" data-on-check="Court_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+	            	</ul>  
+	            	<input type="hidden" name="areaId" id="co_areaId" value="">        	
+	  			</div>
+	  			<div class="row-input required evendiv">
+		            <label class="row-label">小区名称&nbsp;</label>
+		            <input type="text" name="courtName" id="courtName" data-rule="小区名称:required;" class="input-nm" value="" size="20" placeholder="必填项">
+		            <input type="hidden" name="courtId" id="courtId" value="">
+	  			</div>
+	  			<div class="row-input required odddiv">
+	  				<label class="row-label">物业公司&nbsp;</label>
+	  				<input type="text" name="propertyName" id="propertyName" data-rule="物业公司:required;" class="input-nm" value="" size="20" placeholder="必填项">
+	  			</div>
+	  			<div class="row-input evendiv">
+		    		<label class="row-label">编辑时间&nbsp;</label>
+		    		<input type="text" value="" id="editCourtDate" data-toggle="datepicker" data-pattern="yyyy年MM月dd日 HH:mm:ss" class="input-nm" size="20" placeholder="2017年02月25日 16:05:03"> 
+		    	</div>
+		    	<div class="row-input required odddiv">
+	  				<label class="row-label">小区面积&nbsp;</label>
+	  				<input type="text" name="courtArea" id="courtArea" data-rule="小区面积:required;integer;" data-toggle="spinner" data-step="100" data-min="1"  class="input-nm" value="" size="20" placeholder="单位：平方米(㎡)">
+	  			</div>
+	  			<div class="row-input required evendiv">
+	  				<label class="row-label">楼栋总数&nbsp;</label>
+	  				<input type="text" id="blockCount" data-rule="楼栋总数:required;integer;" data-toggle="spinner" data-step="5" data-min="1"  class="input-nm" value="" size="20" placeholder="单位：栋">
+	  			</div>
+	  			<div class="row-input required">
+	  				<label class="row-label">小区地址&nbsp;</label>
+	  				<input type="text" name="courtSite" id="courtSite" data-rule="小区地址:required" class="input-nm" value="" size="53" placeholder="必填项">
+	  			</div>
+	  			<div class="row-input">
+			     	<label class="row-label">上传图片&nbsp;</label>
+		   			<input type="text" name="courtPic" class="input-nm" id="courtPic" size="53" value="" readonly placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传5张！" />
+		    	</div>
+	  			<div class="hide" id="courtUploadArea" style="margin-left:12px; margin-top:20px; width: 600px;">
+	            	<input type="file"  id="uploadCourtPic" data-name="court" data-toggle="webuploader" class="input-nm" data-options="{
+	                    pick: {label: '点击选择图片'},server: 'court/uploadCourtPic.do',fileNumLimit: 5,fileSingleSizeLimit: 1024*1024,
+	                    duplicate: true,formData: {mainName:'court'},required: true,uploaded: '',basePath: '',
+	                    accept: {
+	                    	title: '图片',extensions: 'jpg,jpeg,png',mimeTypes: '.jpg,.png'
+	                    }
+	                	}" >
+	        	</div>
+	  		</form>
+	  	</div>
+  		<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+		  		<button type="button" id="submitBtnco" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	<div id="courtDetail" class="hide">
+  		<div class="bjui-pageContent">
+	  		<table id="courtDetailTab" border="1">
+	  			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">小&ensp;区&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    			</tr>
+	  			<tr>
+	  				<td><label class="row-label">小区名称</label></td>
+	  				<td id="co_courtName"></td>
+	  				<td><label class="row-label">所属区域</label></td>
+	  				<td id="co_areaName"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">物业名称</label></td>
+	  				<td id="co_propertyName"></td>
+	  				<td><label class="row-label">审核状态</label></td>
+	  				<td id="co_courtAudit"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">小区面积</label></td>
+	  				<td id="co_courtArea"></td>
+	  				<td><label class="row-label">楼&ensp;栋&ensp;数</label></td>
+	  				<td id="co_blockCount"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">编&ensp;辑&ensp;人</label></td>
+	  				<td id="co_editCourtName"></td>
+	  				<td><label class="row-label">编辑时间</label></td>
+	  				<td id="co_editCourtDate"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">小区地址</label></td>
+	  				<td id="co_courtSite" colspan="3"></td>
+	  			</tr>
+	  			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="4">小&ensp;区&ensp;图&ensp;片&ensp;信&ensp;息</td>
+    			</tr>
+	  			<tr>
+	  				<td colspan="4"  style="background-color:white;padding: 10px;text-align: left;padding-left:20px;" id="td_court_pic">
+					</td>
+	  			</tr>
+	  		</table>
+	  	</div>
+	  	<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	<!--查看楼栋信息弹窗  -->
+  	<div id="courtSuBlock" class="hide">
+  			<table id="blockView" class="table table-bordered"></table>
+  		</div>
+  	
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.GridDao">
+	<resultMap type="grid" id="gridResult">
+		<id property="gridId" column="gridId"/>
+		<result property="gridName" column="gridName"/>
+		<result property="gridScope" column="gridScope"/>
+		<result property="editGridName" column="editGridName"/>
+		<result property="editGridDate" column="editGridDate"/>
+		<result property="gridAudit" column="gridAudit"/>
+		<result property="gridAdmitor" column="gridAdmitor"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	
+	<select id="getAllGridByAreaId" resultMap="gridResult">
+		select g.gridId,a.areaName,g.gridName,g.gridScope,g.editGridName,g.editGridDate,g.gridAudit,g.gridAdmitor from grid g,area a where a.areaId=g.areaId and g.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by g.gridId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllGridCount" resultType="int">
+		select count(*) from grid where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<insert id="saveGrid" parameterType="grid">
+		insert into grid(areaId,gridName,gridScope,editGridName,editGridDate,gridAdmitor)
+		values(#{areaId},#{gridName},#{gridScope},#{editGridName},#{editGridDate},#{gridAdmitor})
+	</insert>
+	
+	<select id="getGridById" parameterType="int" resultMap="gridResult">
+		select gridId,areaId,gridName,gridScope,editGridName,editGridDate,gridAudit,gridAdmitor from grid where gridId=#{gridId}
+	</select>
+	
+	<update id="editGridById" parameterType="grid">
+		update grid set areaId=#{areaId},gridName=#{gridName},gridScope=#{gridScope},editGridName=#{editGridName},editGridDate=#{editGridDate},gridAdmitor=#{gridAdmitor}
+		where gridId=#{gridId}
+	</update>
+	
+	<update id="updateAuditGrid" parameterType="list">
+		update grid set gridAudit='0' where gridId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getOneGridById" parameterType="grid" resultMap="gridResult">
+		select gridId,areaId,gridName,gridScope,editGridName,editGridDate,gridAudit,gridAdmitor from grid where gridId=#{gridId}
+	</select>
+	
+	<select id="getAllGrid" resultMap="gridResult">
+		select g.gridId,a.areaName,g.gridName,g.gridScope,g.editGridName,g.editGridDate,g.gridAudit,g.gridAdmitor from grid g,area a where a.areaId=g.areaId and g.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<delete id="deleteGrid" parameterType="int">
+		delete from grid where gridId=#{0}
+	</delete>
+	
+	<select id="getAllGridIdsByAreaId" resultType="int">
+		select gridId from grid where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAreaByGridId" resultType="area">
+		select a.areaName,g.areaId from area a,grid g where a.areaId=g.areaId and g.gridId=#{0}
+	</select>
+	
+</mapper>

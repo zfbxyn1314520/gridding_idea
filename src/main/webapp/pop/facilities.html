@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>公共设施信息</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/facilities.js"></script>
+	<style type="text/css">
+		#facDetailTab{border:1px #E5E5E5 solid; width: 710px;margin: -5px;}
+    	#facDetailTab td:nth-child(odd){width:120px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#facDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+		#addFacilitiesInfo .odddiv{display: inline-block;width: 340px;}
+    	#addFacilitiesInfo .evendiv{float: right;width: 340px;}
+	</style>
+  </head>
+  
+  <body>
+   		<table id="facilitiesInfo" class="table table-bordered"></table>
+   		
+   		<!--增加修改弹窗容器  -->
+   		<div id="addFacilities" data-noinit="true" class="hide">
+   			<div class="bjui-pageContent">
+	   			<form id="addFacilitiesInfo">
+	   			 	<div class="row-input required odddiv">
+	   					<label class="row-label">所&#8197;&#8197;&#8197;属&#8197;&#8197;&#8197;区&#8197;&#8197;域&nbsp;</label>
+	            	<input type="text" class="input-nm" id="f_areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
+	            		readonly data-toggle="selectztree" data-tree="#f_areaNameMenu"/>
+	            	<ul id="f_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+	            		data-radio-type="all" data-on-check="Facilities_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+	            	</ul>  
+	            	<input type="hidden" name="areaId" id="f_areaId" value="">        	
+			        </div>
+			        <div class="row-input required evendiv">
+			            <label class="row-label">公共设施类别&nbsp;</label>
+		        		<select data-toggle="selectpicker" data-width="200" name="facilitiesTypeId" id="facilitiesTypeId" data-rule="公共设施类别:required"></select>
+			        </div>
+			        <div class="row-input required odddiv">
+			        	<label class="row-label">公共设施名称&nbsp;</label>
+			            <input type="text" name="facilitiesName" id="facilitiesName" data-rule="公共设施名称:required" class="input-nm" size="20" value="" placeholder="必填项"/>
+			            <input type="hidden" name="facilitiesId" id="facilitiesId" value="">
+			        </div>
+			        <div class="row-input evendiv">
+		    			<label class="row-label">编&#8197;&#8197;&#8197;辑&#8197;&#8197;&#8197;时&#8197;&#8197;间&nbsp;</label>
+		    			<input type="text" id="editFacDate" data-toggle="datepicker" data-pattern="yyyy年MM月dd日 HH:mm:ss" class="input-nm" value="" size="20" placeholder="2017年02月25日 16:05:03"> 
+		    		</div>
+			        <div class="row-input required">
+			        	<label class="row-label">公共设施地址&nbsp;</label>
+			            <input type="text" name="facilitiesSite" id="facilitiesSite" data-rule="公共设施地址:required" class="input-nm" size="57" value="" placeholder="必填项"/>
+			        </div>
+			        <div class="row-input">
+			     		<label class="row-label">上&#8197;&#8197;&#8197;传&#8197;&#8197;&#8197;图&#8197;&#8197;片&nbsp;</label>
+		   				<input type="text" name="facilitiesPic" class="input-nm" id="facilitiesPic" size="57" value="" readonly placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传5张！" />
+		    		</div>
+			        <div class="hide" id="facilitiesUploadArea" style="margin-left:12px; margin-top:20px; width: 675px;">
+	            		<input type="file"  id="uploadFacilitiesPic" data-name="facilities" data-toggle="webuploader" class="input-nm" data-options="{
+	                    pick: {label: '点击选择图片'},server: 'facilities/uploadFacilitiesPic.do',fileNumLimit: 5,fileSingleSizeLimit: 1024*1024,
+	                    duplicate: true,formData: {mainName:'facilities'},required: true,uploaded: '',basePath: '',
+	                    accept: {
+	                    	title: '图片',extensions: 'jpg,jpeg,png',mimeTypes: '.jpg,.png'
+	                    }
+	                	}" >
+	        		</div>
+	   			</form>
+	   		</div>
+   			<div class="bjui-pageFooter">
+   				<div class="dialogFooterBtn">
+		  			<button type="button" id="submitBtnf" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+				</div>
+			</div>
+   		</div>
+   		
+   		<!--查看弹窗容器  -->
+   		<div id="facilitiesDetail" class="hide">
+   			<div class="bjui-pageContent">
+	   			<table id="facDetailTab" border="1"> 
+	   				<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    					<td colspan="4">公&ensp;共&ensp;设&ensp;施&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    				</tr>
+	   				<tr>
+	   					<td >公共设施名称</td>
+	   					<td id="f_Name"></td>
+	   					<td>公共设施类别</td>
+	   					<td id="ft_Name"></td>
+	   				</tr>
+	   				<tr>
+	   					<td>所&ensp;属&ensp;&ensp;区&ensp;域</td>
+	   					<td id="fa_Name"></td>
+	   					<td>审&ensp;核&ensp;&ensp;状&ensp;态</td>
+	   					<td id="f_Audit"></td>
+	   				</tr>
+	   				<tr>
+	   					<td>编&emsp;&ensp;辑&emsp;&ensp;人</td>
+	   					<td id="f_editFacName"></td>
+	   					<td>编&ensp;辑&ensp;&ensp;时&ensp;间</td>
+	   					<td id="f_editFacDate"></td>
+	   				</tr>
+	   				<tr>
+	   					<td>公共设施地址&nbsp;&nbsp;</td>
+	   					<td id="f_Site" colspan="3"></td>
+	   				</tr>
+	   				<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    					<td colspan="4">公&ensp;共&ensp;设&ensp;施&ensp;图&ensp;片&ensp;信&ensp;息</td>
+    				</tr>
+    				<tr>
+	  					<td colspan="4"  style="background-color:white;padding: 10px;text-align: left;padding-left:20px;" id="td_fac_pic">
+						</td>
+	  				</tr>
+	   			</table>
+	   		</div>
+	   		<div class="bjui-pageFooter">
+  				<div class="dialogFooterBtn">
+		  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+				</div>
+			</div>
+   		</div>
+   	
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>role.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <script type="text/javascript" src="js/role.js"></script>
+  </head>
+  
+  <body>
+    <table id="roleInfo" class="table table-bordered"></table>
+    
+    <!-- 增加/编辑 弹框容器 -->
+     <div id="addRole" data-noinit="true" class="hide">
+     	<div class="bjui-pageContent">
+	  		<form id="addRoleInfo">
+	        	<div class="row-input required" style="width: 305px;">
+	            	<label class="row-label">角色名称&nbsp;</label>
+	            	<input type="text" name="roleName" class="input-nm" id="roleName" size="20" value="" data-rule="角色名称:required;" placeholder="必填项" />
+		        	<input type="hidden" name="roleId" id="roleId" value=""> 
+	        	</div>
+		    	<div class="row-input">
+		        	<label class="row-label">角色级别&nbsp;</label>
+	        		<select data-toggle="selectpicker" data-width="200" id="roleLevel" name="roleLevel">
+	            		<option value="0">最高权限</option>
+	            		<option value="1">省级权限</option>
+	            		<option value="2">市级权限</option>
+	            		<option value="3">区县权限</option>
+	            		<option value="4">镇街权限</option>
+	            		<option value="5">村社权限</option>
+	            		<option value="6" selected="">网格权限</option>
+	        		</select>
+		   		</div>
+		   		<div class="row-input">
+		    		<label class="row-label">编辑时间&nbsp;</label>
+		    		<input type="text" value="" id="editRoleDate" data-toggle="datepicker" data-pattern="yyyy年MM月dd日 HH:mm:ss" class="input-nm" size="20" > 
+		    	</div>
+		   		<div class="row-input">
+		   			<label class="row-label">备　　注&nbsp;</label>
+	        		<textarea cols="20" rows="4" id="roleMemo" name="roleMemo"></textarea>
+		   		</div>
+		   		<div class="row-input">
+		   			<label class="row-label">是否启用&nbsp;</label>　
+	        		<input type="radio" name="role_enable" id="role_enable" value="1" data-rule="checked" data-toggle="icheck" checked="checked" data-label="启用">　
+	        		<input type="radio" name="role_enable" id="role_disable" value="0" data-toggle="icheck" data-label="禁用">
+		   		</div>
+	  		</form>
+  		</div>
+  		<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" id="roleBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	<!-- 查看权限人数 弹框容器 -->
+     <div id="roleSubUser" class="hide">
+     	 <table id="userView" class="table table-bordered"></table>
+     </div>
+  </body>
+</html>

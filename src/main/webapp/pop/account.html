@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>户口信息</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/account.js"></script>
+	<style type="text/css">
+		#selectAccountTab{border:1px #E5E5E5 solid; width: 545px;}
+    	#selectAccountTab td:nth-child(odd){width:120px;height: 30px;}
+		#houseSuAccountView{border:1px #E5E5E5 solid; width: 545px;}
+    	#houseSuAccountView td:nth-child(odd){width:120px;height: 30px;}
+    	#addAccountInfo .odddiv{display: inline-block;width: 305px;}
+    	#addAccountInfo .evendiv{float: right;width: 305px;}
+	</style>
+  </head>
+  
+  <body>
+	<table id="accountInfo" class="table table-bordered"></table>
+	
+	<div id="addAccount" data-noinit="true" class="hide">
+ 		<div class="bjui-pageContent">
+ 		<form id="addAccountInfo">
+ 			<div class="bs-callout bs-callout-danger" style="height: 20px;margin-top:10px; width: 615px;background-color: #F7F7F9;">
+        		<div style="margin-top: -10px; ">
+        			<h4>房屋基本信息</h4>
+        		</div>
+    		</div>
+    		<div style="margin-top: -20px">
+	 			<div class="row-input odddiv">
+	        		<label class="row-label">所属小区&nbsp;</label>
+	        		<select data-toggle="selectpicker" id="a_courtId" data-width="200"></select>
+	 			</div>
+	 			<div class="row-input evendiv">
+	 				<label class="row-label">所属楼栋&nbsp;</label>
+	 				<select data-toggle="selectpicker" id="a_blockId" data-width="200">
+	 					<option value="">请选择楼栋</option>
+	 				</select>
+	 			</div>
+	 			<div class="row-input odddiv">
+	 				<label class="row-label">所属单元&nbsp;</label>
+	 				<select data-toggle="selectpicker" name="unitId" id="a_unitId" data-width="200">
+	 					<option value="">请选择单元</option>
+	 				</select>
+	 			</div>
+	 			<div class="row-input required evendiv">
+	 				<label class="row-label">门&ensp;牌&ensp;号&nbsp;</label>
+	 				<input type="text" name="houseNum" id="a_houseNum" data-rule="required" class="input-nm" value="" size="20">
+	 				<input type="hidden" name="houseId" id="a_houseId" value="">
+	 			</div>
+	 			<div class="row-input odddiv">
+	 				<label class="row-label">房屋状态&nbsp;</label>
+	 				<select data-toggle="selectpicker" name="statusId" id="a_statusId" data-width="200"></select>
+	 			</div>
+	 			<div class="row-input evendiv">
+	 				<label class="row-label">房屋户型&nbsp;</label>
+	 				<select data-toggle="selectpicker" name="typeId" id="a_typeId" data-width="200">
+	        		</select>
+	 			</div>
+	 			<div class="row-input required odddiv">
+	 				<label class="row-label">房屋面积&nbsp;</label>
+	 				<input type="text" name="houseArea" id="a_houseArea" data-rule="required" class="input-nm" value="" size="20" data-toggle="spinner" data-step="10" data-min="1">
+	 			</div>
+	 			<div class="row-input evendiv">
+		    			<label class="row-label">编辑时间&nbsp;</label>
+		    			<input type="text" data-toggle="datepicker" id="a_editHouseDate" class="input-nm" size="20" data-pattern="yyyy年MM月dd日 HH:mm:ss" value="" > 
+		    	</div>
+		    </div>
+	 			<div class="row-input required">
+	 				<label class="row-label">房屋地址&nbsp;</label>
+	 				<input type="text" name="houseSite" id="a_houseSite" data-rule="required" class="input-nm" value="" size="53">
+	 			</div>
+	 			<div class="bs-callout bs-callout-danger" style="height: 20px;margin-top: 30px;width: 615px;background-color: #F7F7F9;">
+	        		<div style="margin-top: -10px; ">
+	        			<h4>房屋户主信息</h4>
+	        		</div>
+	    		</div>
+	    		<div style="margin-top: -20px">
+		 			<div class="row-input required odddiv">
+		 				<label class="row-label">户&emsp;&emsp;主&nbsp;</label>
+		 				<input type="text" name="accountHolder" id="a_accountHolder" data-rule="required" class="input-nm" value="" size="20">
+		 			</div>
+		 			<div class="row-input required evendiv">
+		 				<label class="row-label">身份证号&nbsp;</label>
+		 				<input type="text" name="holderCard" id="a_holderCard" data-rule="身份证号:required; IDcard;" class="input-nm" value="" size="20">
+		 			</div>
+		 			<div class="row-input odddiv">
+		 				<label class="row-label">户口人数&nbsp;</label>
+	 					<input type="text" id="a_memberCount" data-rule="required" class="input-nm" value="" size="20" data-toggle="spinner" data-step="1" data-min="1">
+		 			</div>
+		 			<div class="row-input required evendiv">
+		 				<label class="row-label">户主电话&nbsp;</label>
+		 				<input type="text" name="holderTel" id="a_holderTel" data-rule="联系电话:required; accountTel;" class="input-nm" value="" 
+		 					data-rule-accountTel="[/^(1[3-9]\d{9})|(?:(?:0\d{2,3}[\- ]?[1-9]\d{6,7})|(?:[48]00[\- ]?[1-9]\d{6}))$/,'联系电话格式不正确']"  size="20">
+		 			</div>
+		 			<div class="row-input required">
+		 				<label class="row-label">户籍地址&nbsp;</label>
+		 				<input type="text" name="accountSite" id="a_accountSite" data-rule="required" class="input-nm" value="" size="53">
+		 			</div>
+	 			</div>
+	 		</form>
+ 		</div>
+ 		<div class="bjui-pageFooter">
+ 			<div class="dialogFooterBtn">
+	  			<button type="button" id="submitBtnac" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+ 	</div>
+ 	
+ 	
+ 	<!--查看弹窗  -->
+ 	<div id="selectAccount" class="hide">
+ 		<div class="bjui-pageContent">
+	 		<table id="selectAccountTab" border="1">
+	 			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+	    				<td colspan="6">房&ensp;屋&ensp;基&ensp;本&ensp;信&ensp;息</td>
+	    		</tr>
+				<tr>
+					<td><label class="row-label">门&ensp;牌&ensp;号</label></td>
+					<td id="a-houseNum"></td>
+					<td><label class="row-label">所属小区</label></td>
+					<td id="a-courtName"></td>
+				</tr>
+				<tr> 		
+					<td><label class="row-label">所属楼栋</label></td>
+					<td id="a-blockName"></td>
+					<td><label class="row-label">所属单元</label></td>
+					<td id="a-unitName"></td>
+				</tr>
+				<tr>
+					<td><label class="row-label">房屋面积</label></td>
+					<td id="a-houseArea"></td>
+					<td><label class="row-label">审核状态</label></td>
+					<td id="a-houseAudit"></td>
+				</tr>
+				<tr>
+					<td><label class="row-label">房屋户型</label></td>
+					<td id="a-typeName"></td>
+					<td><label class="row-label">房屋状态</label></td>
+					<td id="a-statusName"></td>
+				</tr>
+				<tr>
+					<td><label class="row-label">房屋地址</label></td>
+					<td id="a-houseSite" colspan="3"></td>
+				</tr>
+				<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+	    			<td colspan="6">房&ensp;屋&ensp;户&ensp;主&ensp;信&ensp;息</td>
+	    		</tr>
+	    		<tr>
+	 				<td><label class="row-label">户主姓名</label></td>
+	 				<td id="a_AccountHoulder"></td>
+	 				<td><label class="row-label">户口人数</label></td>
+	 				<td id="a_MemberCount"></td>
+	 			</tr>
+	 			<tr>
+	 				<td><label class="row-label">户主电话</label></td>
+	 				<td id="a_HolderTel"></td>
+	 				<td><label class="row-label">户主证件号</label></td>
+	 				<td id="a_HolderCard"></td>
+	 			</tr>
+	 			<tr>
+	 				<td><label class="row-label">户籍地址</label></td>
+	 				<td id="a_AccountSite" ></td>
+	 				<td><label class="row-label">审核状态</label></td>
+ 					<td id="a_accountAudit"></td>
+	 			</tr>
+	 			<tr>
+ 				<td><label class="row-label">编辑人</label></td>
+ 				<td id="a_editAccountName"></td>
+ 				<td><label class="row-label">编辑时间</label></td>
+ 				<td id="a_editAccountDate"></td>
+ 			</tr>
+	 		</table>
+	 	</div>
+	 	<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+	</div>
+ 	<!-- <div id="selectAccount" class="hide">
+ 		<table id="selectAccountTab" border="1" style="margin-top: 10px;table-layout:fixed;">
+ 			<tr>
+ 				<td><label class="row-label">户主姓名</label></td>
+ 				<td id="a_AccountHoulder"></td>
+ 				<td><label class="row-label">户口人数</label></td>
+ 				<td id="a_MemberCount"></td>
+ 			</tr>
+ 			<tr>
+ 				<td><label class="row-label">户主证件号</label></td>
+ 				<td id="a_HolderCard" colspan="3"></td>
+ 			</tr>
+ 			<tr>
+ 				<td><label class="row-label">户主电话</label></td>
+ 				<td id="a_HolderTel"></td>
+ 				<td><label class="row-label">审核状态</label></td>
+ 				<td id="a_accountAudit"></td>
+ 			</tr>
+ 			<tr>
+ 				<td><label class="row-label">编辑人</label></td>
+ 				<td id="a_editAccountName"></td>
+ 				<td><label class="row-label">编辑时间</label></td>
+ 				<td id="a_editAccountDate"></td>
+ 			</tr>
+ 			<tr>
+ 				<td><label class="row-label">户籍地址</label></td>
+ 				<td id="a_AccountSite" colspan="3"></td>
+ 			</tr>
+ 		</table>
+ 	</div> -->
+  </body>
+</html>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="gridding:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="gridding.war">
+      <element id="artifact" artifact-name="gridding:war exploded" />
+    </root>
+  </artifact>
+</component>

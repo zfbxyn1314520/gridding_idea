@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.EventDao">
+	<resultMap type="event" id="eventResult">
+		<id property="eventId" column="eventId"/>
+		<result property="eventTitle" column="eventTitle" />
+		<result property="eventContent" column="eventContent" />
+		<result property="blogContent" column="blogContent" />
+		<result property="editEventDate" column="editEventDate" />
+		<result property="isImportant" column="isImportant" />
+		<result property="isFinished" column="isFinished" />
+		<association property="eventType" column="eventTypeId" javaType="event_type">
+			<id property="eventTypeId" column="eventTypeId" />
+			<result property="eventTypeName" column="eventTypeName" />
+		</association>
+		<association property="area" column="areaId" javaType="area">
+			<id property="areaId" column="areaId" />
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="grid" column="gridId" javaType="grid">
+			<id property="gridId" column="gridId" />
+			<result property="gridName" column="gridName" />
+		</association>
+		<association property="gridStaff" column="gridStaffId"
+			javaType="grid_staff">
+			<id property="gridStaffId" column="gridStaffId" />
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+		<association property="eventLevel" javaType="event_level" resultMap="eventLevelResult" />
+		<association property="sourceType" javaType="event_source_type" resultMap="sourceTypeResult" />
+	</resultMap>
+	<resultMap type="event_level" id="eventLevelResult">
+		<id property="eventLevelId" column="eventLevelId"/>
+		<result property="eventLevelName" column="eventLevelName" />
+	</resultMap>
+	<resultMap type="event_source_type" id="sourceTypeResult">
+		<id property="sourceTypeId" column="sourceTypeId"/>
+		<result property="sourceTypeName" column="sourceTypeName" />
+	</resultMap>
+	<resultMap type="event_solve_status" id="solveStatusResult">
+		<id property="solveStatusId" column="solveStatusId"/>
+		<result property="solveStatusName" column="solveStatusName" />
+	</resultMap>
+	<resultMap type="event_log" id="eventLogResult">
+		<id property="eventLogId" column="eventLogId"/>
+		<result property="eventLogContent" column="eventLogContent" />
+		<result property="editEventLogName" column="editEventLogName" />
+		<result property="editEventLogDate" column="editEventLogDate" />
+		<association property="event" javaType="event" resultMap="eventResult" />
+		<association property="solveStatus" javaType="event_solve_status" resultMap="solveStatusResult" />
+	</resultMap>
+	
+	<resultMap type="eventApp" id="eventAppResult">
+		<id property="eventId" column="eventId"/>
+		<result property="eventTitle" column="eventTitle" />
+		<result property="eventContent" column="eventContent" />
+		<result property="eventPic" column="eventPic" />
+		<result property="editEventDate" column="editEventDate" />
+		<result property="isImportant" column="isImportant" />
+		<result property="isFinished" column="isFinished" />
+		<association property="gridStaffApp" column="gridStaffId" javaType="gridStaffApp">
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+		<association property="eventType" column="eventTypeId" javaType="event_type">
+			<result property="eventTypeName" column="eventTypeName" />
+		</association>
+		<association property="eventLevel" column="eventLevelId" javaType="event_level">
+			<result property="eventLevelName" column="eventLevelName" />
+		</association>
+		<association property="sourceType" column="sourceTypeId" javaType="event_source_type">
+			<result property="sourceTypeName" column="sourceTypeName" />
+		</association>
+		<association property="areaApp" column="areaId" javaType="areaApp">
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="gridApp" column="gridId" javaType="gridApp">
+			<result property="gridName" column="gridName" />
+		</association>
+	</resultMap>
+	
+	<select id="getAllEventByAreaId" resultMap="eventResult">
+		SELECT a.areaName,s.gridStaffName,e.eventId,e.eventTitle,e.editEventDate,et.eventTypeName,l.eventLevelName,g.gridName,e.isImportant,e.isFinished 
+		FROM event_type et,grid g,`area` a,grid_staff s,event e,event_level l 
+		WHERE et.eventTypeId=e.eventTypeId AND g.gridId=e.gridId AND a.areaId=e.areaId AND e.gridStaffId=s.gridStaffId AND e.eventLevelId=l.eventLevelId AND e.areaId IN
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		ORDER BY e.eventId DESC LIMIT #{x},#{y}
+	</select>
+	
+	<select id="getAllEventCount" resultType="int">
+		SELECT COUNT(eventId) FROM event WHERE areaId IN
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAllEventInfoById" resultMap="eventAppResult">
+		SELECT e.eventId,e.eventTitle,e.eventContent,e.eventPic,e.editEventDate,e.isImportant,e.isFinished,
+  			a.areaName,g.gridName,s.gridStaffName,et.eventTypeName,l.eventLevelName,est.sourceTypeName
+		FROM event_type et,grid g,`area` a,grid_staff s,event e,event_level l,event_source_type est 
+		WHERE et.eventTypeId=e.eventTypeId AND g.gridId=e.gridId AND a.areaId=e.areaId AND e.gridStaffId=s.gridStaffId 
+  			AND e.eventLevelId=l.eventLevelId AND est.sourceTypeId=e.sourceTypeId AND e.gridStaffId IN
+		<if test="field==''">
+   			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+   		</if>
+   		<if test="field!=''">
+   			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%') AND gridStaffId IN
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+   		</if>
+		ORDER BY e.eventId DESC LIMIT #{x},#{y}
+	</select>
+	
+	<select id="getAllEventInfoCount" resultType="int">
+		SELECT COUNT(eventId) FROM event WHERE gridStaffId in
+		<if test="field==''">
+   			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+   		</if>
+   		<if test="field!=''">
+   			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%') AND gridStaffId IN
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+   		</if>
+	</select>
+	
+	<select id="getAllEventLevel" resultMap="eventLevelResult">
+		select eventLevelId,eventLevelName from event_level
+	</select>
+	
+	<select id="getAllType" resultMap="sourceTypeResult">
+		select sourceTypeId,sourceTypeName from event_source_type
+	</select>
+	
+	<select id="getAllStatus" resultMap="solveStatusResult">
+		select solveStatusId,solveStatusName from event_solve_status
+	</select>
+	
+	<insert id="saveEvent" parameterType="event">
+		insert into event(areaId,gridId,gridStaffId,eventLevelId,sourceTypeId,eventTitle,eventContent,editEventDate,eventTypeId,isImportant)
+		values(#{areaId},#{gridId},#{gridStaffId},#{eventLevelId},#{sourceTypeId},#{eventTitle},#{eventContent},#{editEventDate},#{eventTypeId},#{isImportant})
+	</insert>
+	
+	<insert id="saveEventLog" parameterType="Event_log">
+		insert into event_log(eventId,eventLogContent,editEventLogDate,editEventLogName,solveStatusId)
+		values(#{eventId},#{eventLogContent},#{editEventLogDate},#{editEventLogName},#{solveStatusId})
+	</insert>
+	
+	<select id="getMaxId" resultType="int">
+		select max(eventId) from event
+	</select>
+	
+	<select id="getEventLogById" resultMap="eventLogResult">
+		select e.eventLogId,e.eventLogContent,e.editEventLogName,e.editEventLogDate, s.solveStatusId,s.solveStatusName 
+		from event_log e,event_solve_status s where e.solveStatusId=s.solveStatusId and e.eventId=#{eventId}
+	</select>
+	
+	<select id="getOneEventLogInfoById" resultType="eventLogApp">
+		SELECT e.eventLogId,e.eventLogContent,e.editEventLogName,e.editEventLogDate, e.solveStatusId 
+		FROM event_log e,event_solve_status s 
+		WHERE e.solveStatusId=s.solveStatusId AND e.eventId=#{eventId}
+	</select>
+	
+	<select id="getEventById" resultType="event">
+		select areaId,eventId,gridId,gridStaffId,eventLevelId,sourceTypeId,eventTitle,eventContent,editEventDate,eventTypeId,isImportant from event where eventId=#{eventId}
+	</select>
+	
+	<update id="editEventById" parameterType="event">
+		update event set areaId=#{areaId},gridId=#{gridId},gridStaffId=#{gridStaffId},eventLevelId=#{eventLevelId},sourceTypeId=#{sourceTypeId},eventTitle=#{eventTitle},eventContent=#{eventContent},editEventDate=#{editEventDate},eventTypeId=#{eventTypeId},isImportant=#{isImportant}
+		where eventId=#{eventId}
+	</update>
+	
+	<update id="editEventLogById" parameterType="Event_log">
+		update event_log set eventLogContent=#{eventLogContent},editEventLogName=#{editEventLogName},editEventLogDate=#{editEventLogDate},solveStatusId=#{solveStatusId} where eventId=#{eventId}
+	</update>
+	
+	<select id="getOneEventById" resultMap="eventResult">
+		select e.isImportant,e.eventId,a.areaName,g.gridName,s.gridStaffName,l.eventLevelName,t.sourceTypeName,e.eventTitle,e.eventContent,e.editEventDate,et.eventTypeName from event e,event_type et,event_level l,event_solve_status v,event_source_type t, area a, grid g, grid_staff s 
+		where e.eventTypeId=et.eventTypeId and a.areaId=e.areaId and g.gridId=e.gridId and s.gridStaffId=e.gridStaffId and l.eventLevelId=e.eventLevelId and t.sourceTypeId=e.sourceTypeId and e.eventId=#{eventId}
+	</select>
+	
+	<delete id="deleteEvent">
+		delete from event where eventId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getEventLogIdById" resultType="int">
+		select eventLogId from event_log where eventId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<delete id="deleteEventLog">
+		delete from event_log where eventLogId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getAllEventType" resultType="event_type">
+		select eventTypeId,eventTypeName from event_type
+	</select>
+	
+	<update id="editIsFinished" parameterType="int">
+		update event set isFinished='1' where eventId=#{eventId}
+	</update>
+	
+	<update id="editFinished" parameterType="int">
+		update event set isFinished='2' where eventId=#{eventId}
+	</update>
+</mapper>

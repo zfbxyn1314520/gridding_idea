@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.PermissionDao">
+	<resultMap id="PerResult" type="permission" >
+    	<id column="perId" property="perId" />
+    	<result column="perName" property="perName" />
+    	<collection property="menuPer" javaType="menu_per">
+  	 		<id column="perId" property="perId" />
+  	 		<id column="menuId" property="menuId" />
+  	  </collection>
+  	</resultMap>
+  	
+  	<select id="getMenuPer" parameterType="menu" resultMap="PerResult">
+		select mp.menuId,p.perId,p.perName from `menu_per` mp,`permission` p where p.perId=mp.perId and mp.menuId=#{menuId}
+	</select>
+	
+	<select id="getAllPermission" resultType="permission">
+		select perId,perName from `permission`
+	</select>
+
+</mapper>

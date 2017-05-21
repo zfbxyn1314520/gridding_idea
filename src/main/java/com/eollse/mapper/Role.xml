@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.RoleDao">
+
+	<select id="getRoleById" parameterType="int" resultType="role">
+  		select roleId,roleName,roleMemo,editRoleName,editRoleDate,role_enable,roleLevel,userCount from `role` 
+  		where roleId=#{roleId}
+  	</select>
+  	
+  	<select id="getAllRoles"  resultType="role">
+  		select roleId,roleName,roleMemo,editRoleName,editRoleDate,role_enable,roleLevel,userCount from `role` where roleLevel>=#{roleLevel}
+  	</select>
+  	
+  	<select id="getAllRoleByAreaId"  resultType="role">
+  		select roleId,roleName,roleMemo,editRoleName,editRoleDate,role_enable,roleLevel,userCount from `role` 
+  		where roleLevel>=#{roleLevel} order by roleId desc limit #{x},#{y}
+  	</select>
+  	
+  	<select id="getAllRolesCount"  resultType="int">
+  		select count(*) from `role` where roleLevel>=#{roleLevel}
+  	</select>
+  	
+  	<insert id="addNewRole" parameterType="role" useGeneratedKeys="true" keyProperty="roleId">
+  		insert into `role`(roleName,roleMemo,editRoleName,editRoleDate,role_enable,roleLevel) 
+    	values(#{roleName},#{roleMemo},#{editRoleName},#{editRoleDate},#{role_enable},#{roleLevel})
+  	</insert>
+  	
+  	<update id="alterRoleInfo" parameterType="role">
+    	update `role` set roleName=#{roleName},roleMemo=#{roleMemo},editRoleName=#{editRoleName},editRoleDate=#{editRoleDate},
+    	role_enable=#{role_enable},roleLevel=#{roleLevel} where roleId=#{roleId}
+  	</update>
+  	
+  	<select id="selectRoleName"  resultType="role" parameterType="string">
+  		select roleId,roleName,roleMemo,editRoleName,editRoleDate,role_enable,roleLevel,userCount from `role` where roleName=#{roleName}
+  	</select>
+  	
+  	<delete id="deleteRoleByIds" parameterType="list">
+    	delete from `role` where roleId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</delete>
+  	
+  	<select id="getUserCountByRoleId" resultType="int">
+		select count(*) from `user` u,`area` a,role r 
+		where a.areaId=u.areaId and u.roleId=r.roleId and r.roleId=#{roleId} and u.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<update id="alterRoleUseStatus" parameterType="role">
+    	update `role` set role_enable=#{role_enable} where roleId=#{roleId}
+  	</update>
+</mapper>

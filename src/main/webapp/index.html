@@ -1,0 +1,269 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" /> 
+	<link rel="shortcut icon" href="images/favicon.ico"/>
+	<link rel="bookmark" href="images/favicon.ico"/>
+	<link href="css/index.css" rel="stylesheet">
+	<!-- 引入jquery.js库 -->
+	<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+	<!-- 提示插件 -->
+	<script type="text/javascript" src="css/jquery-DJMask.2.1.1.js" charset="UTF-8"></script>
+	<!-- 引入 nice validate 表单验证-->
+	<script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.js?local=zh-CN"></script>
+	<script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
+	
+	<!-- 引入封装了failback的接口--initGeetest -->
+	<!-- <script src="http://static.geetest.com/static/tools/gt.js"></script> -->
+	<!-- 若是https，使用以下接口 -->
+	<!-- <script src="https://static.geetest.com/static/tools/gt.js"></script> -->
+	<script type="text/javascript">
+		$(function(){
+			//得到焦点
+			$("#password").focus(function(){
+				$("#left_hand").animate({
+					left: "150",
+					top: " -38"
+				},{step: function(){
+					if(parseInt($("#left_hand").css("left"))>140){
+						$("#left_hand").attr("class","left_hand");
+					}
+				}}, 2000);
+				$("#right_hand").animate({
+					right: "-64",
+					top: "-38px"
+				},{step: function(){
+					if(parseInt($("#right_hand").css("right"))> -70){
+						$("#right_hand").attr("class","right_hand");
+					}
+				}}, 2000);
+			});
+			//失去焦点
+			$("#password").blur(function(){
+				$("#left_hand").attr("class","initial_left_hand");
+				$("#left_hand").attr("style","left:100px;top:-12px;");
+				$("#right_hand").attr("class","initial_right_hand");
+				$("#right_hand").attr("style","right:-112px;top:-12px");
+			});
+		});
+	</script>
+	
+</head>
+<body>
+	<div class="top_div">
+  		<h1>网&ensp;格&ensp;信&ensp;息&ensp;化&ensp;管&ensp;理&ensp;系&ensp;统</h1>
+  	</div>
+	<div class="title_div">
+  		<!-- <h3>网&ensp;格&ensp;信&ensp;息&ensp;化&ensp;管&ensp;理&ensp;系&ensp;统</h3> -->
+  	</div>
+  	<form id="loginForm">
+		<div style="background: rgb(255, 255, 255); margin: -160px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 260px; text-align: center;">
+			<div style="width: 165px; height: 96px; position: absolute;">
+				<div class="tou"></div>
+				<div class="initial_left_hand" id="left_hand"></div>
+				<div class="initial_right_hand" id="right_hand"></div>
+			</div>
+			<p style="padding: 30px 0px 10px; position: relative;">
+				<span class="u_logo"></span>         
+				<input name="userName" class="ipt" type="text" placeholder="&nbsp;用户名/手机号" value="" data-rule="用户名:required;"> 
+		    </p>
+			<p style="position: relative;">
+				<span class="p_logo"></span>         
+				<input name="password" class="ipt" id="password" type="password" placeholder="&nbsp;请输入密码" value="" data-rule="密码:required;filter(`%<>\/);">   
+		  	</p>
+		  	<p style="position: relative;padding: 10px 122px 10px 0px;">
+				<span class="c_logo"></span>       
+		    	<input name="code" style="width: 170px;" class="ipt" id="captcha" type="text" placeholder="&nbsp;请输入验证码"  value="" data-rule="验证码:required;"/>
+		    	<a class="captcha_btn" style="position: relative;top: -37px;left: 255px;" id="captchaBtn" href="javascript:void(0);">获取验证码</a>
+		    </p>
+		  	<div id="error_msg" style="text-align:right;width: 335px;height: 20px;margin: -35px 0 -20px 30px;">
+		  		<div class="checkbox" >&emsp;
+		  			<input name="savesid" value="0" id="check-box" type="checkbox" style="vertical-align: middle;">
+		  			<span>记住用户名</span>　　　　　　
+		  			<span><a href="">忘记密码</a></span>
+		  		</div>
+			</div>
+			<div style="height: 50px; line-height: 50px; margin-top: 28px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
+				<p style="margin-top: 5px;">
+		        	<a class="submit_btn" id="validate" href="javascript:void(0);">立 即 登 陆</a> 
+		        </p>
+	        </div>
+		</div>
+		<div id="popup-captcha"></div>
+		<div style="padding:50px; text-align: center;color: #555">
+			<div>
+				Copyright&nbsp;&copy;&nbsp;2017&nbsp;重庆指讯科技有限公司&nbsp;All&nbsp;Rights&nbsp;Reserved.&nbsp;版本号&nbsp;V1.0
+            </div>
+            <div>
+            	<span class="item-label">友情链接：</span>
+	            <a data-linkid="footer-exlink-0" target="_blank" href="http://cs.zbj.com/?cssource=dbwz">指讯科技</a>
+	            <a data-linkid="footer-exlink-1" target="_blank" href="http://ipr.zbj.com/?_union_uid=7223946&_union_itemid=136886">网格信息化服务群众平台</a>
+	            <a data-linkid="footer-exlink-2" target="_blank" href="https://shangbiLINKEXCHANGE&utm_campaign=ZBJ2YBJ">渝北群团网</a>
+	            <a data-linkid="footer-exlink-3" target="_blank" href="http://china.findlaw.cn/">法律咨询</a>
+	            <a data-linkid="footer-exlink-4" target="_blank" href="http://task.zbj.com">需求市场</a>
+	            <a data-linkid="footer-exlink-5" target="_blank" href="http://www.tianpeng.com">天蓬网</a>
+	            <a data-linkid="footer-exlink-6" target="_blank" href="http://www.yzmg.com/">亿智蘑菇</a>
+            </div>
+            
+		</div>
+	</form>
+  	<script>
+  		var i = 0; 
+	  	$(function(){ 
+			$(document).keydown(function(event){ 
+				if(event.keyCode==13){ 
+					$("#validate").click(); 
+				} 
+			});
+		});
+	  	
+		$("#captchaBtn").click(function(){
+			//防止网速延迟，多次点击获取验证码
+			i++;
+			if(i == 1){
+				if($(this).text()=="获取验证码"){
+					$("#captcha").attr("novalidate", "novalidate");
+		    		if ($("#loginForm").isValid()) {
+		    			$.ajax({  
+		            	  	url:"user/getPhoneCaptcha.do?" + (new Date()).getTime(), // 加随机数防止缓存 
+		            	    type: "POST",
+		            	    data:$("#loginForm").serialize(),  
+		            	    dataType:"json",
+		            	    cache:false,
+		            	    async:false,
+		            	    success: function(result){ 
+		            	    	if(result.statusCode=="200"){
+		            	      		countDown($("#captchaBtn"));
+		            	      		DJMask.msg(result.message);
+		            			}else{
+		            				i = 0;
+		            			    DJMask.alert(result.message);   
+		            			}
+		            	    }                
+		            	}); 
+		    		}else{
+		    			i = 0;
+		    		}
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+    	});
+		
+		$("#validate").click(function(){
+			$("#captcha").removeAttr("novalidate");
+			if ($("#loginForm").isValid()) {
+				$.ajax({  
+            	  	url:"user/login.do?" + (new Date()).getTime(), // 加随机数防止缓存 
+           	        type: "POST",
+           	        data:$("#loginForm").serialize(),  
+           	        dataType:"json",
+           	        cache:false,
+           	        success: function(result){ 
+           	        	if(result.statusCode=="200"){
+           	        		if(location.pathname=="/grid/index.html"){
+            		        	var url=window.location.href.substring(0, window.location.href.indexOf("index.html", 0));
+            			 	  	window.location.href=url+"pop/main.jsp";
+            		  	  	}else{
+            			    	window.location.href+="pop/main.jsp";
+            		      	}
+           	        	}else{
+           	        		DJMask.alert(result.message); 
+           	        	}
+            	     }
+            	});
+			}
+		}); 
+		
+		 function countDown(obj) {
+		     if (obj.text() == "获取验证码") {
+		         var _delay = 60;
+		         var delay = _delay;
+		         obj.text(_delay+"秒后重新获取");
+		         var timer = setInterval(function() {
+		             if (delay > 1) {
+		                 delay--;
+		                 obj.text(delay+"秒后重新获取");
+		             } else {
+		            	 i = 0;
+		                 clearInterval(timer);
+		                 obj.text("获取验证码");
+		             }
+		         }, 1000);
+		     } else {
+		    	 return false;
+		     }
+		 }
+		 
+		 //使用极验验证
+	   /*  var handlerPopup = function (captchaObj) {
+	        // 成功的回调
+	       	captchaObj.onSuccess(function () {
+	            var validate = captchaObj.getValidate();
+	            $.ajax({
+	                url: "pc-geetest/validate?t=" + (new Date()).getTime(), // 进行二次验证
+	                type: "post",
+	                dataType: "json",
+	                data: {
+	                    geetest_challenge: validate.geetest_challenge,
+	                    geetest_validate: validate.geetest_validate,
+	                    geetest_seccode: validate.geetest_seccode
+	                },
+	                success: function (data) {
+	                    if (data && (data.status === "success")) {
+	                    	$.ajax({  
+	                    	  	url:"user/validateUser.do?" + (new Date()).getTime(), // 加随机数防止缓存 
+	                    	      type: "POST",
+	                    	      data:$("#loginForm").serialize(),  
+	                    	      dataType:"json",              
+	                    	      success: function(result){  
+	                    	      	  if(result=="1"){
+                    	        		  if(location.pathname=="/grid/index.html"){
+                    	        		      var url=window.location.href.substring(0, window.location.href.indexOf("index.html", 0));
+                    	        			  window.location.href=url+"pop/main.jsp";
+                    	        		  }else{
+                    	        			  window.location.href+="pop/main.jsp";
+                    	        		  }                		
+	                    			  }else{
+	                    			      $("#error_msg span:last").text("用户名或密码错误，请重新输入！");
+	                    			  }
+	                    	      }                
+	                    	  }); 
+	                    } else {
+	                    	$("#error_msg span:last").text("登录失败！");
+	                    }
+	                }
+	            });
+	        });
+	       	$("#validate").click(function(){
+	    		if ($("#loginForm").isValid()) {
+	    			captchaObj.show();
+	    		}else{
+	    			alert("验证未通过！");
+	    		}
+	    	});
+	        // 将验证码加到id为captcha的元素里
+	        captchaObj.appendTo("#popup-captcha");
+	    };
+	  	//验证开始需要向网站主后台获取id，challenge，success（是否启用failback）
+	  	$.ajax({
+		      url: "pc-geetest/register?t=" + (new Date()).getTime(), // 加随机数防止缓存
+		      type: "get",
+		      dataType: "json",
+		      success: function (data) {
+		          initGeetest({
+		              gt: data.gt,
+		              challenge: data.challenge,
+		              product: "popup", // 展现形式float，embed，popup。注意只对PC版验证码有效
+		              offline: !data.success 
+		          }, handlerPopup);
+		      }
+	  	}); */
+	  	
+  </script> 
+</body>
+</html>

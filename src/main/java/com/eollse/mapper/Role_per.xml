@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.RolePerDao">
+
+	<delete id="deletePerByRoleId" parameterType="list">
+    	delete from `role_per` where roleId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</delete>
+  	
+  	<delete id="deletePerByMenuId" parameterType="list">
+    	delete from `role_per` where menuId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</delete>
+  	
+  	<delete id="deleteRolePer" parameterType="role">
+    	delete from `role_per` where roleId=#{roleId}
+  	</delete>
+  	
+  	<select id="getRolePerInfo" parameterType="role" resultType="role_per">
+    	select roleId,menuId,perId from `role_per` where roleId=#{roleId}
+  	</select>
+  	
+  	<insert id="saveRolePer" parameterType="list">
+  		insert into `role_per`(roleId,menuId,perId) values
+    	<foreach collection="list" item="item" index="index" separator="," >
+	 		(#{item.roleId},#{item.menuId},#{item.perId})
+		</foreach>
+  	</insert>
+  	
+</mapper>

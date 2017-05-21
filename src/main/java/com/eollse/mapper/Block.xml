@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.BlockDao">
+	<resultMap type="block" id="blockResult">
+		<id property="blockId" column="blockId"/>
+		<result property="gridStaffId" column="gridStaffId"/>
+		<result property="gridId" column="gridId"/>
+		<result property="blockName" column="blockName"/>
+		<result property="unitCount" column="unitCount"/>
+		<result property="editBlockName" column="editBlockName"/>
+		<result property="editBlockDate" column="editBlockDate"/>
+		<result property="blockAudit" column="blockAudit"/>
+		<result property="blockAdmintor" column="blockAdmintor"/>
+		<result property="blockAdmintorTel" column="blockAdmintorTel"/>
+		<result property="unitFloorCount" column="unitFloorCount"/>
+		<association property="court" javaType="court" resultMap="courtResult"/>
+	</resultMap>
+	<resultMap type="court" id="courtResult">  	
+		<id property="courtId" column="courtId"/>
+		<result property="courtName" column="courtName"/>
+		<result property="propertyName" column="propertyName"/>
+		<result property="courtSite" column="courtSite"/>
+		<result property="courtArea" column="courtArea"/>
+		<result property="blockCount" column="blockCount"/>
+		<result property="courtAudit" column="courtAudit"/>
+		<result property="editCourtName" column="editCourtName"/>
+		<result property="editCourtDate" column="editCourtDate"/>
+	</resultMap>
+	
+	<select id="getAllBlockByCourtId" resultMap="blockResult">
+		select b.blockId,c.courtName,b.gridStaffId,b.gridId,b.blockName,b.unitCount,b.editBlockName,b.editBlockDate,b.blockAudit 
+		from block b,court c where b.courtId=c.courtId and b.courtId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by b.blockId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllBlockCount" resultType="int">
+		select count(*) from block where courtId in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<insert id="saveBlock" parameterType="block">
+		insert into block(courtId,gridStaffId,gridId,blockName,unitCount,editBlockName,editBlockDate,blockAdmintor,blockAdmintorTel)
+		values(#{courtId},#{gridStaffId},#{gridId},#{blockName},#{unitCount},#{editBlockName},#{editBlockDate},#{blockAdmintor},#{blockAdmintorTel})
+	</insert>
+	
+	<select id="getBlockById" parameterType="int" resultMap="blockResult">
+		select blockId,courtId,gridStaffId,gridId,blockName,unitCount,editBlockName,editBlockDate,blockAudit,blockAdmintor,blockAdmintorTel
+		from block where blockId=#{blockId}
+	</select>
+	
+	<update id="editBlockById" parameterType="block">
+		update block set blockName=#{blockName},unitCount=#{unitCount},courtId=#{courtId},blockAdmintor=#{blockAdmintor},blockAdmintorTel=#{blockAdmintorTel},editBlockName=#{editBlockName},editBlockDate=#{editBlockDate},gridStaffId=#{gridStaffId}
+		where blockId=#{blockId}
+	</update>
+	
+	<update id="updateAuditBlock" parameterType="list">
+			update block set blockAudit='0' where blockId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	
+	<select id="getGridName" resultType="Grid">
+		select gridId,gridName from grid where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getGridStaffName" resultType="Grid_staff">
+		select gridStaffId,gridStaffName from grid_staff where gridId=#{gridId}
+	</select>
+	
+	<select id="getOneBlockById" parameterType="block" resultMap="blockResult">
+		select blockId,courtId,gridStaffId,gridId,blockName,unitCount,editBlockName,editBlockDate,blockAudit,blockAdmintor,blockAdmintorTel
+		from block where blockId=#{blockId}
+	</select>
+	
+	<select id="getGridById" parameterType="int" resultType="Grid">
+		select gridId,gridName from grid where gridId=#{gridId}
+	</select>
+	
+	<select id="getGridStaffById" parameterType="int" resultType="Grid_staff">
+		select gridStaffId,gridStaffName from grid_staff where gridStaffId=#{gridStaffId}
+	</select>
+	
+	<select id="getBlockName" parameterType="int" resultMap="blockResult">
+		select blockId,courtId,blockName from block where courtId=#{courtId}
+	</select>
+	
+	<select id="getBlockByCourtIds" resultMap="blockResult">
+		select blockId,courtId,blockName from block where courtId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getBlockByGridStaffId" parameterType="int" resultMap="blockResult">
+		select blockId,gridStaffId,blockName from block where gridStaffId=#{gridStaffId}
+	</select>
+	
+	<update id="editBlockGridStaff">
+		update block set gridStaffId=#{newGridStaffId} where gridStaffId=#{oldGridStaffId}
+	</update>
+	
+	<select id="getUnitIdByBlockId" parameterType="int" resultType="int">
+		select unitId from unit where blockId=#{blockId}
+	</select>
+	
+	<select id="getBlockCountById" resultMap="blockResult">
+		select b.blockId,c.courtName,b.gridStaffId,b.gridId,b.blockName,b.unitCount,b.editBlockName,b.editBlockDate,b.blockAudit 
+		from block b,court c where b.courtId=c.courtId and b.courtId=#{courtId}
+	</select>
+	
+	<update id="editBlockGrid">
+		update block set gridId=#{newId} where gridId=#{oldId}
+	</update>
+	
+	<select id="getBlockByGridId" resultMap="blockResult">
+		select blockId,courtId,gridStaffId,gridId,blockName from block where gridId=#{gridId}
+	</select>
+	
+	<select id="getMaxBlockId" resultType="int">
+		select max(blockId) from block
+	</select>
+	
+	<insert id="saveUnit" parameterType="Unit">
+		insert into unit(blockId,unitName,floorCount)values(#{blockId},#{unitName},#{floorCount})
+	</insert>
+	
+	<select id="getUnitFloorCountById" resultType="int">
+		select floorCount from unit where blockId=#{0}
+	</select>
+	
+	<select id="getAllBlockId" resultType="int">
+		select blockId from block where courtId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

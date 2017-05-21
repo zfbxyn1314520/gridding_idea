@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
+	<!-- 配置自动扫描 -->
+	<context:component-scan base-package="com.eollse" />
+	<!-- 配置引入的外部文件 -->   <!-- 加载jdbc.properties中的配置信息，以便于下面配置数据源bean读取 -->
+    <context:property-placeholder location="classpath:conf/jdbc.properties" /> 
+    <!-- 数据源配置 --> 
+    <bean id="dataSource"  
+        class="org.apache.commons.dbcp2.BasicDataSource"> 
+        <!-- dbcp连接池数据源 -->  
+        <property name="driverClassName" value="${jdbc.driverClassName}" />  
+        <property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />  
+       	<!--maxActive: 最大连接数量-->    
+		<property name="maxTotal" value="${dbcp.maxTotal}"/>  
+		<!--minIdle: 最小空闲连接-->    
+		<property name="minIdle" value="${dbcp.minIdle}"/>  
+		<!--maxIdle: 最大空闲连接-->    
+		<property name="maxIdle" value="${dbcp.maxIdle}"/>  
+		<!--initialSize: 初始化连接    -->
+		<property name="initialSize" value="${dbcp.initialSize}"/>  
+		<!-- 连接被泄露时是否打印 -->  
+		<property name="logAbandoned" value="${dbcp.logAbandoned}"/>  
+		<!--removeAbandoned: 是否自动回收超时连接--> 
+		<property name="RemoveAbandonedOnBorrow" value="${dbcp.RemoveAbandonedOnBorrow}"/>   
+		<property name="RemoveAbandonedOnMaintenance"  value="${dbcp.RemoveAbandonedOnMaintenance}"/>  
+		<!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->    
+		<property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}"/>  
+		<!--maxWait: 超时等待时间以毫秒为单位 1000等于1秒-->  
+		<property name="MaxWaitMillis" value="${dbcp.MaxWaitMillis}"/>  
+		<!-- 在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. -->  
+		<property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}"/>  
+		<!--  在每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->  
+		<property name="numTestsPerEvictionRun" value="${dbcp.numTestsPerEvictionRun}"/>  
+		<!-- 1000 * 60 * 30  连接在池中保持空闲而不被空闲连接回收器线程-->  
+		<property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}"/> 		  
+    </bean> 
+     
+    <!-- spring和Mybatis完美整合，不需要mybatis的配置  配置会话工厂 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <!-- mybatis配置文件路径 -->
+      <property name="configLocation" value="classpath:conf/mybatis-config.xml" />
+      <!-- 配置自动扫描mapper xml文件 -->
+      <property name="mapperLocations" value="classpath:com/eollse/mapper/*.xml" />
+    </bean>
+    
+    <!-- 配置会话模板 
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+      <constructor-arg index="0">
+        <ref bean="sqlSessionFactory"/>
+      </constructor-arg>
+    </bean>-->
+    
+    <!-- Dao接口所在包名，Spring会自动找其下的接口 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+      <property name="basePackage" value="com.eollse.dao" />
+    </bean>
+    
+    <!-- 配置事务管理器 -->    
+    <bean id="transactionManager"    
+        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">    
+        <property name="dataSource" ref="dataSource" />    
+    </bean>    
+    
+    <!-- 配置事务通知属性 -->    
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">    
+        <!-- 定义事务传播属性 -->    
+        <tx:attributes>    
+            <tx:method name="insert*" propagation="REQUIRED" />    
+            <tx:method name="update*" propagation="REQUIRED" />    
+            <tx:method name="edit*" propagation="REQUIRED" />    
+            <tx:method name="save*" propagation="REQUIRED" />    
+            <tx:method name="add*" propagation="REQUIRED" />    
+            <tx:method name="new*" propagation="REQUIRED" />    
+            <tx:method name="set*" propagation="REQUIRED" />    
+            <tx:method name="remove*" propagation="REQUIRED" />    
+            <tx:method name="delete*" propagation="REQUIRED" />    
+            <tx:method name="change*" propagation="REQUIRED" />
+            <tx:method name="alter*" propagation="REQUIRED" />   
+            <tx:method name="assign*" propagation="REQUIRED" />
+            <tx:method name="keep*" propagation="REQUIRED" />    
+            <tx:method name="validate*" propagation="REQUIRED" read-only="true" />              
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />    
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />    
+            <tx:method name="load*" propagation="REQUIRED" read-only="true" />    
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />    
+        </tx:attributes>    
+    </tx:advice>    
+        
+    <!-- 应用普通类获取bean -->     
+    
+    
+    
+    <!-- 配置事务切面 -->    
+    <aop:config>    
+        <aop:pointcut id="serviceOperation"    
+            expression="execution(* com.eollse.bo..*.*(..))" />    
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />    
+    </aop:config> 
+    
+
+</beans>

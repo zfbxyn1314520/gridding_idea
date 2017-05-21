@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eollse.dao.FacilitiesDao">
+	<resultMap type="facilities" id="facilitiesResult">
+		<id property="facilitiesId" column="facilitiesId"/>
+		<result property="facilitiesTypeId" column="facilitiesTypeId"/>
+		<result property="facilitiesName" column="facilitiesName"/>
+		<result property="facilitiesSite" column="facilitiesSite"/>
+		<result property="facilitiesPic" column="facilitiesPic"/>
+		<result property="facilitiesAudit" column="facilitiesAudit"/>
+		<result property="editFacName" column="editFacName"/>
+		<result property="editFacDate" column="editFacDate"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	
+	<select id="getAllfacilitiesByAreaId" resultMap="facilitiesResult">
+		select f.facilitiesId,a.areaName,f.facilitiesTypeId,f.facilitiesName,f.facilitiesSite,f.facilitiesPic,f.facilitiesAudit,f.editFacName,f.editFacDate
+		from facilities f,`area` a where a.areaId=f.areaId and f.areaId in 
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by f.facilitiesId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllfacilitiesCount" resultType="int">
+		select count(*) from facilities where areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getFacilitiesTypeById" parameterType="int" resultType="Facilities_type">
+		select facilitiesTypeId,facilitiesTypePerId,facilitiesTypeName from facilities_type where facilitiesTypeId=#{facilitiesTypeId}
+	</select>
+	
+	<insert id="saveFacilitiesType" parameterType="string">
+		insert into facilities_type(facilitiesTypePerId,facilitiesTypeName)
+		values(1,#{facilitiesTypeName})
+	</insert>
+	
+	<select id="findFacilitiesTypeIdByName" resultType="Facilities_type">
+		select facilitiesTypeId,facilitiesTypePerId,facilitiesTypeName from facilities_type where facilitiesTypeName=#{facilitiesTypeName}
+	</select>
+	
+	<insert id="saveFacilities" parameterType="facilities">
+		insert into facilities(areaId,facilitiesTypeId,facilitiesName,facilitiesSite,editFacName,editFacDate)
+		values(#{areaId},#{facilitiesTypeId},#{facilitiesName},#{facilitiesSite},#{editFacName},#{editFacDate})
+	</insert>
+	
+	<delete id="deleteFacilities" parameterType="list">
+		delete from facilities where facilitiesId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="getfacilitiesTypeId" parameterType="list" resultType="int">
+		select facilitiesTypeId from facilities where facilitiesId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<delete id="deleteFacilitiesType" parameterType="list">
+		delete from facilities_type where facilitiesTypeId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="updateAuditFacilities" parameterType="list">
+		update facilities set facilitiesAudit='0' where facilitiesId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getFacilitiesById" parameterType="int" resultMap="facilitiesResult">
+		select facilitiesId,areaId,facilitiesTypeId,facilitiesName,facilitiesSite,facilitiesPic,facilitiesAudit,editFacName,editFacDate
+		from facilities where facilitiesId=#{facilitiesId};	
+	</select>
+	
+	<update id="editfacilitiesById" parameterType="facilities">
+		update facilities set facilitiesTypeId=#{facilitiesTypeId},facilitiesName=#{facilitiesName},facilitiesSite=#{facilitiesSite},facilitiesPic=#{facilitiesPic},editFacName=#{editFacName},editFacDate=#{editFacDate}
+		where facilitiesId=#{facilitiesId}
+	</update>
+
+	<select id="getOneFacilitiesById" parameterType="facilities" resultMap="facilitiesResult">
+		select facilitiesId,areaId,facilitiesTypeId,facilitiesName,facilitiesSite,facilitiesPic,facilitiesAudit,editFacName,editFacDate
+		from facilities where facilitiesId=#{facilitiesId}
+	</select>
+	
+	<select id="getAllFacilitiesType" resultType="Facilities_type">
+		select facilitiesTypeId,facilitiesTypePerId,facilitiesTypeName from facilities_type
+	</select>
+	
+	<select id="getFacilitiesNameById" resultType="string">
+		select facilitiesName from facilities where facilitiesId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+</mapper>

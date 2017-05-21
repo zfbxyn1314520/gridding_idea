@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.PopulationDao">
+
+	<resultMap type="population" id="popResult">
+		<id property="popId" column="popId" />
+		<result property="gridId" column="gridId" />
+		<result property="popName" column="popName" />
+		<result property="popSex" column="popSex" />
+		<result property="popCode" column="popCode" />
+		<result property="popTel" column="popTel" />
+		<result property="popAudit" column="popAudit" />
+		<association property="area" column="areaId" javaType="area">
+			<id property="areaId" column="areaId" />
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="grid" column="gridId" javaType="grid">
+			<id property="gridId" column="gridId" />
+			<result property="gridName" column="gridName" />
+		</association>
+		<association property="gridStaff" column="gridStaffId"
+			javaType="grid_staff">
+			<id property="gridStaffId" column="gridStaffId" />
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+		<association property="account" column="accountId"
+			javaType="account">
+			<id property="accountId" column="accountId" />
+			<result property="accountHolder" column="accountHolder" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="population" id="getOnePopInfoResult">
+		<id property="popId" column="popId" />
+		<result property="marriageId" column="marriageId" />
+		<result property="relationId" column="relationId" />
+		<result property="areaId" column="areaId" />
+		<result property="levelId" column="levelId" />
+		<result property="nationId" column="nationId" />
+		<result property="politicsId" column="politicsId" />
+		<result property="gridId" column="gridId" />
+		<result property="gridStaffId" column="gridStaffId" />
+		<result property="popName" column="popName" />
+		<result property="popSex" column="popSex" />
+		<result property="popBirthday" column="popBirthday" />
+		<result property="popNative" column="popNative" />
+		<result property="popCode" column="popCode" />
+		<result property="popJob" column="popJob" />
+		<result property="popTel" column="popTel" />
+		<result property="popIcon" column="popIcon" />
+		<result property="popNativeSite" column="popNativeSite" />
+		<result property="popNowSite" column="popNowSite" />
+		<result property="popCompany" column="popCompany" />
+		<result property="popJobSite" column="popJobSite" />
+		<result property="popCar" column="popCar" />
+		<result property="popHobby" column="popHobby" />
+		<result property="popInsured" column="popInsured" />
+		<result property="householder" column="householder" />
+		<result property="isFlow" column="isFlow" />
+		<result property="editPopDate" column="editPopDate" />
+		<association property="account" column="accountId" javaType="account">
+			<id property="accountId" column="accountId" />
+			<result property="accountHolder" column="accountHolder" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="population" id="getOnePopDetailInfoResult">
+		<id property="popId" column="popId" />
+		<result property="popName" column="popName" />
+		<result property="popSex" column="popSex" />
+		<result property="popBirthday" column="popBirthday" />
+		<result property="popNative" column="popNative" />
+		<result property="popCode" column="popCode" />
+		<result property="popJob" column="popJob" />
+		<result property="popTel" column="popTel" />
+		<result property="popIcon" column="popIcon" />
+		<result property="popNativeSite" column="popNativeSite" />
+		<result property="popNowSite" column="popNowSite" />
+		<result property="popCompany" column="popCompany" />
+		<result property="popJobSite" column="popJobSite" />
+		<result property="popCar" column="popCar" />
+		<result property="popHobby" column="popHobby" />
+		<result property="popInsured" column="popInsured" />
+		<result property="householder" column="householder" />
+		<result property="isFlow" column="isFlow" />
+		<result property="editPopName" column="editPopName" />
+		<result property="editPopDate" column="editPopDate" />
+		<result property="popAudit" column="popAudit" />
+		<association property="area" column="areaId" javaType="area">
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="grid" column="gridId" javaType="grid">
+			<result property="gridName" column="gridName" />
+		</association>
+		<association property="gridStaff" column="gridStaffId" javaType="grid_staff">
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+		<association property="account" column="accountId" javaType="account">
+			<result property="accountHolder" column="accountHolder" />
+		</association>
+		<association property="marriageStatus" column="marriageId" javaType="marriage_status">
+			<result property="marriageName" column="marriageName" />
+		</association>
+		<association property="cultureLevel" column="levelId" javaType="culture_level">
+			<result property="levelName" column="levelName" />
+		</association>
+		<association property="politics" column="politicsId" javaType="politics">
+			<result property="politicsName" column="politicsName" />
+		</association>
+		<association property="popNation" column="nationId" javaType="pop_nation">
+			<result property="nationName" column="nationName" />
+		</association>
+		<association property="holderRelation" column="relationId" javaType="holder_relation">
+			<result property="relationName" column="relationName" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="flow" id="flowResult">
+		<id property="flowId" column="flowId" />
+		<result property="flowCause" column="flowCause" />
+		<result property="flowTime" column="flowTime" />
+		<result property="inflowSite" column="inflowSite" />
+		<result property="outflowSite" column="outflowSite" />
+		<association property="flowType" column="flowTypeId" javaType="flow_type">
+			<id property="flowTypeId" column="flowTypeId" />
+			<result property="flowTypeName" column="flowTypeName" />
+		</association>
+	</resultMap>
+
+
+	<select id="getAllPopByAreaId" resultMap="popResult">
+		select
+		p.popId,p.popName,p.popSex,p.popCode,p.popTel,p.popAudit,a.areaName,g.gridName,s.gridStaffName
+		from `population` p,`area` a,`grid` g,`grid_staff` s
+		where p.areaId=a.areaId and p.gridId=g.gridId and s.gridStaffId=p.gridStaffId and p.areaId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by p.popId desc limit #{x},#{y}
+	</select>
+
+	<select id="getAllPopCount" resultType="int">
+		select count(*) from `population` where areaId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<update id="editPopGridStaff">
+		update population set gridStaffId=#{newGridStaffId} where gridStaffId=#{oldGridStaffId}
+	</update>
+
+	<update id="editPopGrid">
+		update population set gridId=#{newId} where
+		gridId=#{oldId}
+	</update>
+
+	<select id="getPopByGridId" resultMap="popResult">
+		select
+		popId,popName,popSex,gridId from population where gridId=#{gridId}
+	</select>
+
+	<select id="getPopByGridStaffId" resultMap="popResult">
+		select popId,popName,popSex,gridId from population where gridStaffId=#{gridStaffId}
+	</select>
+
+	<select id="getMemberCountById" resultType="int">
+		select count(*) from population where accountId=#{accountId}
+	</select>
+	
+	<select id="getAllHolderRelation" resultType="holder_relation">
+		select relationId,relationName from holder_relation
+	</select>
+	
+	<select id="getAllMarriageStatus" resultType="marriage_status">
+		select marriageId,marriageName from marriage_status
+	</select>
+	
+	<select id="getAllPopNation" resultType="pop_nation">
+		select nationId,nationName from pop_nation
+	</select>
+	
+	<select id="getAllPolitics" resultType="politics">
+		select politicsId,politicsName from politics
+	</select>
+	
+	<select id="getAllCultureLevel" resultType="culture_level">
+		select levelId,levelName from culture_level
+	</select>
+	
+	<select id="getAllFlowType" resultType="flow_type">
+		select flowTypeId,flowTypeName from flow_type
+	</select>
+	
+	<select id="getAllPopAttr" resultType="popattr">
+		select popAttrId,popAttrName from `popattr`
+	</select>
+	
+	<insert id="addOnePopInfo" parameterType="population" useGeneratedKeys="true" keyProperty="popId">
+		insert into population(marriageId,relationId,areaId,levelId,nationId,accountId,politicsId,gridId,
+			gridStaffId,popName,popSex,popBirthday,popNative,popCode,popJob,popTel,popIcon,popNativeSite,
+			popNowSite,popCompany,popJobSite,popCar,popHobby,popInsured,householder,isFlow,editPopName,editPopDate) 
+		values(#{marriageId},#{relationId},#{areaId},#{levelId},#{nationId},#{accountId},#{politicsId},#{gridId},
+			#{gridStaffId},#{popName},#{popSex},#{popBirthday},#{popNative},#{popCode},#{popJob},#{popTel},#{popIcon},#{popNativeSite},
+			#{popNowSite},#{popCompany},#{popJobSite},#{popCar},#{popHobby},#{popInsured},#{householder},#{isFlow},#{editPopName},#{editPopDate})
+	</insert>
+	
+	<select id="getNewPopPopId" resultType="int">
+		select max(popId) from population
+	</select>
+	
+	<select id="getOnePopInfo" parameterType="int" resultMap="getOnePopInfoResult">
+		select p.popId,p.marriageId,p.relationId,p.areaId,p.levelId,p.nationId,ac.accountId,ac.accountHolder,p.politicsId,p.gridId,
+			p.gridStaffId,p.popName,p.popSex,p.popBirthday,p.popNative,p.popCode,p.popJob,p.popTel,p.popIcon,p.popNativeSite,
+			p.popNowSite,p.popCompany,p.popJobSite,p.popCar,p.popHobby,p.popInsured,p.householder,p.isFlow,p.editPopName,p.editPopDate
+		from population p,account ac
+		where p.accountId=ac.accountId and p.popId=#{popId}
+	</select>
+	
+	<select id="getOnePopDetailInfo" parameterType="int" resultMap="getOnePopDetailInfoResult">
+		select p.popId,ms.marriageName,hr.relationName,a.areaName,cl.levelName,pn.nationName,ac.accountHolder,ps.politicsName,
+			g.gridName,gs.gridStaffName,p.popName,p.popSex,p.popBirthday,p.popNative,p.popCode,p.popJob,p.popTel,p.popIcon,p.popNativeSite,
+			p.popNowSite,p.popCompany,p.popJobSite,p.popCar,p.popHobby,p.popInsured,p.householder,p.isFlow,p.editPopName,p.editPopDate,p.popAudit
+		from population p,marriage_status ms,holder_relation hr,`area` a,culture_level cl,pop_nation pn,
+			account ac,politics ps,grid g,grid_staff gs
+		where ms.marriageId=p.marriageId and hr.relationId=p.relationId and a.areaId=p.areaId and cl.levelId=p.levelId 
+			and pn.nationId=p.nationId and p.accountId=ac.accountId and ps.politicsId=p.politicsId and g.gridId=p.gridId 
+			and gs.gridStaffId=p.gridStaffId and p.popId=#{popId}
+	</select>
+	
+	<select id="getOnePopFlowInfo" parameterType="int" resultMap="flowResult">
+		select f.flowId,f.popId,ft.flowTypeId,ft.flowTypeName,f.flowCause,f.flowTime,f.inflowSite,f.outflowSite 
+		from flow f,flow_type ft where ft.flowTypeId=f.flowTypeId and f.popId=#{popId}
+	</select>
+	
+	<select id="getOnePopAttrsInfo" parameterType="int" resultType="popattr">
+		select pr.popAttrId,pr.popAttrName from pop_attr pa,popattr pr 
+		where pa.popAttrId=pr.popAttrId and pa.popId=#{popId}
+	</select>
+	
+	<insert id="addOnePopFlowInfo" parameterType="flow" useGeneratedKeys="true" keyProperty="flowId">
+		insert into `flow`(popId,flowTypeId,flowCause,flowTime,inflowSite,outflowSite)
+		values(#{popId},#{flowTypeId},#{flowCause},#{flowTime},#{inflowSite},#{outflowSite})
+	</insert>
+	
+	<insert id="addOnePopAttrInfo" parameterType="list">
+		insert into `pop_attr`(popId,popAttrId) values
+		<foreach collection="list" item="item" index="index" separator="," >
+	 		(#{item.popId},#{item.popAttrId})
+		</foreach>
+	</insert>
+	
+	<delete id="deletePopInfoForError" parameterType="int">
+		delete from `population` where popId=#{popId}
+	</delete>
+	
+	<delete id="deleteFlowInfoForError" parameterType="int">
+		delete from `flow` where popId=#{popId}
+	</delete>
+	
+	<update id="editOnePopInfoById" parameterType="population">
+    	update `population` set marriageId=#{marriageId},relationId=#{relationId},areaId=#{areaId},levelId=#{levelId},
+    		nationId=#{nationId},accountId=#{accountId},politicsId=#{politicsId},gridId=#{gridId},
+			gridStaffId=#{gridStaffId},popName=#{popName},popSex=#{popSex},popBirthday=#{popBirthday},popNative=#{popNative},
+			popCode=#{popCode},popJob=#{popJob},popTel=#{popTel},popIcon=#{popIcon},popNativeSite=#{popNativeSite},
+			popNowSite=#{popNowSite},popCompany=#{popCompany},popJobSite=#{popJobSite},popCar=#{popCar},popHobby=#{popHobby},
+			popInsured=#{popInsured},householder=#{householder},isFlow=#{isFlow},editPopName=#{editPopName},editPopDate=#{editPopDate} 
+		where popId=#{popId}
+  	</update>
+  	
+  	<update id="editOnePopFlowInfo" parameterType="flow">
+    	update `flow` set flowTypeId=#{flowTypeId},flowCause=#{flowCause},flowTime=#{flowTime},inflowSite=#{inflowSite},outflowSite=#{outflowSite}
+    	where flowId=#{flowId} and popId=#{popId}
+  	</update>
+  	
+  	<delete id="deleteOnePopAttrInfo" parameterType="int">
+		delete from `pop_attr` where popId=#{popId}
+	</delete>
+	
+	<update id="alterOnePopAuditStatusInfo" parameterType="list">
+		update population set popAudit='0' where popId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+</mapper>

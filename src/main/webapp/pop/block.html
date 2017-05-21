@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>楼栋信息</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/block.js"></script>
+	
+    <style type="text/css">
+    	#blockDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#blockDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#blockDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+		#addBlockInfo .odddiv{display: inline-block;width: 305px;}
+    	#addBlockInfo .evendiv{float: right;width: 305px;}
+	</style>
+  </head>
+  <body>
+  		<table id="blockInfo" class="table table-bordered"></table>
+  		
+  		<div id="addBlock" data-noinit="true" class="hide">
+  			<div class="bjui-pageContent">
+	  			<form id="addBlockInfo">
+	  				<div class="row-input odddiv">
+	  					<label class="row-label">所属小区&nbsp;</label>
+	  					<select data-toggle="selectpicker" name="courtId" id="courtId" data-width="200" data-rule="所属小区:required" ></select>
+	  				</div>
+	  				<div class="row-input required evendiv">
+						<label class="row-label">楼栋名称&nbsp;</label>
+						<input type="text" name="blockName" id="blockName" data-rule="楼栋名称:required" class="input-nm" value="" size="20" placeholder="必填项">
+						<input type="hidden" name="blockId" id="blockId" value="">
+	  				</div>
+	  				<div class="row-input odddiv">
+	        			<label class="row-label">所属网格&nbsp;</label>
+	  					<select data-toggle="selectpicker" name="gridId" id="gridId" data-rule="所属网格:required" data-width="200"></select>
+	  				</div>
+	  				<div class="row-input evendiv">
+	  					<label class="row-label">网&ensp;格&ensp;员&nbsp;</label>
+	  					<select data-toggle="selectpicker" name="gridStaffId" id="gridStaffId" data-width="200" data-rule="网格员:required">
+	  						<option value="">请选择网格员</option>
+	  					</select>
+	  				</div>
+	  				<div class="row-input required odddiv">
+						<label class="row-label">总单元数&nbsp;</label>
+						<input type="text" name="unitCount" id="unitCount" data-rule="总单元数:required;integer;" class="input-nm" value="" size="20" data-toggle="spinner" data-step="1" data-min="1" placeholder="单位：单元">
+	  				</div>
+	  				<div class="row-input required evendiv">
+	  					<label class="row-label">总&ensp;层&ensp;数&nbsp;</label>
+	  					<input type="text" name="floorCount" id="floorCount" data-rule="总层数:required;integer;" class="input-nm" value="" size="20" data-toggle="spinner" data-step="1" data-min="1" placeholder="单位：层">
+	  				</div>
+	  				<div class="row-input required odddiv">
+	        			<label class="row-label">楼&ensp;栋&ensp;长&nbsp;</label>
+	        			<input type="text" name="blockAdmintor" id="blockAdmintor" data-rule="楼栋长:required" class="input-nm" value="" size="20" placeholder="必填项">
+	  				</div>
+	  				<div class="row-input required evendiv">
+	        			<label class="row-label">联系电话&nbsp;</label>
+	        			<input type="text" name="blockAdmintorTel" id="blockAdmintorTel" data-rule="联系电话:required;blockTel;" class="input-nm" value="" size="20" 
+	        				data-rule-blockTel="[/^(1[3-9]\d{9})|(?:(?:0\d{2,3}[\- ]?[1-9]\d{6,7})|(?:[48]00[\- ]?[1-9]\d{6}))$/,'联系电话格式不正确']" placeholder="必填项">
+	  				</div>
+	  			</form>
+  			</div>
+  			<div class="bjui-pageFooter">
+  				<div class="dialogFooterBtn">
+	  				<button type="button" id="submitBtnb" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  				<button type="button" class="btn-close" data-icon="close">关闭</button>
+				</div>
+			</div>
+  		</div>
+  		
+  		<!--查看弹窗  -->
+  		<div id="blockDetail" class="hide">
+  			<div class="bjui-pageContent">
+	  			<table id="blockDetailTab" border="1">
+	  				<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+	    				<td colspan="6">楼&ensp;栋&ensp;基&ensp;本&ensp;信&ensp;息</td>
+	    			</tr>
+	  				<tr>
+	  					<td><label class="row-label">楼栋名称</label></td>
+	  					<td id="b_blockName"></td>
+	  					<td><label class="row-label">所属小区</label></td>
+	  					<td id="b_courtName"></td>
+	  				</tr>
+	  				<tr>
+	  					<td><label class="row-label">所属网格</label></td>
+	  					<td id="b_grid"></td>
+	  					<td><label class="row-label">网&ensp;格&ensp;员</label></td>
+	  					<td id="b_gridStaff"></td>
+	  				</tr>
+	  				<tr>
+	  					<td><label class="row-label">总单元数</label></td>
+	  					<td id="b_unitCount"></td>
+	  					<td><label class="row-label">审核状态</label></td>
+	  					<td id="b_blockAudit"></td>
+	  				</tr>
+	  				<tr>
+	  					<td><label class="row-label">楼&ensp;栋&ensp;长</label></td>
+	  					<td id="b_blockAdmintor"></td>
+	  					<td><label class="row-label">联系电话</label></td>
+	  					<td id="b_blockAdmintorTel"></td>
+	  				</tr>
+	  				<tr>
+	  					<td><label class="row-label">编&ensp;辑&ensp;人</label></td>
+	  					<td id="editBlockName"></td>
+	  					<td><label class="row-label">编辑时间</label></td>
+	  					<td id="editBlockDate"></td>
+	  				</tr>
+	  			</table>
+	  		</div>
+	  		<div class="bjui-pageFooter">
+  				<div class="dialogFooterBtn">
+	  				<button type="button" class="btn-close" data-icon="close">关闭</button>
+				</div>
+			</div>
+  		</div>
+  		
+  		<!--房屋具体信息弹窗  -->
+  		<div id="blockSuHouse" class="hide">
+  			<table id="houseView" class="table table-bordered"></table>
+  		</div>
+  </body>
+</html>

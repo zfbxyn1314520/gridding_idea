@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+     <!-- springmvc自带的格式化转换器bean,
+     可以在实体类的日期属性上添加@DateTimeFormat(pattern="yyyy-MM-dd")自动完成日期类型的
+    转换，其它类型转换也提供了对应的注解-->
+    <bean id="conversion-service"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+    <!-- 配置springmvc对注解的支持 -->
+	<mvc:annotation-driven  conversion-service="conversion-service" >
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+         	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+      	</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- 配置springmvc对视图类的支持 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/"/>
+		<property name="suffix" value=".jsp"/>
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	</bean>   
+    <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+    <bean id="mappingJacksonHttpMessageConverter"
+       class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+       <property name="supportedMediaTypes">
+        <list>
+           <value>text/html;charset=UTF-8</value>
+        </list>
+       </property>
+     </bean>
+     <!-- 配置spring文件中添加上传文件的支持配置 -->
+     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+     	<!-- 最大文件上传大小 -->
+     	<property name="maxUploadSize" value="10485760"></property>
+     	<!-- 默认上传文件编码方式 -->
+     	<property name="defaultEncoding" value="utf-8"></property>
+     	<!-- 缓存大小 -->
+     	<property name="maxInMemorySize" value="5242880"></property>
+     </bean>
+     
+     <!-- 全局异常处理  自定义实现spring的全局异常解析器HandlerExceptionResolver -->
+     <!--<bean id="exceptionResolver" class="com.eollse.util.CustomExceptionResolver"></bean>-->
+     
+     <mvc:annotation-driven />
+
+</beans>

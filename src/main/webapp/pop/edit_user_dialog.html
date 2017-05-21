@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>edit_user_dialog.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <style type="text/css">
+    	#addStaffUserInfo .odddiv{display: inline-block;width: 305px;}
+    	#addStaffUserInfo .evendiv{float: right;width: 305px;}
+    </style>
+
+  </head>
+  
+  <body>
+    <!-- 增加/编辑 app用户弹框容器 -->
+    <div class="bjui-pageContent">
+  		<form id="addStaffUserInfo" enctype="multipart/form-data">
+	    	<div class="row-input required odddiv">
+	        	<label class="row-label">用&ensp;户&ensp;名&nbsp;</label>
+	        	<input type="text" name="userName" class="input-nm" id="app_userName" size="20" value="" placeholder="必填项"
+	        		data-rule="用户名:required; username; remote[user/validateUsername.do, userName]"/>
+	        	<input type="hidden" name="userId" id="app_userId" value=""> 
+	        	<input type="hidden" name="gridStaffId" id="app_gridStaffId" value=""> 
+	    	</div>
+	    	<div class="row-input required evendiv">
+	        	<label class="row-label">密　　码&nbsp;</label>
+	        	<input type="password" name="password" class="input-nm" id="app_password" size="20" value="" placeholder="必填项" 
+	        		data-rule="密码:required; password;filter(`%<>\/)"/>
+	    	</div>
+        	<div class="row-input required odddiv" >
+        		<label class="row-label">所属区域&nbsp;</label>
+            	<input type="text" class="input-nm" id="app_areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
+            		readonly data-toggle="selectztree" data-tree="#app_areaNameMenu"/>
+            	<ul id="app_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+            		data-radio-type="all" data-on-check="appUser_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+            	</ul>          	
+            	<input type="hidden" name="areaId" id="app_areaId" value="">
+        	</div>
+        	<div class="row-input required evendiv">
+        		<label class="row-label">角色名称&nbsp;</label>
+            	<select data-toggle="selectpicker" id="app_roleId" name="roleId" data-rule="checked" data-width="200"></select>
+        	</div>
+        	<div class="row-input odddiv">
+	    		<label class="row-label">移动电话&nbsp;</label>
+	        	<input type="text" name="mobileTel" class="input-nm" id="app_mobileTel" data-rule="required(from, input[id$=Tel]); mobile" size="20" value="" data-msg-required="请至少填写一种联系方式" />
+	   		</div>
+	   		<div class="row-input evendiv">
+	        	<label class="row-label">办公电话&nbsp;</label>
+	        	<input type="text" name="officeTel" class="input-nm" id="app_officeTel" data-rule="required(from, input[id$=Tel]); tel" size="20" value="" />
+	   		</div>
+	   		<div class="row-input odddiv">
+	    		<label class="row-label">编辑时间&nbsp;</label>
+	    		<input type="text" data-toggle="datepicker" id="app_editUserDate" class="input-nm" size="20" data-pattern="yyyy年MM月dd日 HH:mm:ss" value="" > 
+	    	</div>
+	   		<div class="row-input evendiv" >
+	   			<label class="row-label">是否启用&nbsp;</label>　
+        		<input type="radio" name="user_enable" id="app_user_enable" value="1" data-rule="checked" data-toggle="icheck" checked="checked" data-label="启用">　
+        		<input type="radio" name="user_enable" id="app_user_disable" value="0" data-toggle="icheck" data-label="禁用">
+	   		</div>
+  		</form>
+  	</div>
+ 	<div class="bjui-pageFooter">
+ 		<div class="dialogFooterBtn">
+  			<button type="button" id="appUserBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+		</div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.LogDao">
+	<resultMap type="log" id="logResult">
+		<id property="logId" column="logId"/>
+		<result property="logIP" column="logIP"/>
+		<result property="useClass" column="useClass"/>
+		<result property="useMethod" column="useMethod"/>
+		<result property="logDate" column="logDate"/>
+		<result property="logLevel" column="logLevel"/>
+		<result property="logMsg" column="logMsg"/>
+		<association property="user" javaType="user" resultMap="userResult" />
+	</resultMap>
+	<resultMap type="user" id="userResult">
+		<id property="userId" column="userId"/>
+		<result property="userName" column="userName"/>
+		<association property="role" column="roleId" javaType="role">
+			<id property="roleId" column="roleId" />
+			<result property="roleName" column="roleName" />
+		</association>
+		<association property="area" column="areaId" javaType="area">
+			<id property="areaId" column="areaId" />
+			<result property="areaName" column="areaName" />
+		</association>
+	</resultMap>
+	
+	<select id="getAllLogByUserId" resultMap="logResult">
+		select l.logId,l.logIP,l.useClass,l.useMethod,l.logLevel,l.logDate,l.logMsg,u.userName,r.roleName,a.areaName from log l,user u,`area` a,role r where l.userId=u.userId and u.roleId=r.roleId and u.areaId=a.areaId and l.userId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		 order by logId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllLogsCount" resultType="int">
+		select count(*) from log where userId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<delete id="deleteLog" parameterType="int">
+		delete from log where logId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteLogByUserId" parameterType="int">
+		delete from log where userId=#{userId}
+	</delete>
+	
+	<select id="getRequestCount" resultType="int">
+		SELECT COUNT(logId) FROM `log` 
+		WHERE userId=#{userId} 
+			AND useMethod='getPhoneCaptcha' 
+			AND logIP=#{logIP} 
+			AND logDate >= DATE_SUB(NOW(),INTERVAL 5 MINUTE)
+	</select>
+</mapper>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>工作日志</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="js/blog.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<style type="text/css">
+		#addBlogInfo .odddiv{display: inline-block;width: 405px;}
+    	#addBlogInfo .evendiv{float: right;width: 405px;}
+    	#blogDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#blogDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#blogDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+    </style>
+  </head>
+  
+  <body>
+  	<table id="blogInfo" class="table table-bordered"></table>
+  	
+  	<!--添加日志弹窗  -->
+  	<div id="addBlog" class="hide" data-noinit="true">
+		<div class="bjui-pageContent">
+        	<form id="addBlogInfo">
+        		<div class="row-input required odddiv">
+	    			<label class="row-label">所属区域&nbsp;</label>
+	    			<input type="text" class="input-nm" id="blog_areaName" value="" size="30" data-rule="所属区域:required" placeholder="必填项"
+            			readonly data-toggle="selectztree" data-tree="#blog_areaNameList"/>
+            		<ul id="blog_areaNameList"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+            			data-radio-type="all" data-on-check="Blog_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+            		</ul>          	
+            		<input type="hidden" name="areaId" id="blog_areaId" value="">
+            		<input type="hidden" name="blogId" id="blogId" value="">
+	   			</div>
+	   			<div class="row-input required evendiv">
+	   				<label class="row-label">所属网格&nbsp;</label>
+	   				<select data-toggle="selectpicker" id="blog_gridId" name="gridId" data-rule="所属网格:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required odddiv">
+	   				<label class="row-label">网&ensp;格&ensp;员&nbsp;</label>
+	        		<select data-toggle="selectpicker" id="blog_gridStaffId" name="gridStaffId" data-rule="信息类别:required;" data-width="300"></select>
+	   			</div>
+	   			<div class="row-input required evendiv">
+	   				<label class="row-label">编辑时间&nbsp;</label>
+	        		<input type="text" class="input-nm" name="editBlogDate" id="editBlogDate" data-toggle="datepicker" size="30" data-pattern="yyyy年MM月dd日 HH:mm:ss" value=""  data-rule="时间:required;" placeholder="必填项">
+	   			</div>
+	   			<div class="row-input required odddiv">
+	        		<label class="row-label">标&emsp;&emsp;题&nbsp;</label>
+	        		<input type="text" name="blogName" class="input-nm" id="blogName" data-rule="标题:required;" size="30" value="" placeholder="必填项"/>
+	   			</div>
+	   			<div class="row-input evendiv">
+	   				<label class="row-label">日志类型&nbsp;</label>
+	   				<input type="checkbox" id="blogType1" value="1" data-toggle="icheck" data-label="巡查">&emsp;
+	   				<input type="checkbox" id="blogType2" value="2" data-toggle="icheck" data-label="宣传">&emsp;
+	   			    <input type="checkbox" id="blogType3" value="3" data-toggle="icheck" data-label="走访">&emsp;
+	   				<input type="checkbox" id="blogType4" value="4" data-toggle="icheck" data-label="处理">&emsp;
+	   				<input type="hidden" name="blogType" id="blogType" value="">
+	   			</div>
+	   			<div style="width:845px;margin-left: 12px;margin-top: 20px;">
+	   				<div style="font-size: 10px;">　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+	   					<a href="#" id="clearBlogBtn">清空内容</a>&emsp;&emsp;
+	   					字数统计：<span id="blogCount"></span>
+        			</div>
+        			<textarea id="blogContent" name="blogContent" style="height:300px;"></textarea>
+        			<input type="hidden" name="blogPic" id="blogPic" value="">
+        		</div>
+        	</form>
+        </div>
+        <div class="bjui-pageFooter">
+ 			<div class="dialogFooterBtn">
+	  			<button type="button" id="blogBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	<!--查看弹窗  -->
+  	<div id="blogDetail" class="hide">
+  		<div class="bjui-pageContent">
+	    	<table id="blogDetailTab" border="1">
+	    		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">日&ensp;志&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    			</tr>
+	    		<tr>
+	    			<td><label class="row-label">标&emsp;&emsp;题</label></td>
+	    			<td id="tb_blogName"></td>
+	    			<td><label class="row-label">网&ensp;格&ensp;员</label></td>
+	    			<td id="tb_gridStaff"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">所属区域</label></td>
+	    			<td id="tb_areaName"></td>
+	    			<td><label class="row-label">所属网格</label></td>
+	    			<td id="tb_grid"></td>
+	    		</tr>
+	    		<tr>
+	    			<td><label class="row-label">日志类型</label></td>
+	    			<td id="tb_blogType"></td>
+	    			<td><label class="row-label">编辑时间</label></td>
+	    			<td id="tb_editBlogDate"></td>
+	    		</tr>
+	    		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">日&ensp;志&ensp;内&ensp;容</td>
+    			</tr>
+    			<tr>
+	    			<td id="tb_blogContent" colspan="4" style="background-color:white;padding: 10px;text-align: left;padding-left:20px;"></td>
+	    		</tr>
+	    	</table>
+	    </div>
+	    <div class="bjui-pageFooter">
+ 			<div class="dialogFooterBtn">
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.InfoDao">
+
+	<resultMap type="info" id="infoResult">
+		<id property="infoId" column="infoId"/>
+		<result property="infoTypeId" column="infoTypeId"/>
+		<result property="infoTitle" column="infoTitle"/>
+		<result property="infoContent" column="infoContent"/>
+		<result property="infoEditor" column="infoEditor"/>
+		<result property="infoEditDate" column="infoEditDate"/>
+		<association property="area" javaType="area" resultMap="areaResult" />
+	</resultMap>
+	
+	<resultMap type="area" id="areaResult">
+		<id property="areaId" column="areaId"/>
+		<result property="areaCode" column="areaCode"/>
+		<result property="areaParentCode" column="areaParentCode"/>
+		<result property="areaName" column="areaName"/>
+		<result property="shortName" column="shortName"/>
+		<result property="areaLevel" column="areaLevel"/>
+	</resultMap>
+	
+	<select id="getAllInfoType"  resultType="info_type">
+		select infoTypeId,infoTypeName from info_type
+	</select>
+	
+	<select id="getInfoTypeById"  parameterType="int" resultType="info_type">
+		select infoTypeId,infoTypeName from info_type where infoTypeId=#{infoTypeId}
+	</select>
+	
+	<insert id="addNewInfo" parameterType="info" useGeneratedKeys="true"
+		keyProperty="infoId">
+		insert into `info`(infoTypeId,areaId,infoTitle,infoEditor,infoEditDate,infoContent) 
+		values(#{infoTypeId},#{areaId},#{infoTitle},#{infoEditor},#{infoEditDate},#{infoContent})
+	</insert>
+	
+	<select id="getAllInfoByAreaId"  parameterType="int" resultMap="infoResult">
+		select i.infoId,i.infoTypeId,i.areaId,a.areaName,i.infoTitle,i.infoEditor,i.infoEditDate,i.infoContent 
+		from `info` i,`area` a
+		where i.areaId=a.areaId and i.areaId=#{areaId}
+	</select>
+	
+	<update id="alterInfo" parameterType="info">
+    	update `info` set infoTypeId=#{infoTypeId},areaId=#{areaId},infoTitle=#{infoTitle},infoEditor=#{infoEditor},infoEditDate=#{infoEditDate},infoContent=#{infoContent}
+    	where infoId=#{infoId}
+  	</update>
+  	
+  	<select id="getOneAreaIntrInfo"  parameterType="info" resultType="info">
+		select infoId,infoTypeId,areaId,infoTitle,infoEditor,infoEditDate,infoContent 
+		from `info` where areaId=#{areaId} and infoTypeId=#{infoTypeId}
+	</select>
+	
+</mapper>

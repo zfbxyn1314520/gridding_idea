@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>道路信息</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/road.js"></script>
+	<style type="text/css">
+		#roadDetailTab{border:1px #E5E5E5 solid; width: 690px;margin: -5px;}
+    	#roadDetailTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#roadDetailTab td:nth-child(even){width:240px;padding-left:5px;}
+    	#addRoadInfo .odddiv{display: inline-block;width: 305px;}
+    	#addRoadInfo .evendiv{float: right;width: 305px;}
+	</style>
+  </head>
+  		
+  <body>
+  	<table id="roadInfo" class="table table-bordered"></table>
+  	<!-- 增加修改 弹框容器 -->
+     <div id="addRoad" class="hide" data-noinit="true">
+     	<div class="bjui-pageContent">
+	  		<form id="addRoadInfo">
+	  		 	<div class="row-input required odddiv">
+		  			<label class="row-label">所属区域&nbsp;</label>
+	            	<input type="text" class="input-nm" id="r_areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
+	            		readonly data-toggle="selectztree" data-tree="#r_areaNameMenu"/>
+	            	<ul id="r_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+	            		data-radio-type="all" data-on-check="Road_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+	            	</ul>  
+	            	<input type="hidden" name="areaId" id="r_areaId" value="">        	
+			 	</div>
+			 	<div class="row-input required evendiv">
+			    	<label class="row-label">道路名称&nbsp;</label>
+			        <input type="text" name="roadName" id="roadName" data-rule="道路名称:required;" class="input-nm" size="20" value="" placeholder="必填项">
+			        <input type="hidden" name="roadId" id="roadId" value="">
+			 	</div>
+			 	<div class="row-input required odddiv">
+			    	<label class="row-label">道路长度&nbsp;</label>
+			        <input type="text" name="roadLength" id="roadLength" data-rule="道路长度:required;integer;" class="input-nm" data-toggle="spinner" data-step="5" data-min="0" placeholder="单位：千米(公里)" size="20" value="">
+			 	</div>
+			 	<div class="row-input required evendiv">
+			    	<label class="row-label">道路宽度&nbsp;</label>
+			        <input type="text" name="roadWidth" id="roadWidth" data-rule="道路宽度:required;integer;" class="input-nm" data-toggle="spinner" data-step="5" data-min="0" placeholder="单位：米" size="20" value="">
+			 	</div>
+			 	<div class="row-input odddiv">
+			   		<label class="row-label">道路等级&nbsp;</label>
+		        	<select data-toggle="selectpicker" data-width="200" name="roadGradeId" id="roadGradeId" data-rule="道路等级:required;" ></select>
+		    	</div>
+		    	<div class="row-input required evendiv">
+			    	<label class="row-label">车&ensp;道&ensp;数&nbsp;</label>
+			        <input type="text" name="laneNum" id="laneNum" data-rule="车道数:required;integer;" data-toggle="spinner" data-step="1" data-min="0" size="20" class="input-nm" value="" placeholder="必填项">
+			    </div>
+		    	<div class="row-input odddiv">
+		    		<label class="row-label">编辑时间&nbsp;</label>
+		    		<input type="text" value="" id="editRoadDate" data-toggle="datepicker" data-pattern="yyyy年MM月dd日 HH:mm:ss" class="input-nm" size="20" placeholder="2017年02月25日 16:05:03"> 
+		    	</div>
+			    <div class="row-input evendiv">
+			        <label class="row-label">是否单行&nbsp;</label>　
+	            	<input type="radio" name="singleLane" id="singleLane1" data-toggle="icheck" value="1" data-rule="checked" checked="checked" data-label="是 ">　
+	            	<input type="radio" name="singleLane" id="singleLane2" data-toggle="icheck" value="0" data-label="否">
+			    </div>
+			    <div class="row-input">
+			     	<label class="row-label">上传图片&nbsp;</label>
+		   			<input type="text" name="roadPic" class="input-nm" id="roadPic" size="53" value="" readonly placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传5张！" />
+		    	</div>
+		    	<div class="hide" id="roadUploadArea" style="margin-left:12px; margin-top:20px; width: 600px;">
+	            	<input type="file"  id="uploadRoadPic" data-name="road" data-toggle="webuploader" class="input-nm" data-options="{
+	                    pick: {label: '点击选择图片'},server: 'road/uploadRoadPic.do',fileNumLimit: 5,fileSingleSizeLimit: 1024*1024,
+	                    duplicate: true,formData: {mainName:'road'},required: true,uploaded: '',basePath: '',
+	                    accept: {
+	                    	title: '图片',extensions: 'jpg,jpeg,png',mimeTypes: '.jpg,.png'
+	                    }
+	                	}" >
+	        	</div>
+	  		</form>
+  		</div>
+  		<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+		  		<button type="button" id="submitBtnr" class="btn-blue" data-icon="check"><span>提交</span></button>　
+		  		<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  	
+  	<!--查看弹窗容器  -->
+  	<div id="roadDetail" class="hide">
+  		<div class="bjui-pageContent">
+	  		<table id="roadDetailTab" border="1">
+	  			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="6">道&ensp;路&ensp;基&ensp;本&ensp;信&ensp;息</td>
+    			</tr>
+	  			<tr>
+	  				<td><label class="row-label">道路名称</label></td>
+	  				<td id="r_Name"></td>
+	  				<td><label class="row-label">道路等级</label></td>
+	  				<td id="r_roadGradeName"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">所属区域</label></td>
+	  				<td id="ra_Name"></td>
+	  				<td><label class="row-label">审核状态</label></td>
+	  				<td id="r_RoadAudit"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">道路长度</label></td>
+	  				<td id="r_Length"></td>
+	  				<td><label class="row-label">道路宽度</label></td>
+	  				<td id="r_Width"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">车&ensp;道&ensp;数</label></td>
+	  				<td id="r_LaneNum"></td>
+	  				<td><label class="row-label">是否单行</label></td>
+	  				<td id="r_SingleLane"></td>
+	  			</tr>
+	  			<tr>
+	  				<td><label class="row-label">编&ensp;辑&ensp;人</label></td>
+	  				<td id="r_editRoadName"></td>
+	  				<td><label class="row-label">编辑时间</label></td>
+	  				<td id="r_editRoadDate"></td>
+	  			</tr>
+	  			<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+    				<td colspan="4">道&ensp;路&ensp;图&ensp;片&ensp;信&ensp;息</td>
+    			</tr>
+	  			<tr>
+	  				<td colspan="4"  style="background-color:white;padding: 10px;text-align: left;padding-left:20px;" id="td_road_pic"></td>
+	  			</tr>
+	  		</table>
+	  	</div>
+	  	<div class="bjui-pageFooter">
+  			<div class="dialogFooterBtn">
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+  	</div>
+  </body>
+</html>

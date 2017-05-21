@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.eollse.dao.HouseDao">
+	<!-- <resultMap type="house" id="houseResult">
+		<id property="houseId" column="houseId"/>
+		<result property="statusId" column="statusId"/>
+		<result property="typeId" column="typeId"/>
+		<result property="houseNum" column="houseNum"/>
+		<result property="houseArea" column="houseArea"/>
+		<result property="houseSite" column="houseSite"/>
+		<result property="editHouseName" column="editHouseName"/>
+		<result property="editHouseDate" column="editHouseDate"/>
+		<result property="houseAudit" column="houseAudit"/>
+		<result property="houseHolder" column="houseHolder"/>
+		<association property="unit" javaType="unit" resultMap="unitResult" />
+	</resultMap> -->
+	<resultMap type="unit" id="unitResult">
+		<id property="unitId" column="unitId"/>
+		<result property="unitName" column="unitName"/>
+		<result property="floorCount" column="floorCount"/>
+		<association property="block" javaType="block" resultMap="blockResult" />
+	</resultMap>
+	<resultMap type="block" id="blockResult">
+		<id property="blockId" column="blockbId"/>
+		<result property="blockName" column="blockName"/>
+		<association property="court" column="courtId" javaType="court">
+			<id property="courtId" column="courtId" />
+			<result property="courtName" column="courtName" />
+		</association>
+	</resultMap>
+	<resultMap type="account" id="accountResult">
+		<id property="accountId" column="accountId"/>
+		<result property="accountHolder" column="accountHolder"/>
+		<result property="accountSite" column="accountSite"/>
+		<result property="memberCount" column="memberCount"/>
+		<result property="editAccountName" column="editAccountName"/>
+		<result property="editAccountDate" column="editAccountDate"/>
+		<result property="accountAudit" column="accountAudit"/>
+		<result property="holderTel" column="holderTel"/>
+		<result property="holderCard" column="holderCard"/>
+		<association property="house" javaType="house" resultMap="houseDetailResult" />
+	</resultMap>
+	
+	 <resultMap type="account" id="AllAcountByUnitId">
+		<id property="accountId" column="accountId"/>
+		<result property="accountHolder" column="accountHolder"/>
+		<result property="holderTel" column="holderTel"/>
+		<result property="holderCard" column="holderCard"/>
+		<association property="house" javaType="house">
+			<id property="houseId" column="houseId"/>
+			<result property="houseNum" column="houseNum"/>
+		</association>
+	</resultMap>
+	<resultMap type="house" id="houseDetailResult">
+		<id property="houseId" column="houseId"/>
+		<result property="unitId" column="unitId"/>
+		<result property="houseNum" column="houseNum"/>
+		<result property="houseArea" column="houseArea"/>
+		<result property="houseSite" column="houseSite"/>
+		<result property="editHouseName" column="editHouseName"/>
+		<result property="editHouseDate" column="editHouseDate"/>
+		<result property="houseAudit" column="houseAudit"/>
+		<result property="houseHolder" column="houseHolder"/>
+		<association property="houseStatus" column="houseStatus" javaType="house_status">
+			<result property="statusName" column="statusName" />
+			<result property="statusId" column="statusId" />
+		</association>
+		<association property="houseType" column="houseType" javaType="house_type">
+			<result property="typeName" column="typeName" />
+			<result property="typeId" column="typeId" />
+		</association>
+		<!-- <association property="unit" column="unit" javaType="unit">
+			<result property="unitName" column="unitName" />
+		</association>-->	
+		<association property="unit" javaType="unit" resultMap="unitResult" />
+		</resultMap>
+	
+
+	
+	<select id="getAllHouseByUnitId" resultMap="houseDetailResult">
+		select h.houseId,u.unitName,h.houseNum,h.houseArea,h.houseSite,h.editHouseName,h.editHouseDate,h.houseAudit,c.courtName,s.statusName
+		from house h,unit u,block b,court c,house_status s where h.unitId=u.unitId and u.blockId=b.blockId and b.courtId=c.courtId and s.statusId=h.statusId and h.unitId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+		order by h.houseId desc limit #{x},#{y};
+	</select>
+	
+	<select id="getAllHouseCount" resultType="int">
+		select count(*) from house where unitId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	
+	<select id="getAllUnitByBlockId" resultType="Unit">
+		select unitId,blockId,unitName,floorCount from unit where blockId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		#{item}
+		</foreach>
+	</select>
+	
+	<select id="getUnitName" parameterType="int" resultType="Unit">
+		select unitId,blockId,unitName from unit where blockId=#{blockId}
+	</select>
+	
+	
+	<select id="getStatusName" resultType="House_status">
+		select statusId,statusName from house_status
+	</select>
+	
+	<select id="getTypeName" resultType="House_type">
+		select typeId,typeName from house_type
+	</select>
+	
+	<insert id="saveHouse" parameterType="house">
+		insert into house(unitId,statusId,typeId,houseNum,houseArea,houseSite,editHouseName,editHouseDate,houseHolder)
+		values(#{unitId},#{statusId},#{typeId},#{houseNum},#{houseArea},#{houseSite},#{editHouseName},#{editHouseDate},#{houseHolder})
+	</insert>
+	
+	<select id="getHouseById" parameterType="int" resultMap="accountResult">
+		select a.houseId,h.unitId,s.statusId,t.typeId,h.houseNum,h.houseArea,h.houseSite,h.editHouseName,h.editHouseDate,h.houseAudit,a.accountId,a.accountHolder,a.accountSite,a.memberCount,a.holderTel,a.holderCard from house h,account a,house_status s,house_type t
+		where h.houseId=a.houseId and s.statusId=h.statusId and t.typeId=h.typeId and a.houseId=#{houseId}
+	</select>
+	
+	<select id="getBlockIdByUnitId" parameterType="int" resultType="block">
+		select b.blockId,b.blockName from unit u,block b where u.blockId=b.blockId and u.unitId=#{unitId}
+	</select>
+	
+	<select id="getCourtIdByBlockId" parameterType="int" resultType="court">
+		select c.courtId,c.courtName from block b,court c where b.courtId=c.courtId and b.blockId=#{blockId}
+	</select>
+	
+	<update id="editHouseById" parameterType="house">
+		update house set houseNum=#{houseNum},houseArea=#{houseArea},houseSite=#{houseSite},statusId=#{statusId},editHouseName=#{editHouseName},editHouseDate=#{editHouseDate}
+		where houseId=#{houseId}
+	</update>
+	
+	<select id="getOneHouseById" resultMap="houseDetailResult" parameterType="house">
+		select h.houseId,h.unitId,hs.statusName,ht.typeName,u.unitName,h.houseNum,h.houseArea,
+			h.houseSite,h.editHouseName,h.editHouseDate,h.houseAudit,h.houseHolder 
+		from house h,house_status hs,house_type ht,unit u
+		where h.statusId=hs.statusId and h.typeId=ht.typeId and h.unitId=u.unitId and h.houseId=#{houseId}
+	</select>
+	
+	<select id="getUnitNameById" parameterType="int" resultType="string">
+		select unitName from unit where unitId=#{unitId}
+	</select>
+	
+	<select id="getAllAccountByUnitId" parameterType="int" resultMap="AllAcountByUnitId">
+		select a.accountId,h.houseId,h.houseNum,a.accountHolder,a.holderTel,a.holderCard 
+		from `house` h,`account` a where a.houseId in
+		(select houseId from `house` where unitId=#{unitId})
+		group by accountId
+	</select>
+	
+	<select id="getBlockNameById" parameterType="int" resultType="string">
+		select blockName from block where blockId=#{blockId}
+	</select>
+	
+	<select id="getCourtNameById" parameterType="int" resultType="string">
+		select courtName from court where courtId=#{courtId}
+	</select>
+	
+	<select id="getStatusNameById" parameterType="int" resultType="string">
+		select statusName from house_status where statusId=#{statusId}
+	</select>
+	
+	<select id="getTypeNameById" parameterType="int" resultType="string">
+		select typeName from house_type where typeId=#{typeId}
+	</select>
+	
+	<update id="updateAuditHouse" parameterType="list">
+		update house set houseAudit='0' where houseId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="getHouseCountById" resultMap="houseDetailResult">
+		select houseId,unitId,statusId,typeId,houseNum,houseArea,houseSite,editHouseName,editHouseDate,houseAudit from house where unitId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAccountName" resultType="account">
+		select accountId,accountHolder from account where accountId=#{0}
+	</select>
+	
+	<insert id="saveAccount" parameterType="account">
+		insert into account(houseId,accountHolder,accountSite,memberCount,editAccountName,editAccountDate,holderTel,holderCard)
+		values(#{houseId},#{accountHolder},#{accountSite},#{memberCount},#{editAccountName},#{editAccountDate},#{holderTel},#{holderCard})
+	</insert>
+	
+	<select id="getMaxHouseId" resultType="int">
+		select max(houseId) from house;
+	</select>
+	
+	<update id="editAccountById" parameterType="account">
+		update account set accountHolder=#{accountHolder},accountSite=#{accountSite},memberCount=#{memberCount},editAccountName=#{editAccountName},editAccountDate=#{editAccountDate},holderTel=#{holderTel},holderCard=#{holderCard} where houseId=#{houseId}
+	</update>
+	
+	<select id="getAccountByHouseId" resultType="account" parameterType="int">
+		select accountId,accountHolder,accountSite,holderTel,holderCard from account where houseId=#{houseId}
+	</select>
+</mapper>

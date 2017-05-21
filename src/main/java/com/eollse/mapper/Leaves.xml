@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.LeavesDao">
+
+	<select id="getAllLeavesType" resultType="leaves_type">
+		SELECT leaves_type_id,leaves_type_name FROM leaves_type
+	</select>
+	
+	<insert id="addOneLeavesInfo" parameterType="leaves" useGeneratedKeys="true" keyProperty="leaves_id">
+		insert into `leaves`(leaves_area_id,leaves_grid_id,leaves_gridStaff_id,leaves_type_id,leaves_auditor,leaves_begin_time,leaves_end_time,leaves_reason) 
+		values(#{leaves_area_id},#{leaves_grid_id},#{leaves_gridStaff_id},#{leaves_type_id},#{leaves_auditor},#{leaves_begin_time},#{leaves_end_time},#{leaves_reason})
+	</insert>
+</mapper>

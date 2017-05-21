@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>户口成员</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+	<script type="text/javascript" src="js/accountPop.js"></script>
+ 	<style type="text/css">
+    	#addAcPopInfo .row{margin:0 auto;width:920px;height:35px;margin-top: 10px}
+    	#addAcPopInfo .lendiv{float: right;width: 925px;}
+    	#addAcPopInfo .odddiv{float: left;width: 305px;padding: 0px;}
+    	#addAcPopInfo .evendiv{float: right;width: 305px;padding: 0px;}
+   		#selectPopAccountTab{border:1px #E5E5E5 solid; width: 915px;}
+    	#selectPopAccountTab td:nth-child(odd){width:105px;height: 30px;text-align: center;background-color: #F7F7F9;}
+    	#selectPopAccountTab td:nth-child(even){width:200px;height: 30px;padding-left: 6px;}
+    </style>
+  </head>
+  
+  <body>
+  	<table id="accountPopInfo" class="table table-bordered"></table>
+  	
+  	<!-- 增加/编辑 弹框容器 -->
+     <div id="addACPop" data-noinit="true" class="hide">
+     	<div class="bjui-pageContent">
+	  		<form id="addAcPopInfo" enctype="multipart/form-data">
+	  			<div class="row" style="width: 920px;height: 755px;margin-top:0px;">
+				   	<div class="bs-callout bs-callout-danger" style="height: 20px;width: 900px;background-color: #F7F7F9;">
+		        		<div style="margin-top: -10px; ">
+		        			<h4>人口基本信息</h4>
+		        		</div>
+		    		</div>
+		    		<div style="float: none;">
+				    	<div class="row">
+				        	<div class="row-input required odddiv">
+				        		<label class="row-label">所属区域&nbsp;</label>
+				            	<input type="text" class="input-nm" id="AcPop_areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
+				            		readonly data-toggle="selectztree" data-tree="#AcPop_areaNameMenu"/>
+				            	<ul id="AcPop_areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+				            		data-radio-type="all" data-on-check="AcPop_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+				            	</ul>          	
+				            	<input type="hidden" name="areaId" id="AcPop_areaId" value="">
+				        	</div>
+				        	<div class="row-input required odddiv">
+				        		<label class="row-label">所属网格&nbsp;</label>
+				  				<select data-toggle="selectpicker" name="gridId" id="AcPop_gridId" data-rule="所属网格:required" data-width="200">
+				  					<option value="">请选择网格</option>
+				  				</select>
+				  			</div>
+				  			<div class="row-input required evendiv">
+				  				<label class="row-label">网&ensp;格&ensp;员&nbsp;</label>
+				  				<select data-toggle="selectpicker" name="gridStaffId" id="AcPop_gridStaffId" data-width="200" data-rule="网格员:required">
+				  					<option value="">请选择网格员</option>
+				  				</select>
+				  			</div>
+			  			</div>
+			 			<div class="row">
+				 			<div class="row-input odddiv">
+				    			<label class="row-label">是否户主&nbsp;</label>
+				    			<select data-toggle="selectpicker" name="householder" id="AcPop_householder" data-width="200">
+				  					<option value="1">是</option>
+				  					<option value="0" selected="selected">否</option>
+				  				</select>
+				    		</div>
+				 			<div class="row-input required odddiv">
+				        		<label class="row-label">户口信息&nbsp;</label>
+				        		<input type="text" class="input-nm" name="AcPop_accountHolder" id="AcPop_accountHolder" size="20" value="" data-rule="户主:required;">
+				        		<input type="hidden" name="accountId" id="AcPop_accountId" value=""> 
+				        	</div>
+				        	<div class="row-input required evendiv">
+				        		<label class="row-label"><span style="font-size: 12.8px;">与户主关系</span>&nbsp;</label>
+				        		<select data-toggle="selectpicker" name="relationId" id="AcPop_relationId" data-width="200"></select>
+				        	</div>
+				        </div>
+				        <div class="row">
+				        	<div class="row-input required odddiv">
+				        		<label class="row-label">姓&emsp;&emsp;名&nbsp;</label>
+				        		<input type="text" name="popName" class="input-nm" id="AcPop_popName" size="20" value="" placeholder="必填项" data-rule="姓名:required;"/>
+					        	<input type="hidden" name="popId" id="AcPop_popId" value=""> 
+				        	</div>
+				        	<div class="row-input required odddiv">
+					    		<label class="row-label">出生时间&nbsp;</label>
+					    		<input type="text" data-toggle="datepicker" name="popBirthday" id="AcPop_popBirthday" class="input-nm" size="20" data-rule="出生日期:required;" data-pattern="yyyy年MM月dd日" value="" > 
+					    	</div>
+					    	<div class="row-input evendiv">
+				        		<label class="row-label">年&emsp;&emsp;龄&nbsp;</label>
+				        		<input type="text" id="AcPop_popAge" class="input-nm" size="20" value="" data-rule="integer;" data-toggle="spinner" data-step="1" data-min="1" placeholder="单位：岁">
+				    		</div>
+					    </div>
+					    <div class="row">
+					   		<div class="row-input odddiv">
+				    			<label class="row-label">性&emsp;&emsp;别&nbsp;</label>
+				    			<select data-toggle="selectpicker" name="popSex" id="AcPop_popSex" data-width="200">
+				  					<option value="男" selected="selected">男</option>
+				  					<option value="女">女</option>
+				  				</select>
+				    		</div>
+				    		<div class="row-input odddiv">
+				    			<label class="row-label">是否参保&nbsp;</label>
+				    			<select data-toggle="selectpicker" name="popInsured" id="AcPop_popInsured" data-width="200">
+				  					<option value="1">是</option>
+				  					<option value="0" selected="selected">否</option>
+				  				</select>
+				    		</div>
+				    		<div class="row-input evendiv">
+				    			<label class="row-label">流动人口&nbsp;</label>
+				    			<select data-toggle="selectpicker" name="isFlow" id="AcPop_isFlow" data-width="200">
+				  					<option value="1">是</option>
+				  					<option value="0" selected="selected">否</option>
+				  				</select>
+				    		</div>
+				        </div>
+					    <div class="row">
+				    		<div class="row-input required odddiv">
+					    		<label class="row-label">籍&emsp;&emsp;贯&nbsp;</label>
+					        	<input type="text" name="popNative" class="input-nm" id="AcPop_popNative" data-rule="籍贯:required;" size="20" value="" />
+					   		</div>
+					   		<div class="row-input required odddiv">
+					        	<label class="row-label">婚姻状况&nbsp;</label>
+					        	<select data-toggle="selectpicker" name="marriageId" id="AcPop_marriageId" data-width="200"></select>
+					   		</div>
+					   		<div class="row-input required evendiv">
+				        		<label class="row-label">职&emsp;&emsp;业&nbsp;</label>
+				        		<input type="text" name="popJob" class="input-nm" id="AcPop_popJob" size="20" value="" placeholder="必填项" data-rule="职业:required;"/>
+				        	</div>
+					   	</div>
+					   	<div class="row">
+					   		<div class="row-input required odddiv">
+					        	<label class="row-label">民&emsp;&emsp;族&nbsp;</label>
+					        	<select data-toggle="selectpicker" name="nationId" id="AcPop_nationId" data-width="200"></select>
+					   		</div>
+					   		<div class="row-input required odddiv">
+					        	<label class="row-label">政治面貌&nbsp;</label>
+					        	<select data-toggle="selectpicker" name="politicsId" id="AcPop_politicsId" data-width="200"></select>
+					   		</div>
+					   		<div class="row-input required evendiv">
+					        	<label class="row-label">文化程度&nbsp;</label>
+					        	<select data-toggle="selectpicker" name="levelId" id="AcPop_levelId" data-width="200"></select>
+					   		</div>
+					   	</div>
+					   	<div class="row">
+					   		<div class="row-input required odddiv">
+				    			<label class="row-label">身份证号&nbsp;</label>
+				    			<input type="text" name="popCode" id="AcPop_popCode" data-rule="身份证号:required; IDcard" class="input-nm" size="20" value="" placeholder="必填项">
+				    		</div>
+				    		<div class="row-input required odddiv">
+				    			<label class="row-label">联系电话&nbsp;</label>
+				    			<input type="text" name="popTel" id="AcPop_popTel" data-rule="联系电话:required; popTel;"  class="input-nm" size="20" value="" 
+				    				data-rule-popTel="[/^1[3-9]\d{9}$/,/^(?:(?:0\d{2,3}[\- ]?[1-9]\d{6,7})|(?:[48]00[\- ]?[1-9]\d{6}))$/,'联系电话格式不正确']"  placeholder="必填项">
+				    		</div>
+				    		<div class="row-input evendiv">
+				    			<label class="row-label">编辑时间&nbsp;</label>
+				    			<input type="text" data-toggle="datepicker" id="AcPop_editPopDate" class="input-nm" size="20" data-pattern="yyyy年MM月dd日 HH:mm:ss" value="" > 
+				    		</div>
+				        </div>
+				        <div class="row">
+				        	<div class="row-input odddiv">
+				        		<label class="row-label">工作单位&nbsp;</label>
+				        		<input type="text" name="popCompany" class="input-nm" id="AcPop_popCompany" size="20" value="" placeholder="必填项"/>
+				        	</div>
+				        	<div class="row-input" style="float: right;padding: 0px;width: 615px;">
+				        		<label class="row-label">单位地址&nbsp;</label>
+				        		<input type="text" name="popJobSite" class="input-nm" id="AcPop_popJobSite" size="51" value="" placeholder="必填项"/>
+				        	</div>
+				        </div>
+				        <div class="row">
+					   		<div class="row-input lendiv">
+					    		<label class="row-label">上传照片&nbsp;</label>
+					   			<input type="text" name="popIcon" class="input-nm" id="AcPop_popIcon" size="82" value="" readonly placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传3张！"/>
+					   		</div> 
+					   	</div>
+				        <div class="row">
+				        	<div class="row-input required lendiv">
+				        		<label class="row-label">现居住地&nbsp;</label>
+				        		<input type="text" name="popNowSite" class="input-nm" id="AcPop_popNowSite" size="82" value="" placeholder="必填项" data-rule="现居住地:required;"/>
+				        	</div>
+				        </div>
+				        <div class="row">
+				        	<div class="row-input required lendiv">
+				        		<label class="row-label">户籍地址&nbsp;</label>
+				        		<input type="text" name="popNativeSite" class="input-nm" id="AcPop_popNativeSite" size="82" value="" placeholder="必填项" data-rule="户籍地址:required;"/>
+				        	</div>
+				        </div>
+				        <div class="row">
+				        	<div class="row-input lendiv">
+				    			<label class="row-label">汽车信息&nbsp;</label>
+				    			<textarea cols="82" rows="2" id="AcPop_popCar" name="popCar" placeholder="示例：鲁能西路社区五街区第X-X栋"></textarea>
+				    		</div>
+				    	</div>
+				    	<div class="row">
+				    		<div class="row-input lendiv">
+				    			<label class="row-label">特长爱好&nbsp;</label>
+				    			<textarea cols="82" rows="2" id="AcPop_popHobby" name="popHobby" placeholder="示例：鲁能西路社区五街区第X-X栋"></textarea>
+					   		</div> 
+					   	</div>
+		    		</div>
+		    	</div>
+			   <div class="row hide" style="width: 920px;height: 210px;" id="AcPop_flowView">
+				   	<div class="bs-callout bs-callout-danger" style="height: 20px;width: 900px;background-color: #F7F7F9;">
+		        		<div style="margin-top: -10px; ">
+		        			<h4>人口流动信息</h4>
+		        		</div>
+		    		</div>
+		    		<div style="float: none;">
+			    		<div class="row">
+				    		<div class="row-input required odddiv">
+				    			<label class="row-label">流动类型&nbsp;</label>
+				    			<select data-toggle="selectpicker" name="flowTypeId" id="AcPop_flowTypeId" data-width="200" data-rule="流动类型:required;"></select>
+				    			<input type="hidden" name="flowId" id="AcPop_flowId" value="">
+				    		</div>
+				    		<div class="row-input required" style="float: right;padding: 0px;width: 615px;">
+				        		<label class="row-label">流入地址&nbsp;</label>
+				        		<input type="text" name="inflowSite" class="input-nm" id="AcPop_inflowSite" size="51" value="" placeholder="必填项" data-rule="流动类型:required;"/>
+				        	</div>
+				        </div>
+				        <div class="row">
+				        	<div class="row-input required odddiv">
+				    			<label class="row-label">流动时间&nbsp;</label>
+				    			<input type="text" data-toggle="datepicker" name="flowTime" id="AcPop_flowTime" class="input-nm" size="20" data-pattern="yyyy年MM月dd日" value="" data-rule="流动时间:required;"> 
+				    		</div>
+				    		<div class="row-input required" style="float: right;padding: 0px;width: 615px;">
+				    			<label class="row-label">流出地址&nbsp;</label>
+				    			<input type="text" name="outflowSite" class="input-nm" id="AcPop_outflowSite" size="51" value="" placeholder="必填项" data-rule="流出地址:required;"/>
+				    		</div>
+				    	</div>
+				    	<div class="row">
+					    	<div class="row-input required" style="margin-top: -15px;">
+					    		<label class="row-label">流动原因&nbsp;</label>
+					    		<input type="text" name="flowCause" class="input-nm" id="AcPop_flowCause" size="81.5" value="" placeholder="必填项" data-rule="流动原因:required;"/>
+					    	</div>
+					    </div>
+			    	</div>
+	    		</div> 
+	    		<div class="row" style="width: 920px;height: 200px;">
+		    		<div class="bs-callout bs-callout-danger" style="height: 20px;width: 900px;background-color: #F7F7F9;">
+		        		<div style="margin-top: -10px; ">
+		        			<h4>人口属性信息</h4>
+		        		</div>
+		    		</div>
+		    		<div class="row" style="margin-left: 12px;width:888px;">
+		    		  	<div class="row-input" style="margin-top: -20px;" id="AcPop_popAttrIcheck">
+		    		  	
+	    				</div>
+	    			</div>
+	    		</div>
+	    		<div class="row" style="width: 920px;height: 250px;">
+		    		<div class="bs-callout bs-callout-danger" style="height: 20px;width: 900px;background-color: #F7F7F9;">
+		        		<div style="margin-top: -10px; ">
+		        			<h4>身份证照片信息</h4>
+		        		</div>
+		    		</div>
+		            <div id="AcPop_popUploadArea" style="margin-left:12px;width: 888px;">
+		            	<input type="file"  id="AcPop_headPicUplod" data-name="user" data-toggle="webuploader" data-options="{
+		                    pick: {label: '点击选择图片'},server: 'user/uploadHeadIcon.do',fileNumLimit: 1,fileSingleSizeLimit: 1024*1024,
+		                    duplicate: true,formData: {mainName:'user'},required: true,uploaded: '',basePath: '',
+		                    accept: {
+		                    	title: '图片',extensions: 'jpg,jpeg,png',mimeTypes: '.jpg,.png'
+		                    }
+		                }">
+		        	</div>
+	    		</div>
+	  		</form>
+  		</div>
+		<div class="bjui-pageFooter" style="margin-right: 35px;">
+			<div class="dialogFooterBtn">
+				<button type="button" id="AcPop_popBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
+	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 人口详细信息 弹框容器 -->
+     <div id="selectPopAccount" class="hide">
+     	<div class="bjui-pageContent">
+    		<table id="selectPopAccountTab" border="1">
+    			<tr style="color: #d9534f;font-weight: bold;height: 40px;">
+    				<td colspan="6">人口基本信息</td>
+    			</tr>
+    			<tr>
+    				<td>所属区域</td>
+    				<td id="Ac_area_name"></td>
+    				<td>所属网格</td>
+    				<td id="Ac_grid_name"></td>
+    				<td>网&ensp;格&ensp;员</td>
+    				<td id="Ac_grid_stff_name"></td>
+    			</tr>
+    			<tr>
+    				<td>姓&emsp;&emsp;名</td>
+    				<td id="Ac_pop_name"></td>
+    				<td>出生时间</td>
+    				<td id="Ac_pop_birthday"></td>
+    				<td>年&emsp;&emsp;龄</td>
+    				<td id="Ac_pop_age"></td>
+    			</tr>
+    			<tr>
+    				<td>性&emsp;&emsp;别</td>
+    				<td id="Ac_pop_sex"></td>
+    				<td>是否参保</td>
+    				<td id="Ac_pop_insured"></td>
+    				<td>流动人口</td>
+    				<td id="Ac_pop_isflow"></td>
+    			</tr>
+    			<tr>
+    				<td>是否户主</td>
+    				<td id="Ac_house_holder"></td>
+    				<td>户主姓名</td>
+    				<td id="Ac_account_name"></td>
+    				<td>与户主关系</td>
+    				<td id="Ac_account_relation"></td>
+    			</tr>
+    			<tr>
+    				<td>籍&emsp;&emsp;贯</td>
+    				<td id="Ac_pop_native"></td>
+    				<td>婚姻状况</td>
+    				<td id="Ac_pop_marriage"></td>
+    				<td>文化程度</td>
+    				<td id="Ac_pop_level"></td>
+    			</tr>
+    			<tr>
+    				<td>民&emsp;&emsp;族</td>
+    				<td id="Ac_pop_nation"></td>
+    				<td>政治面貌</td>
+    				<td id="Ac_pop_politics"></td>
+    				<td>职&emsp;&emsp;业</td>
+    				<td id="Ac_pop_job"></td>
+    			</tr>
+    			<tr>
+    				<td>身份证号</td>
+    				<td id="Ac_pop_code"></td>
+    				<td>联系电话</td>
+    				<td id="Ac_pop_tel"></td>
+    				<td>工作单位</td>
+    				<td id="Ac_pop_job_name"></td>
+    			</tr>
+    			<tr>
+    				<td>编&ensp;辑&ensp;人</td>
+    				<td id="Ac_pop_editor"></td>
+    				<td>编辑时间</td>
+    				<td id="Ac_pop_editDate"></td>
+    				<td>审核状态</td>
+    				<td id="Ac_pop_audit"></td>
+    			</tr>
+    			<tr>
+    				<td>现居住地</td>
+    				<td colspan="5" id="Ac_pop_now_site"></td>
+    			</tr>
+    			<tr>
+    				<td>单位地址</td>
+    				<td colspan="5" id="Ac_pop_job_site"></td>
+    			</tr>
+    			<tr>
+    				<td>户籍地址</td>
+    				<td colspan="5" id="Ac_pop_native_site"></td>
+    			</tr>
+    			<tr style="height: 60px;">
+    				<td>汽车信息</td>
+    				<td colspan="5" id="Ac_pop_car"></td>
+    			</tr>
+    			<tr style="height: 60px;">
+    				<td>特长爱好</td>
+    				<td colspan="5" id="Ac_pop_hobby"></td>
+    			</tr>
+    			<tr style="color: #d9534f;font-weight: bold;height: 40px;">
+    				<td colspan="6">人口流动信息</td>
+    			</tr>
+    			<tr>
+    				<td>流动类型</td>
+    				<td id="Ac_pop_editor"></td>
+    				<td>流出地址</td>
+    				<td colspan="3" id="Ac_pop_job_site"></td>
+    			</tr>
+    			<tr>
+    				<td>流动时间</td>
+    				<td id="Ac_pop_editDate"></td>
+    				<td>流入地址</td>
+    				<td colspan="3" id="Ac_pop_native_site"></td>
+    			</tr>
+    			<tr>
+    				<td>流动原因</td>
+    				<td colspan="5" id="Ac_pop_audit"></td>
+    			</tr>
+    			<tr>
+    				<td colspan="6" style="background-color:white;">暂无信息</td>
+    			</tr>
+    			<tr style="color: #d9534f;font-weight: bold;height: 40px;">
+    				<td colspan="6">人口属性信息</td>
+    			</tr>
+    			<tr>
+    				<td colspan="6"  style="background-color:white;">暂无信息</td>
+    			</tr>
+    			<tr style="color: #d9534f;font-weight: bold;height: 40px;">
+    				<td colspan="6">身份证照片信息</td>
+    			</tr>
+    			<tr>
+    				<td colspan="6"  style="background-color:white;">暂无信息</td>
+    			</tr>
+    		</table>
+    	</div>
+    	<div class="bjui-pageFooter" style="margin-right: 35px;">
+				<div class="dialogFooterBtn">
+	  				<button type="button" class="btn-close" data-icon="close">关闭</button>
+				</div>
+		</div> 
+    </div>
+  </body>
+</html>

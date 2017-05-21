@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.BlogDao">
+	<resultMap type="blog" id="blogResult">
+		<id property="blogId" column="blogId"/>
+		<result property="blogName" column="blogName" />
+		<result property="blogType" column="blogType" />
+		<result property="blogContent" column="blogContent" />
+		<result property="editBlogDate" column="editBlogDate" />
+		<association property="area" column="areaId" javaType="area">
+			<id property="areaId" column="areaId" />
+			<result property="areaName" column="areaName" />
+		</association>
+		<association property="grid" column="gridId" javaType="grid">
+			<id property="gridId" column="gridId" />
+			<result property="gridName" column="gridName" />
+		</association>
+		<association property="gridStaff" column="gridStaffId" javaType="grid_staff">
+			<id property="gridStaffId" column="gridStaffId" />
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+	</resultMap>
+	
+	<resultMap type="blogApp" id="blogAppResult">
+		<id property="blogId" column="blogId"/>
+		<result property="areaId" column="areaId" />
+		<result property="gridId" column="gridId" />
+		<result property="blogName" column="blogName" />
+		<result property="blogType" column="blogType" />
+		<result property="blogContent" column="blogContent" />
+		<result property="editBlogDate" column="editBlogDate" />
+		<result property="blogPic" column="blogPic" />
+		<association property="gridStaffApp" column="gridStaffId" javaType="gridStaffApp">
+			<id property="gridStaffId" column="gridStaffId" />
+			<result property="gridStaffName" column="gridStaffName" />
+		</association>
+	</resultMap>
+	
+	
+	<select id="getAllBlogByAreaId" resultMap="blogResult">
+		select b.blogId,b.blogName,b.blogType,b.editBlogDate,a.areaName,s.gridStaffName,g.gridName from `blog` b,grid_staff s,grid g ,area a
+		where b.areaId=a.areaId and b.gridStaffId=s.gridStaffId and g.gridId=b.gridId and b.areaId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by b.blogId desc limit #{x},#{y}
+	</select>
+	
+	<select id="getOneStaffBlogById" resultMap="blogAppResult">
+		SELECT b.blogId,b.areaId,b.gridId,g.gridStaffId,g.gridStaffName,b.blogName,b.blogType,b.blogContent,b.editBlogDate,b.blogPic
+		FROM blog b,grid_staff g WHERE b.gridStaffId=g.gridStaffId AND b.gridStaffId IN
+   		<if test="field==''">
+   			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+   		</if>
+   		<if test="field!=''">
+   			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%') AND gridStaffId IN
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+   		</if>
+   		<if test="editTime!=''">
+   			AND b.editBlogDate BETWEEN CONCAT(#{editTime},' 00:00:00') AND CONCAT(#{editTime},' 23:59:59')
+   		</if>
+		ORDER BY b.gridStaffId,b.editBlogDate DESC LIMIT #{x},#{y}
+	</select>
+	
+	<select id="getAllBlogCount" resultType="int">
+		select count(blogId) from blog where areaId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getOneStaffBlogCount" resultType="int">
+		SELECT COUNT(blogId) FROM blog WHERE gridStaffId IN
+   		<if test="field==''">
+   			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+   		</if>
+   		<if test="field!=''">
+   			(SELECT gridStaffId FROM grid_staff WHERE (gridStaffName LIKE '%${field}%' OR gridStaffTel LIKE '%${field}%') AND gridStaffId IN
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+			)
+   		</if>
+   		<if test="editTime!=''">
+   			AND editBlogDate BETWEEN CONCAT(#{editTime},' 00:00:00') AND CONCAT(#{editTime},' 23:59:59')
+   		</if>
+	</select>
+	
+	<insert id="saveBlog" parameterType="blog">
+		insert into blog(areaId,gridId,gridStaffId,blogName,blogType,blogContent,editBlogDate,blogPic) 
+		values(#{areaId},#{gridId},#{gridStaffId},#{blogName},#{blogType},#{blogContent},#{editBlogDate},#{blogPic})
+	</insert>
+	
+	<select id="getBlogById" resultType="blog">
+		select blogId,areaId,gridId,gridStaffId,blogName,blogType,blogContent,editBlogDate from blog where blogId=#{0}
+	</select>
+	
+	<update id="editBlogById" parameterType="blog">
+		update blog set areaId=#{areaId},gridId=#{gridId},gridStaffId=#{gridStaffId},blogName=#{blogName},blogType=#{blogType},blogContent=#{blogContent},editBlogDate=#{editBlogDate} where blogId=#{blogId}
+	</update>
+	
+	<select id="getOneBlogById" resultMap="blogResult">
+		select a.areaName,g.gridName,s.gridStaffName,b.blogName,b.blogType,b.blogContent,b.editBlogDate from area a,blog b,grid g,grid_staff s where b.areaId=a.areaId and b.gridId=g.gridId and b.gridStaffId=s.gridStaffId and b.blogId=#{0}
+	</select>
+	
+	<delete id="deleteBlog">
+		delete from blog where blogId in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+</mapper>

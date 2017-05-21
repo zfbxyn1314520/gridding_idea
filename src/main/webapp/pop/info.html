@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>info.html</title>
+	
+    <meta name="keywords" content="keyword1,keyword2,keyword3">
+    <meta name="description" content="this is my page">
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+    <!-- wangEditor 在线html编辑器-->
+    <script type="text/javascript" src="js/info.js"></script>
+    <style type="text/css">
+    	.row-label:first-of-type{padding-left:20px;}
+    	.row-label:nth-of-type(2){padding-left:102px;}
+    	#sub_head span{color:#d9534f;font-weight: normal;}
+    	#editClass {padding: 20px;margin: 20px 0;border: 1px solid #eee;border-left-width: 1px;border-radius: 3px;}
+    	#infoEdit .odddiv{display: inline-block;width: 510px;}
+    	#infoEdit .evendiv{float: right;width: 510px;}
+    </style>
+  </head>
+  
+  <body>
+  	<div class="bjui-pageContent">
+    	<div id="editClass" class="bs-callout bs-callout-danger">
+        	<h4>
+        		<i class='am-icon-thumb-tack sidebar-nav-link-logo'></i>信息管理　
+        		<i class='am-icon-angle-double-right sidebar-nav-link-logo'></i>
+        		<i class='am-icon-pencil-square-o sidebar-nav-link-logo'></i>编辑页面
+        	</h4>
+        	<div style="margin: 0 auto; width: 1080px; min-width: 1080px;height: auto;padding-top: 10px;">
+        	<form id="infoEdit">
+        		<input type="hidden" name="infoId" id="infoId" value="">
+    			<div class="row-input required odddiv">
+	    			<label class="row-label">所属区域&nbsp;</label>
+	    			<input type="text" class="input-nm" id="info_areaName" value="" size="40" data-rule="所属区域:required" placeholder="必填项"
+            			readonly data-toggle="selectztree" data-tree="#areaNameList"/>
+            		<ul id="areaNameList"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
+            			data-radio-type="all" data-on-check="Info_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
+            		</ul>          	
+            		<input type="hidden" name="areaId" id="info_areaId" value="">
+	   			</div>
+	   			<div class="row-input required evendiv">
+	        		<label class="row-label">信息类别&nbsp;</label>
+	        		<select data-toggle="selectpicker" id="infoTypeId" name="infoTypeId" data-rule="信息类别:required;" data-width="400"></select>
+	   			</div>
+	   			<div class="row-input required odddiv">
+	    			<label class="row-label">编&nbsp;&nbsp;辑&nbsp;&nbsp;人&nbsp;</label>
+	    			<input type="text" class="input-nm" name="infoEditor" id="infoEditor" value="" size="40" readonly />
+	   			</div>
+	   			<div class="row-input required evendiv">
+	        		<label class="row-label">编辑时间&nbsp;</label>
+	        		<input type="text" class="input-nm" name="infoEditDate" id="infoEditDate" data-toggle="datepicker" size="40" data-pattern="yyyy年MM月dd日 HH:mm:ss" value=""  data-rule="时间:required;" placeholder="必填项">
+	   			</div>
+	   			<div class="row-input required" style="width: 1080px;">
+	        		<label class="row-label">标　　题&nbsp;</label>
+	        		<input type="text" name="infoTitle" class="input-nm" id="infoTitle" data-rule="标题:required;" size="97" value="" placeholder="必填项"/>
+	   			</div>
+	   			<div style="width:1051px;margin-left: 20px;margin-top: 20px;">
+	   				<div style="font-size: 10px;">　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+        				<a href="#" data-toggle="dialog" onclick="preview();">效果预览</a>　　
+        				字数统计：<span id="count"></span>
+        			</div>
+        			<textarea id="infoContent" name="infoContent" style="height:400px;"></textarea>
+        		</div>
+        		<div style="padding-left:880px;padding-top: 15px;">
+					<button id="clearBtn">清空内容</button>&nbsp;&nbsp;
+					<button id="exportBtn">导出内容</button>
+				</div>
+       		</form>
+       		</div>
+    	</div>
+	</div>
+	<div class="bjui-pageFooter">
+  		<div class="dialogFooterBtn">
+	  		<button type="button" id="infoBtn" class="btn-blue" data-icon="check"><span>添加</span></button>
+  			<button type="button" class="btn-close" data-icon="close">关闭</button>
+		</div>
+	</div>
+	
+	<div id="infoView" data-noinit="true" class="hide">
+    	<div class="bs-callout bs-callout-danger" style="height: 70px;margin-top: 1px;">
+        	<div id="main_head" style="margin-top: -10px; text-align: center;">
+        		<h4></h4>
+        	</div>
+        	<div id="sub_head" style="margin-top: 12px;text-align: center;font-size: 12px;">
+        		所属区域：<span id="sub_head_areaName"></span>　　
+        		信息类别：<span id="sub_head_type"></span>　　
+        		编辑人：<span id="sub_head_editor"></span>　　
+        		编辑时间：<span id="sub_head_date"></span>
+        	</div>
+    	</div>
+    	<div id="info_content"></div>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eollse.dao.MenuDao">
+
+	<resultMap id="menuResult" type="menu" >
+    	<id column="menuId" property="menuId" />
+    	<result column="parentMenuId" property="parentMenuId" />
+    	<result column="menuName" property="menuName" />
+    	<result column="menuUri" property="menuUri" />
+    	<result column="menuIcon" property="menuIcon" />
+    	<collection property="permissions" javaType="permission">
+  	 		<id column="perId" property="perId" />
+    		<result column="perName" property="perName" />
+  	  </collection>
+  	</resultMap>
+  	
+	<select id="getAllMenu"  resultType="menu">
+		select menuId,parentMenuId,menuName,menuUri,menuIcon from menu
+	</select>
+	
+	<select id="getAllIcon"  resultType="icon">
+		select iconId,iconName,iconType from `icon`
+	</select>
+	
+	<select id="getAllMainMenu"  resultType="menu">
+		select menuId,parentMenuId,menuName,menuUri,menuIcon from menu 
+		where parentMenuId is null
+	</select>
+	
+	<select id="getMenuPerById" resultMap="menuResult">
+		select m.menuId,m.parentMenuId,m.menuName,m.menuUri,m.menuIcon,p.perId,p.perName from `menu` m,`permission` p, role_per r 
+		where m.menuId=r.menuId and r.perId=p.perId and m.menuName=#{menu.menuName} and r.roleId=#{roleId}
+	</select>
+
+	<select id="getParentMenuById"  resultType="menu">
+		select menuId,parentMenuId,menuName,menuUri,menuIcon from `menu` where menuId=#{parentMenuId}
+	</select>
+	
+	<insert id="addNewMenu" parameterType="menu" useGeneratedKeys="true" keyProperty="menuId">
+  		insert into `menu`(parentMenuId,menuName,menuUri,menuIcon) values(#{parentMenuId},#{menuName},#{menuUri},#{menuIcon})
+  	</insert>
+  	
+  	<select id="getLastMenuId" resultType="int">
+		select max(menuId) from `menu`
+	</select>
+	
+	<insert id="addMenuPer" parameterType="list">
+  		insert into `menu_per`(menuId,perId) values
+  		<foreach collection="list" item="item" index="index" separator="," >  
+        	(#{item.menuId},#{item.perId}) 
+    	</foreach>  
+  	</insert>
+  	
+  	<select id="getOneMenuInfo" parameterType="menu" resultType="menu">
+		select menuId,parentMenuId,menuName,menuUri,menuIcon from `menu` where menuId=#{menuId}
+	</select>
+	
+	<update id="alterMenuInfo" parameterType="menu">
+    	update `menu` set parentMenuId=#{parentMenuId},menuName=#{menuName},menuUri=#{menuUri},menuIcon=#{menuIcon} where menuId=#{menuId}
+  	</update>
+  	
+  	<delete id="deletePersByMenuId" parameterType="int">
+    	delete from `menu_per` where menuId=#{menuId}
+  	</delete>
+  	
+  	<delete id="deleteMenuByIds" parameterType="list">
+    	delete from `menu` where menuId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</delete>
+  	
+  	<delete id="deleteMenuPerByMenuIds" parameterType="list">
+    	delete from `menu_per` where menuId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+	 		 #{item}
+		</foreach>
+  	</delete>
+  	
+	
+</mapper>
