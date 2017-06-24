@@ -60,7 +60,7 @@ public class AttendanceAppAction extends CommonAction {
 					attendance.setRecordDate(nowTime);
 					Integer result=this.attendanceBo.addStaffClockInInfo(attendance);
 					if(result>0){
-						logger.info("成功签到打卡！");
+						logger.info("签到打卡成功！");
 						return "{\"statusCode\":200,\"message\":\"签到成功！\"}";
 					}else{
 						logger.error("签到打卡失败！");

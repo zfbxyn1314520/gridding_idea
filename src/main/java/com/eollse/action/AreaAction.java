@@ -4,6 +4,7 @@ package com.eollse.action;
  * author 李宁财
  * 区域控制器
  */
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class AreaAction extends CommonAction{
 		if(user!=null){
 			Map<String, Object> map=this.areaBo.getAllAreaByAreaId(areaIds,pageSize,pageCurrent);
 			String content=this.createPageJSONString(map);
-			return content;		
+			return content;
 		}else{
 			return null;
 		}

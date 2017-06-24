@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="gridding:war exploded">
-    <output-path>$PROJECT_DIR$/target/gridding</output-path>
+    <output-path>$PROJECT_DIR$/target/grid</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">

@@ -103,7 +103,7 @@
   			a.areaName,g.gridName,s.gridStaffName,et.eventTypeName,l.eventLevelName,est.sourceTypeName
 		FROM event_type et,grid g,`area` a,grid_staff s,event e,event_level l,event_source_type est 
 		WHERE et.eventTypeId=e.eventTypeId AND g.gridId=e.gridId AND a.areaId=e.areaId AND e.gridStaffId=s.gridStaffId 
-  			AND e.eventLevelId=l.eventLevelId AND est.sourceTypeId=e.sourceTypeId AND e.gridStaffId IN
+  			AND e.eventLevelId=l.eventLevelId AND est.sourceTypeId=e.sourceTypeId AND e.isFinished=#{isFinished} AND e.gridStaffId IN
 		<if test="field==''">
    			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
 				#{item}
@@ -120,7 +120,7 @@
 	</select>
 	
 	<select id="getAllEventInfoCount" resultType="int">
-		SELECT COUNT(eventId) FROM event WHERE gridStaffId in
+		SELECT COUNT(eventId) FROM event WHERE isFinished=#{isFinished} AND gridStaffId in
 		<if test="field==''">
    			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
 				#{item}
@@ -148,8 +148,8 @@
 	</select>
 	
 	<insert id="saveEvent" parameterType="event">
-		insert into event(areaId,gridId,gridStaffId,eventLevelId,sourceTypeId,eventTitle,eventContent,editEventDate,eventTypeId,isImportant)
-		values(#{areaId},#{gridId},#{gridStaffId},#{eventLevelId},#{sourceTypeId},#{eventTitle},#{eventContent},#{editEventDate},#{eventTypeId},#{isImportant})
+		insert into event(areaId,gridId,gridStaffId,eventLevelId,sourceTypeId,eventTitle,eventContent,editEventDate,eventTypeId,eventPic,isImportant)
+		values(#{areaId},#{gridId},#{gridStaffId},#{eventLevelId},#{sourceTypeId},#{eventTitle},#{eventContent},#{editEventDate},#{eventTypeId},#{eventPic},#{isImportant})
 	</insert>
 	
 	<insert id="saveEventLog" parameterType="Event_log">

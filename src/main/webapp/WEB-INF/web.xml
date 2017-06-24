@@ -37,7 +37,7 @@
     <filter-class>com.eollse.filter.Log4jFilter</filter-class>
     <init-param>
       <param-name>excludedUrl</param-name>
-      <param-value>validateUser.do,login.do</param-value>
+      <param-value>getPhoneCaptcha.do,login.do</param-value>
     </init-param>
   </filter>
   <filter-mapping>
