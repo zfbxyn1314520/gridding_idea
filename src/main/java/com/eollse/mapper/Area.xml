@@ -29,10 +29,10 @@
   	
   	<select id="getAllAreaByAreaId" resultType="area">
 		select areaId,areaCode,areaParentCode,areaName,shortName,areaLevel from `area`
-		<!-- where areaId in
+	    where areaId in
 		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
 	 		#{item}
-		</foreach> -->
+		</foreach>
 		limit #{x},#{y}
 	</select>
 	

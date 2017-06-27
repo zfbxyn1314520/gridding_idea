@@ -55,7 +55,7 @@
      </bean>
      
      <!-- 全局异常处理  自定义实现spring的全局异常解析器HandlerExceptionResolver -->
-     <bean id="exceptionResolver" class="com.eollse.util.CustomExceptionResolver"></bean>
+     <!--<bean id="exceptionResolver" class="com.eollse.util.CustomExceptionResolver"></bean>-->
      
      <mvc:annotation-driven />
 

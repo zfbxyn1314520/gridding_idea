@@ -268,42 +268,46 @@ public class CommonAction {
                 e.printStackTrace();
             }
             String imgPath = "";
-            for (MultipartFile file : files) {
-                try {
-                    if (!file.isEmpty()) {
-                        boolean result = true;
-                        String[] allowedType = {"image/bmp", "image/gif", "image/jpg", "image/jpeg", "image/png", "image/webp"};
-                        for (int i = 0; i < allowedType.length; i++) {
-                            if (file.getContentType().equals(allowedType[i])) {
-                                result = false;
+            if (files.length > 20) {
+                return "{\"statusCode\":203,\"message\":\"上传图片大于20张！\"}";
+            } else {
+                for (MultipartFile file : files) {
+                    try {
+                        if (!file.isEmpty()) {
+                            boolean result = true;
+                            String[] allowedType = {"image/bmp", "image/gif", "image/jpg", "image/jpeg", "image/png", "image/webp"};
+                            for (int i = 0; i < allowedType.length; i++) {
+                                if (file.getContentType().equals(allowedType[i])) {
+                                    result = false;
+                                }
                             }
+                            if (result) {
+                                errorImg += file.getOriginalFilename() + ";";
+                                continue;
+                            }
+                            // 文件大小限制
+                            if (file.getSize() > 1 * 1024 * 1024) {
+                                errorImg += file.getOriginalFilename() + ";";
+                                continue;
+                            }
+                            String fileName = sdf.format(new Date()) + (random.nextInt(999) % (900) + 100);
+                            String name = file.getOriginalFilename();
+                            imgPath = path + fileName + name.substring(name.lastIndexOf("."), name.length());
+                            imgsUrl += imgPath.substring(imgPath.indexOf("images/"), imgPath.length()) + ";";
+                            Streams.copy(file.getInputStream(), new FileOutputStream(imgPath), true);
                         }
-                        if (result) {
-                            errorImg += file.getOriginalFilename() + ";";
-                            continue;
-                        }
-                        // 文件大小限制
-                        if (file.getSize() > 1 * 1024 * 1024) {
-                            errorImg += file.getOriginalFilename() + ";";
-                            continue;
-                        }
-                        String fileName = sdf.format(new Date()) + (random.nextInt(999) % (900) + 100);
-                        String name = file.getOriginalFilename();
-                        imgPath = path + fileName + name.substring(name.lastIndexOf("."), name.length());
-                        imgsUrl += imgPath.substring(imgPath.indexOf("images/"), imgPath.length()) + ";";
-                        Streams.copy(file.getInputStream(), new FileOutputStream(imgPath), true);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return "{\"statusCode\":201,\"message\":\"上传失败，请重新选择上传！\"}";
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return "{\"statusCode\":201,\"message\":\"上传失败，请重新选择上传！\"}";
                 }
+                String content = "{\"statusCode\":200,\"message\":\"上传成功！\",\"path\":\"" + imgsUrl + "\"";
+                if (errorImg != "") {
+                    content += ",\"errorMsg\":\"" + errorImg + "\"";
+                }
+                content += "}";
+                return content;
             }
-            String content = "{\"statusCode\":200,\"message\":\"上传成功！\",\"path\":\"" + imgsUrl + "\"";
-            if (errorImg != "") {
-                content += ",\"errorMsg\":\"" + errorImg + "\"";
-            }
-            content += "}";
-            return content;
         } else {
             return "{\"statusCode\":202,\"message\":\"未选择上传图片！\"}";
         }
