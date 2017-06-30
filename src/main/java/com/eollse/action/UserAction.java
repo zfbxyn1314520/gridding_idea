@@ -57,10 +57,9 @@ public class UserAction extends CommonAction {
 	/**
 	 * 用户登录
 	 * @param request
-	 * @param userName 用户名
-	 * @param password 密码
+	 * @param u ==> userName 用户名
+	 * @param u ==> password 密码
 	 * @param code 验证码
-	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/login")
@@ -93,8 +92,14 @@ public class UserAction extends CommonAction {
 			return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
 		}
 	}
-	
-	
+
+	/**
+	 * 获取手机验证码
+	 * @param u 用户实体类
+	 * @param session
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value="/getPhoneCaptcha")
 	@ResponseBody
 	public String getPhoneCaptcha(User u,HttpSession session, HttpServletRequest request){
@@ -124,23 +129,23 @@ public class UserAction extends CommonAction {
 //			System.out.println("rows:"+rows);
 	        session.setAttribute("captcha", captcha);
 	        session.setMaxInactiveInterval(300);
-	        MDC.put("userId", user.getUserId());  
+	        MDC.put("userId", user.getUserId());
             MDC.put("logIP", logIP);
 	        this.logger.info("获取验证码");
 			return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\"}";
 			
 //			发送手机验证码
-//			map.put("CorpID","CQLKY00729");  
+//			map.put("CorpID","CQLKY00729");
 //	        map.put("Pwd","zxkj@666");
-//	        map.put("Mobile",user.getMobileTel());  
+//	        map.put("Mobile",user.getMobileTel());
 //	        System.out.println(user.getMobileTel());
-//	        map.put("Content","您的验证码为"+captcha+"，有效时间5分钟。");
+//			map.put("Content","您的手机验证码为："+captcha+"，有效时间为3分钟。请勿向任何单位及个人泄露。如非本人操作，请忽略本消息。");
 //	        String status=httpClient.post("http://yzm.mb345.com/ws/BatchSend2.aspx","gb2312",map);
 //			Integer code = Integer.parseInt(status);
 //			if(code > 0){
 //				session.setAttribute("captcha", captcha);
 //	        	session.setMaxInactiveInterval(300);
-//	        	MDC.put("userId", user.getUserId());  
+//	        	MDC.put("userId", user.getUserId());
 //            	MDC.put("logIP", logIP);
 //	        	this.logger.info("获取验证码");
 //				return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\"}";
@@ -172,8 +177,7 @@ public class UserAction extends CommonAction {
 
 	/**
 	 * 获取用户权限菜单
-	 * @param user
-	 * @return
+	 *
 	 */
 	@RequestMapping("/getUserPerMenu")
 	@ResponseBody
@@ -426,7 +430,6 @@ public class UserAction extends CommonAction {
 	/**
 	 * 修改用户基本信息
 	 * @param user 用户实体类
-	 * @param request
 	 * @param session
 	 * @return string “1”==>表示修改成功 “0”==>表示修改失败
 	 */
@@ -447,7 +450,6 @@ public class UserAction extends CommonAction {
 	/**
 	 * 修改App用户基本信息
 	 * @param user 用户实体类
-	 * @param request
 	 * @param session
 	 * @return string “1”==>表示修改成功 “0”==>表示修改失败
 	 */
@@ -480,7 +482,7 @@ public class UserAction extends CommonAction {
 
 	/**
 	 * 根据id删除用户信息
-	 * @param userId 用户id
+	 * @param user ==> userId ==> 用户id
 	 * @param isStaff 是否是网格员用户
 	 * @return
 	 */

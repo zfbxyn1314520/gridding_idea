@@ -47,8 +47,8 @@ public class UserAppAction extends CommonAction {
     /**
      * 获取手机验证码
      *
-     * @param userName 用户名
-     * @param password 密码
+     * @param u ==> userName 用户名
+     * @param u ==> password 密码
      * @param session  验证码session
      * @return {\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\""+captcha+"\"}
      */
@@ -86,16 +86,16 @@ public class UserAppAction extends CommonAction {
             return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\"" + captcha + "\"}";
 
 //			发送手机验证码
-//			map.put("CorpID","CQLKY00729");  
+//			map.put("CorpID","CQLKY00729");
 //	        map.put("Pwd","zxkj@666");
-//	        map.put("Mobile",user.getMobileTel());  
-//	        map.put("Content","您的验证码为"+captcha+"，有效时间5分钟。");
+//	        map.put("Mobile",user.getMobileTel());
+//            map.put("Content","您的手机验证码为："+captcha+"，有效时间为3分钟。请勿向任何单位及个人泄露。如非本人操作，请忽略本消息。");
 //	        String status=httpClient.post("http://yzm.mb345.com/ws/BatchSend2.aspx","gb2312",map);
 //			Integer code = Integer.parseInt(status);
 //			if(code > 0){
 //				session.setAttribute("captcha", captcha);
 //	        	session.setMaxInactiveInterval(300);
-//	        	MDC.put("userId", user.getUserId());  
+//	        	MDC.put("userId", user.getUserId());
 //            	MDC.put("logIP", logIP);
 //	        	this.logger.info("获取验证码");
 //				return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\""+captcha+"\"}";
@@ -108,10 +108,10 @@ public class UserAppAction extends CommonAction {
     }
 
     /**
-     * App验证用户登陆
-     *
-     * @param userName&password 用户名&密码
+     * @param code 验证码
+     * @param u ==> userName&password 用户名&密码
      * @param request
+     * @param response
      * @param session
      * @return
      */
@@ -146,7 +146,6 @@ public class UserAppAction extends CommonAction {
 
     /**
      * 保存App用户区域session
-     *
      * @param session 用户session的areaId
      * @return
      */
