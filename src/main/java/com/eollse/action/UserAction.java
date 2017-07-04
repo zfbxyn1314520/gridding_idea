@@ -164,7 +164,7 @@ public class UserAction extends CommonAction {
 	 */
 	@RequestMapping(value = "/loginOut")
 	@ResponseBody
-	private void loginOut(HttpServletRequest request, HttpSession session) {
+	private String loginOut(HttpServletRequest request, HttpSession session) {
 		//存储日志信息到数据库
 		logger.info("退出系统！");
 		// 清除session
@@ -173,6 +173,10 @@ public class UserAction extends CommonAction {
 			request.getSession().removeAttribute(em.nextElement().toString());
 		}
 		request.getSession().invalidate();
+		//项目域名地址
+		StringBuffer url = request.getRequestURL();
+		String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
+		return tempContextUrl;
 	}
 
 	/**

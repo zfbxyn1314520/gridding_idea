@@ -53,7 +53,7 @@ $(function(){
 	    	    local: 'remote',
 	    	    dataUrl: 'user/getAllUserByAreaId.do',
 	    	    columns: [
-	    	        {name:'headIcon',label:'Icon',align:'center',width:width*0.05,
+                    {name:'headIcon',label:'Icon',align:'center',width:width*0.05,
 	    	        	render:function(value, data){
 	    	        		var headIcon="";
 	    	        		if(value==null||value==""){

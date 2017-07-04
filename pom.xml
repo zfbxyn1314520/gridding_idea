@@ -249,6 +249,14 @@
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
     </dependency> -->
+
+    <!-- Echarts java类库-->
+    <dependency>
+      <groupId>com.github.abel533</groupId>
+      <artifactId>ECharts</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>gridding</finalName>
