@@ -55,7 +55,7 @@ public class AttendanceAppAction extends CommonAction {
 			Integer gridStaffId = this.userBo.getStaffIdByUserId(user.getUserId());
 			List<Attendance> list = this.attendanceBo.validateSignIn(gridStaffId,nowTime);
 			if(list.size() == 0){
-				if(attendance.getAttendance_pic() != null  && !attendance.getAttendance_pic().equals("")){
+				if(attendance.getStart_memo() != null  && !attendance.getStart_memo().equals("")){
 					attendance.setGridStaffId(gridStaffId);
 					attendance.setRecordDate(nowTime);
 					Integer result=this.attendanceBo.addStaffClockInInfo(attendance);

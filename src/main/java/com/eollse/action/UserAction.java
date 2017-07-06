@@ -17,6 +17,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
 import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -548,6 +549,20 @@ public class UserAction extends CommonAction {
 			return null;
 		}
 	}
-	
+
+	@RequestMapping("/getTreeNode")
+	@ResponseBody
+	public String getTreeNode(String areaCode) {
+		Long code = Long.parseLong(areaCode);
+		JSONArray jsonArray;
+		List<Area> areas=areaBo.getAllAreaMenu();
+		jsonArray = JSONArray.fromObject(areas);
+		String content = treeMenuList(jsonArray,code).toString();
+		return content;
+
+	}
+
+
+
 
 }

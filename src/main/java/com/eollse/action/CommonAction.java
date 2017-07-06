@@ -18,6 +18,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import com.eollse.util.DateJsonValueProcessor;
+import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,21 @@ public class CommonAction {
         String liststr = JSONArray.fromObject(map.get("list"), jf).toString();
         content += liststr + "}";
         return content;
+    }
+
+    public JSONArray treeMenuList(JSONArray menuList, Long areaParentCode) {
+        JSONArray childMenu = new JSONArray();
+        for (Object object : menuList) {
+            JSONObject  jsonMenu = JSONObject.fromObject(object);
+            Long code = jsonMenu.getLong("areaCode");
+            Long parentCode = jsonMenu.getLong("areaParentCode");
+            if (areaParentCode == parentCode) {
+                JSONArray c_node = treeMenuList(menuList, code);
+                jsonMenu.put("childNode", c_node);
+                childMenu.add(jsonMenu);
+            }
+        }
+        return childMenu;
     }
 
     /**
@@ -322,6 +338,8 @@ public class CommonAction {
     public void setAreaIds(List<Integer> areaIds) {
         this.areaIds = areaIds;
     }
+
+
 
 
 }
