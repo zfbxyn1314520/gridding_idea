@@ -21,4 +21,5 @@ public interface AreaBo {
 
 	public List<Area> getAllAreaMenu();
 
+    public List<Area> getAllAreaByLevel(Integer areaId);
 }

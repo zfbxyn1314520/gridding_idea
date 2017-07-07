@@ -1,51 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eollse.dao.AreaDao">
 
-	<select id="getAreaByAreaId" parameterType="int" resultType="area">
+    <select id="getAreaByAreaId" parameterType="int" resultType="area">
   		select areaId,areaCode,areaParentCode,areaName,areaLevel from `area` where areaId=#{areaId}
   	</select>
-  	
-  	<select id="getAreaByAreaCode" parameterType="long" resultType="area">
+
+    <select id="getAreaByAreaCode" parameterType="long" resultType="area">
   		select areaId,areaCode,areaParentCode,areaName,areaLevel from `area` where areaCode=#{areaCode}
   	</select>
-  	
-	<select id="getSubAreaByAreaId" parameterType="long" resultType="area">
+
+    <select id="getSubAreaByAreaId" parameterType="long" resultType="area">
   		select areaId,areaCode,areaParentCode,areaName,areaLevel from `area` where areaParentCode=#{areaCode}
   	</select>
-  	
-  	<select id="getAreaIdByAreaName" parameterType="string" resultType="area">
+
+    <select id="getAreaIdByAreaName" parameterType="string" resultType="area">
   		select areaId,areaCode,areaParentCode,areaName,areaLevel from `area` where areaName=#{areaName}
   	</select>
-  	
-  	<select id="getAreaMenuById" parameterType="list" resultType="area">
-  		select areaId,areaCode,areaParentCode,areaName,areaLevel from `area`
-  		where areaId in 
-		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-	 		#{item}
-		</foreach>
-  	</select>
-  	
-  	<select id="getAllAreaByAreaId" resultType="area">
+
+    <select id="getAreaMenuById" parameterType="list" resultType="area">
+        select areaId,areaCode,areaParentCode,areaName,areaLevel from `area`
+        where areaId in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getAllAreaByAreaId" resultType="area">
+        select areaId,areaCode,areaParentCode,areaName,shortName,areaLevel from `area`
+        where areaId in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        limit #{x},#{y}
+    </select>
+
+    <select id="getAllAreasCount" resultType="int">
+        select count(*) from `area` where areaId in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getAllAreaMenu" resultType="area">
 		select areaId,areaCode,areaParentCode,areaName,shortName,areaLevel from `area`
-	    where areaId in
-		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-	 		#{item}
-		</foreach>
-		limit #{x},#{y}
 	</select>
-	
-	<select id="getAllAreasCount" resultType="int">
-		select count(*) from `area` where areaId in
-		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-	 		#{item}
-		</foreach>
+
+    <select id="getAllAreaByLevel" resultType="area">
+		select areaId,areaCode,areaParentCode,areaName,shortName,areaLevel
+		from `area` where areaLevel >= (select areaLevel from area where areaId=#{areaId})
 	</select>
-	
-	<select id="getAllAreaMenu" resultType="area">
-		select areaId,areaCode,areaParentCode,areaName,shortName,areaLevel from `area`
-	</select>
-  	
-  	
+
+
 </mapper>

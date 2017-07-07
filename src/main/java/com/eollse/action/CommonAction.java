@@ -102,20 +102,20 @@ public class CommonAction {
         return content;
     }
 
-    public JSONArray treeMenuList(JSONArray menuList, Long areaParentCode) {
-        JSONArray childMenu = new JSONArray();
-        for (Object object : menuList) {
-            JSONObject  jsonMenu = JSONObject.fromObject(object);
-            Long code = jsonMenu.getLong("areaCode");
-            Long parentCode = jsonMenu.getLong("areaParentCode");
-            if (areaParentCode == parentCode) {
-                JSONArray c_node = treeMenuList(menuList, code);
-                jsonMenu.put("childNode", c_node);
-                childMenu.add(jsonMenu);
-            }
-        }
-        return childMenu;
-    }
+//    public JSONArray treeMenuList(JSONArray menuList, Long areaParentCode) {
+//        JSONArray childMenu = new JSONArray();
+//        for (Object object : menuList) {
+//            JSONObject  jsonMenu = JSONObject.fromObject(object);
+//            Long code = jsonMenu.getLong("areaCode");
+//            Long parentCode = jsonMenu.getLong("areaParentCode");
+//            if (areaParentCode == parentCode) {
+//                JSONArray c_node = treeMenuList(menuList, code);
+//                jsonMenu.put("childNode", c_node);
+//                childMenu.add(jsonMenu);
+//            }
+//        }
+//        return childMenu;
+//    }
 
     /**
      * 根据传入的areaCode获取该区域所有子节点
