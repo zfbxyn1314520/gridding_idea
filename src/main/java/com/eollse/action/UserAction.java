@@ -275,6 +275,32 @@ public class UserAction extends CommonAction {
         return null;
     }
 
+    @RequestMapping(value = "/getTreeNode", produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    public String getTreeNode(HttpSession session) {
+        User s_user = (User) session.getAttribute("user");
+        JSONArray jsonArray;
+//        List<Area> areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
+//        Long areaCode = this.areaBo.getAreaByAreaId(s_user.getAreaId()).get(0).getAreaCode();
+        List<Area> areas = this.areaBo.getAllAreaByLevel(1);
+        Long areaCode = this.areaBo.getAreaByAreaId(1).get(0).getAreaCode();
+        jsonArray = JSONArray.fromObject(areas);
+        TreeUtil treeUtil = new TreeUtil();
+//        treeUtil.getAreaIds();
+//        JSONArray ja = treeUtil.treeMenuList(jsonArray, areaCode);
+//        List<Integer> areaIds = new ArrayList<Integer>();
+//        for(int i=0;i<ja.size();i++){
+//
+//        }
+
+        String content = treeUtil.treeMenuList(jsonArray, areaCode).toString();
+        System.out.println("areaSize==" + areas.size());
+        System.out.println("size===" + treeUtil.treeMenuList(jsonArray, areaCode).size());
+        System.out.println(content);
+        return content;
+
+    }
+
     /**
      * 获取用户所在区域下的所有用户
      *
@@ -563,24 +589,6 @@ public class UserAction extends CommonAction {
         } else {
             return null;
         }
-    }
-
-    @RequestMapping("/getTreeNode")
-    @ResponseBody
-    public String getTreeNode(HttpSession session, String areaCode) {
-        User s_user = (User) session.getAttribute("user");
-        Long code = Long.parseLong(areaCode);
-        JSONArray jsonArray;
-        List<Area> areas = this.areaBo.getAllAreaByLevel(6);
-//        List<Area> areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
-        jsonArray = JSONArray.fromObject(areas);
-        TreeUtil treeUtil = new TreeUtil();
-//        treeUtil.getAreaIds();
-        String content = treeUtil.treeMenuList(areas, code).toString();
-//        System.out.println("size===" + treeUtil.getAreaIds().size());
-        System.out.println(content);
-        return content;
-
     }
 
 
