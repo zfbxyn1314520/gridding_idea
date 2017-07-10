@@ -234,7 +234,18 @@
 <header class="navbar bjui-header" id="bjui-navbar" style="background:rgba(255, 255, 255, 0.8);
 		border: 1px #f1f1f1 solid;box-shadow:0 1px 8px rgba(0,0,0,.1);">
     <div class="tpl-header-fluid">
-        <span style="font-size: 30px;vertical-align: middle;">龙塔街道网格信息化鲁能西路社区运行中心</span>
+        <span style="font-size: 30px;vertical-align: middle;">
+            <% User user = (User) session.getAttribute("user");
+                Integer areaLevel = user.getArea().getAreaLevel();
+                String title = "";
+                if (areaLevel >= 3) {
+                    title = user.getArea().getAreaName() + "网格信息化运行中心";
+                } else {
+                    title = "网格信息化管理系统";
+                }
+            %>
+            <%=title%>
+        </span>
         <!-- 其它功能-->
         <div class="am-fr tpl-header-navbar">
             <ul>

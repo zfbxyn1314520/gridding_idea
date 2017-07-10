@@ -15,21 +15,21 @@
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
 
-  <!-- 自定义 登录请求过滤器 -->
-  <!--<filter>-->
-    <!--<filter-name>requestFilter</filter-name>-->
-    <!--<filter-class>com.eollse.filter.RequestFilter</filter-class>-->
-    <!--<init-param>-->
-      <!--<param-name>excludedUrl</param-name>-->
-      <!--<param-value>-->
-        <!--getPhoneCaptcha.do,login.do,index.html,.css,.js,.png,.ico,.jpg,.jpeg,.gif,.webp,.bmp-->
-      <!--</param-value>-->
-    <!--</init-param>-->
-  <!--</filter>-->
-  <!--<filter-mapping>-->
-    <!--<filter-name>requestFilter</filter-name>-->
-    <!--<url-pattern>*</url-pattern>-->
-  <!--</filter-mapping>-->
+  <!--自定义 登录请求过滤器 -->
+  <filter>
+    <filter-name>requestFilter</filter-name>
+    <filter-class>com.eollse.filter.RequestFilter</filter-class>
+    <init-param>
+      <param-name>excludedUrl</param-name>
+      <param-value>
+        getPhoneCaptcha.do,login.do,index.html,.css,.js,.png,.ico,.jpg,.jpeg,.gif,.webp,.bmp
+      </param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>requestFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
 
   <!-- log4j 获取session里的用户id过滤器 -->
   <filter>

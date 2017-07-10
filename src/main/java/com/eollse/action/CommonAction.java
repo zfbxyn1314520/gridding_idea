@@ -37,13 +37,10 @@ public class CommonAction {
     @Autowired
     private AreaBo areaBo;
 
-    private List<Integer> areaIds;
-
     protected Logger logger = Logger.getLogger(this.getClass());//日志文件
 
     public CommonAction() {
         super();
-        this.areaIds = new ArrayList<Integer>();
     }
 
     /**
@@ -100,40 +97,6 @@ public class CommonAction {
         String liststr = JSONArray.fromObject(map.get("list"), jf).toString();
         content += liststr + "}";
         return content;
-    }
-
-//    public JSONArray treeMenuList(JSONArray menuList, Long areaParentCode) {
-//        JSONArray childMenu = new JSONArray();
-//        for (Object object : menuList) {
-//            JSONObject  jsonMenu = JSONObject.fromObject(object);
-//            Long code = jsonMenu.getLong("areaCode");
-//            Long parentCode = jsonMenu.getLong("areaParentCode");
-//            if (areaParentCode == parentCode) {
-//                JSONArray c_node = treeMenuList(menuList, code);
-//                jsonMenu.put("childNode", c_node);
-//                childMenu.add(jsonMenu);
-//            }
-//        }
-//        return childMenu;
-//    }
-
-    /**
-     * 根据传入的areaCode获取该区域所有子节点
-     *
-     * @param areaCode 区域行政代码
-     * @return
-     */
-    public Area getAllAreaIdById(Long areaCode) {
-        Area area = this.areaBo.getAreaByAreaCode(areaCode);
-        List<Area> childAreaNodes = this.areaBo.getSubAreaByAreaId(areaCode);
-        // 遍历子节点
-        for (Area child : childAreaNodes) {
-            // 递归
-            Area a = getAllAreaIdById(child.getAreaCode());
-            a.getNodes().add(a);
-        }
-        areaIds.add(area.getAreaId());
-        return area;
     }
 
 
@@ -329,17 +292,6 @@ public class CommonAction {
         }
 
     }
-
-
-    public List<Integer> getAreaIds() {
-        return areaIds;
-    }
-
-    public void setAreaIds(List<Integer> areaIds) {
-        this.areaIds = areaIds;
-    }
-
-
 
 
 }

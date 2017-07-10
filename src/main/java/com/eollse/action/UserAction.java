@@ -17,8 +17,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.eollse.util.TreeUtil;
-import net.sf.json.JSONArray;
+import com.eollse.util.AreaTreeUtil;
 import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,6 +80,7 @@ public class UserAction extends CommonAction {
                     user.setRole(role);
                 }
                 session.setAttribute("user", user);
+                System.out.println(session.getAttribute("user"));
                 session.setMaxInactiveInterval(1800);
                 MDC.put("userId", user.getUserId());
                 MDC.put("logIP", loginIP);
@@ -108,6 +108,12 @@ public class UserAction extends CommonAction {
         User user = this.userBo.validateUser(u);
         String captcha = null;
         if (user != null) {
+
+            Integer roleLevel = this.roleBo.getRoleById(user.getRoleId()).getRoleLevel();
+            if (roleLevel > 5) {
+                return "{\"statusCode\":201,\"message\":\"你的账号暂无此权限登录本系统！\"}";
+            }
+
             String oldCaptcha = (String) session.getAttribute("captcha");
             String logIP = getIpAddr(request);
 
@@ -231,6 +237,7 @@ public class UserAction extends CommonAction {
         }
     }
 
+
     /**
      * 保存用户区域session
      *
@@ -239,67 +246,20 @@ public class UserAction extends CommonAction {
      */
     @RequestMapping("/saveUserAreaSession")
     @ResponseBody
-    public String saveUserAreaSession(HttpServletRequest request, HttpSession session) {
+    public void saveUserAreaSession(HttpSession session) {
+        AreaTreeUtil areaTreeUtil;
+        List<Area> areas;
         User s_user = (User) session.getAttribute("user");
-        System.out.println(s_user.getUserId());
-//		System.out.println("areaIds"+s_user.getUserId());
-        Object s_areaId = session.getAttribute("areaIds");
-//		System.out.println(s_areaId);
-        if (s_areaId == null) {
-            long startTime = System.currentTimeMillis();   //获取开始时间
-            if (this.getAreaIds().size() > 0) {
-                this.getAreaIds().clear();
-            }
-            List<Area> area = this.areaBo.getAreaByAreaId(s_user.getAreaId());
-            this.getAllAreaIdById(area.get(0).getAreaCode());
-            long endTime = System.currentTimeMillis(); //获取结束时间
-            System.out.println("程序运行时间： " + (endTime - startTime) + "ms");
-//			System.out.println("areaId"+this.getAreaIds());
-            System.out.println("时间===" + session.getMaxInactiveInterval());
-            session.setAttribute("areaIds", this.getAreaIds());
-            System.out.println("时间===" + session.getMaxInactiveInterval());
+        List<Integer> s_areaId = (List<Integer>) session.getAttribute("areaIds");
+        if (s_areaId == null || s_areaId.isEmpty() || s_areaId.size() == 0) {
+            areaTreeUtil = new AreaTreeUtil();
+            areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
+            areaTreeUtil.treeMenuList(areas, s_user.getArea().getAreaCode());
+            areaTreeUtil.getAreaIds().add(s_user.getAreaId());
+            session.setAttribute("areaIds", areaTreeUtil.getAreaIds());
         }
-        //获取session
-//		HttpSession   session   =   request.getSession();    
-        // 获取session中所有的键值
-        Enumeration<?> enumeration = session.getAttributeNames();
-        // 遍历enumeration中的
-        while (enumeration.hasMoreElements()) {
-            // 获取session键值
-            String name = enumeration.nextElement().toString();
-            // 根据键值取session中的值
-            Object value = session.getAttribute(name);
-            // 打印结果
-            System.out.println("<B>" + name + "</B>=" + value + "<br>/n");
-        }
-        return null;
     }
 
-    @RequestMapping(value = "/getTreeNode", produces = {"application/json;charset=utf-8"})
-    @ResponseBody
-    public String getTreeNode(HttpSession session) {
-        User s_user = (User) session.getAttribute("user");
-        JSONArray jsonArray;
-//        List<Area> areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
-//        Long areaCode = this.areaBo.getAreaByAreaId(s_user.getAreaId()).get(0).getAreaCode();
-        List<Area> areas = this.areaBo.getAllAreaByLevel(1);
-        Long areaCode = this.areaBo.getAreaByAreaId(1).get(0).getAreaCode();
-        jsonArray = JSONArray.fromObject(areas);
-        TreeUtil treeUtil = new TreeUtil();
-//        treeUtil.getAreaIds();
-//        JSONArray ja = treeUtil.treeMenuList(jsonArray, areaCode);
-//        List<Integer> areaIds = new ArrayList<Integer>();
-//        for(int i=0;i<ja.size();i++){
-//
-//        }
-
-        String content = treeUtil.treeMenuList(jsonArray, areaCode).toString();
-        System.out.println("areaSize==" + areas.size());
-        System.out.println("size===" + treeUtil.treeMenuList(jsonArray, areaCode).size());
-        System.out.println(content);
-        return content;
-
-    }
 
     /**
      * 获取用户所在区域下的所有用户
@@ -313,9 +273,7 @@ public class UserAction extends CommonAction {
     @ResponseBody
     public String getAllUserByAreaId(HttpSession session, Integer pageSize, Integer pageCurrent) {
         User user = (User) session.getAttribute("user");
-        System.out.println("user2=" + user);
         List<Integer> areaIds = (List<Integer>) session.getAttribute("areaIds");
-        System.out.println(areaIds);
         if (user != null) {
             Map<String, Object> map = this.userBo.getAllUserByAreaId(areaIds, pageSize, pageCurrent);
             String content = this.createPageJSONString(map);
@@ -533,7 +491,6 @@ public class UserAction extends CommonAction {
     @RequestMapping(value = "/deleteUserByIds", produces = {"application/json;charset=utf-8"})
     @ResponseBody
     public String deleteUserByIds(User user, boolean isStaff) {
-        System.out.println(user + " " + isStaff);
         if (isStaff) {
             Integer gridStaffId = this.userBo.getStaffIdByUserId(user.getUserId());
             this.gridStaffBo.alterAppUserStatusOfStaff(0, gridStaffId);

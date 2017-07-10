@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 
+import com.eollse.util.AreaTreeUtil;
 import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,9 +48,9 @@ public class UserAppAction extends CommonAction {
     /**
      * 获取手机验证码
      *
-     * @param u ==> userName 用户名
-     * @param u ==> password 密码
-     * @param session  验证码session
+     * @param u       ==> userName 用户名
+     * @param u       ==> password 密码
+     * @param session 验证码session
      * @return {\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\""+captcha+"\"}
      */
     @RequestMapping(value = "/getPhoneCaptcha", produces = {"application/json;charset=utf-8"})
@@ -63,7 +64,7 @@ public class UserAppAction extends CommonAction {
             if (oldCaptcha != null) {
                 Integer count = this.logBo.getRequestCount(user.getUserId(), logIP);
                 if (count > 2) {
-                    return "{\"statusCode\":200,\"message\":\"你的操作过于频繁，请5分钟之后重新获取！\"}";
+                    return "{\"statusCode\":201,\"message\":\"你的操作过于频繁，请5分钟之后重新获取！\"}";
                 }
             }
 
@@ -108,8 +109,9 @@ public class UserAppAction extends CommonAction {
     }
 
     /**
-     * @param code 验证码
-     * @param u ==> userName&password 用户名&密码
+     * 登录
+     * @param code     验证码
+     * @param u        ==> userName&password 用户名&密码
      * @param request
      * @param response
      * @param session
@@ -146,19 +148,19 @@ public class UserAppAction extends CommonAction {
 
     /**
      * 保存App用户区域session
+     *
      * @param session 用户session的areaId
      * @return
      */
     @RequestMapping("/saveUserAreaSession")
     @ResponseBody
-    public void saveUserAreaSession(HttpServletRequest request, HttpSession session) {
+    public void saveUserAreaSession(HttpSession session) {
         User s_user = (User) session.getAttribute("user");
-        if (this.getAreaIds().size() > 0) {
-            this.getAreaIds().clear();
-        }
-        List<Area> area = this.areaBo.getAreaByAreaId(s_user.getAreaId());
-        this.getAllAreaIdById(area.get(0).getAreaCode());
-        session.setAttribute("areaIds", this.getAreaIds());
+        List<Area> areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
+        AreaTreeUtil areaTreeUtil = new AreaTreeUtil();
+        areaTreeUtil.treeMenuList(areas, s_user.getArea().getAreaCode());
+        areaTreeUtil.getAreaIds().add(s_user.getAreaId());
+        session.setAttribute("areaIds", areaTreeUtil.getAreaIds());
     }
 
 

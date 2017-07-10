@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.eollse.util.AreaTreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,12 +96,12 @@ public class HouseAction extends CommonAction {
 			house.setEditHouseName(user.getUserName());
 			house.setEditHouseDate(new Date());
 			house.setHouseHolder(account.getAccountHolder());
-			if(this.getAreaIds().size()>0){
-				this.getAreaIds().clear();
-			}
-			List<Area> area = this.areaBo.getAreaByAreaId(user.getAreaId());
-			this.getAllAreaIdById(area.get(0).getAreaCode());
-			List<Court> courts = this.courtBo.getAllCourtsByAreaId(this.getAreaIds());
+
+			AreaTreeUtil areaTreeUtil = new AreaTreeUtil();
+			List<Area> areas = this.areaBo.getAllAreaByLevel(user.getAreaId());
+			areaTreeUtil.treeMenuList(areas, user.getArea().getAreaCode());
+			areaTreeUtil.getAreaIds().add(user.getAreaId());
+			List<Court> courts = this.courtBo.getAllCourtsByAreaId(areaTreeUtil.getAreaIds());
 			List<Integer> courtIds = new ArrayList<Integer>();
 			for (Court court : courts) {
 				courtIds.add(court.getCourtId());
