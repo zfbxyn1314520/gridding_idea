@@ -110,6 +110,7 @@ public class UserAppAction extends CommonAction {
 
     /**
      * 登录
+     *
      * @param code     验证码
      * @param u        ==> userName&password 用户名&密码
      * @param request
@@ -121,7 +122,9 @@ public class UserAppAction extends CommonAction {
     @ResponseBody
     public String getOneUserById(String code, User u, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         String captcha = (String) session.getAttribute("captcha");
-        if (code.equals(captcha)) {
+        if (code == null)
+            code = "";
+//        if (code.equals(captcha)) {
             User user = this.userBo.validateUser(u);
             if (user != null) {
                 String loginIP = getIpAddr(request);
@@ -141,9 +144,9 @@ public class UserAppAction extends CommonAction {
             } else {
                 return "{\"statusCode\":300,\"message\":\"用户名或密码错误！\"}";
             }
-        } else {
-            return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
-        }
+//        } else {
+//            return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
+//        }
     }
 
     /**

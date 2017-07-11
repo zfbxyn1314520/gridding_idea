@@ -68,7 +68,7 @@ public interface GridStaffBo {
 		Integer pageSize, 
 		Integer pageCurrent
 	);
-	
 
 
+    public List<Integer> getAllGridStaffByAreaIds(List<Integer> areaIds);
 }

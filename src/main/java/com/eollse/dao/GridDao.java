@@ -9,27 +9,27 @@ import com.eollse.po.Grid;
 
 public interface GridDao {
 
-	public List<Grid> getAllGridByAreaId(@Param("list")List<Integer> areaIds, @Param("x")Integer x, @Param("y")Integer y);
+    public List<Grid> getAllGridByAreaId(@Param("list") List<Integer> areaIds, @Param("x") Integer x, @Param("y") Integer y);
 
-	public int getAllGridCount(List<Integer> areaIds);
+    public int getAllGridCount(List<Integer> areaIds);
 
-	public Integer saveGrid(Grid grid);
+    public Integer saveGrid(Grid grid);
 
-	public List<Grid> getGridById(Integer gridId);
+    public List<Grid> getGridById(Integer gridId);
 
-	public Integer editGridById(Grid grid);
+    public Integer editGridById(Grid grid);
 
-	public Integer updateAuditGrid(List<Integer> gridIds);
+    public Integer updateAuditGrid(List<Integer> gridIds);
 
-	public List<Grid> getOneGridById(Grid grid);
+    public List<Grid> getOneGridById(Grid grid);
 
-	public List<Grid> getAllGrid(@Param("list")List<Integer> areaIds);
+    public List<Grid> getAllGrid(@Param("list") List<Integer> areaIds);
 
-	public Integer deleteGrid(Integer gridId);
+    public Integer deleteGrid(Integer gridId);
 
-	public List<Integer> getAllGridIdsByAreaId(@Param("list")List<Integer> areaIds);
+    public List<Integer> getAllGridIdsByAreaId(@Param("list") List<Integer> areaIds);
 
-	public Area getAreaByGridId(Integer gridId);
+    public Area getAreaByGridId(Integer gridId);
 
 
 }

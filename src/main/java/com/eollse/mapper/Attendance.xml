@@ -1,14 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eollse.dao.AttendanceDao">
-	<insert id="addStaffClockInInfo" parameterType="attendance" useGeneratedKeys="true" keyProperty="userId">
+    <resultMap type="attendance" id="attendanceResult">
+        <id property="attendance_id" column="attendance_id"/>
+        <result property="recordDate" column="recordDate"/>
+        <result property="start_time" column="start_time"/>
+        <result property="start_site" column="start_site"/>
+        <result property="start_memo" column="start_memo"/>
+        <result property="end_time" column="end_time"/>
+        <result property="end_site" column="end_site"/>
+        <result property="end_memo" column="end_memo"/>
+        <result property="attendance_pic" column="attendance_pic"/>
+        <association property="gridStaff" javaType="grid_staff" resultMap="gridStaffResult"/>
+    </resultMap>
+    <resultMap type="grid_staff" id="gridStaffResult">
+        <id property="gridStaffId" column="gridStaffId"/>
+        <result property="gridStaffName" column="gridStaffName"/>
+    </resultMap>
+    <insert id="addStaffClockInInfo" parameterType="attendance" useGeneratedKeys="true" keyProperty="userId">
 		insert into `attendance`(gridStaffId,recordDate,start_time,start_site,start_memo,attendance_pic)
 		values(#{gridStaffId},#{recordDate},#{start_time},#{start_site},#{start_memo},#{attendance_pic})
 	</insert>
-	
-	<select id="validateSignIn" resultType="attendance">
+
+    <select id="validateSignIn" resultType="attendance">
 		select * from attendance where gridStaffId=#{gridStaffId} and recordDate=#{recordDate}
 	</select>
+
+    <select id="getAllAttendanceLogByIds" resultMap="attendanceResult">
+        SELECT a.attendance_id,g.gridStaffName,a.recordDate,a.start_time,a.start_site,a.start_memo FROM attendance
+        a,grid_staff g WHERE a.gridStaffId=g.gridStaffId AND
+        a.gridStaffId IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by attendance_id desc limit #{x},#{y};
+    </select>
+
+    <select id="getAllAttendanceLogCount" resultType="int">
+        SELECT count(*) FROM attendance WHERE gridStaffId IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteWorkByIds" parameterType="string">
+        DELETE FROM attendance WHERE attendance_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </delete>
 
 </mapper>

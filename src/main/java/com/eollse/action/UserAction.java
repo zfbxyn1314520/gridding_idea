@@ -84,7 +84,7 @@ public class UserAction extends CommonAction {
                 session.setMaxInactiveInterval(1800);
                 MDC.put("userId", user.getUserId());
                 MDC.put("logIP", loginIP);
-                this.logger.info("用户登录成功（PC）！");
+                this.logger.info("用户登录成功（PC）");
                 return "{\"statusCode\":200,\"message\":\"用户登录成功！\"}";
             } else {
                 return "{\"statusCode\":300,\"message\":\"用户名或密码错误，请重新输入！\"}";
@@ -131,10 +131,10 @@ public class UserAction extends CommonAction {
             System.out.println("captcha:" + captcha);
 
 //			代码调试
-//			map.put("type","shentong");
-//			map.put("postid","3327110080673");
-//			String rows=httpClient.post("http://www.kuaidi100.com/query","gb2312",map);
-//			System.out.println("rows:"+rows);
+			map.put("type","shentong");
+			map.put("postid","3327110080673");
+			String rows=httpClient.post("http://www.kuaidi100.com/query","gb2312",map);
+			System.out.println("rows:"+rows);
             session.setAttribute("captcha", captcha);
             session.setMaxInactiveInterval(300);
             MDC.put("userId", user.getUserId());

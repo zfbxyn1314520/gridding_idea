@@ -70,7 +70,7 @@
 	    	        {name:'menuUri',label:'菜单地址',align:'center',width:width*0.18},
 	    	        {name:'parentMenuId',label:'菜单级别',align:'center',width:width*0.15,
 	    	        	render:function(value, data){
-	    	        		if(value==''){
+	    	        		if(value != "" && value != null){
 	    	        			return "<span style='color:red'>一级菜单</span>";
 	    	        		}else{
 	    	        			return "<span style='color:green'>二级菜单</span>";

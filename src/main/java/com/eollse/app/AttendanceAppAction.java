@@ -37,10 +37,10 @@ public class AttendanceAppAction extends CommonAction {
 	/**
 	 * 网格员App上签到打卡
 	 * @param attendance 考勤实体类
-	 * @param start_time签到时间
-	 * @param start_site签到地点
-	 * @param start_memo签到备注
-	 * @param attendance_pic打卡图片
+	 * @param attendance ==> start_time签到时间
+	 * @param attendance ==> start_site签到地点
+	 * @param attendance ==> start_memo签到备注
+	 * @param attendance ==> attendance_pic打卡图片
 	 * @return 信息反馈
 	 */
 	@RequestMapping(value="/addStaffClockInInfo", produces = "application/json;charset=UTF-8")

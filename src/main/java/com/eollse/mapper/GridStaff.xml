@@ -50,6 +50,13 @@
 		</foreach>
   		 order by s.gridStaffId desc limit #{x},#{y};
   	</select>
+
+	<select id="getAllGridStaffByAreaIds" resultType="int">
+		SELECT s.gridStaffId FROM grid_staff s,grid g,`area` a WHERE a.areaId=g.areaId AND g.gridId=s.gridId AND a.areaId in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
   	
   	<select id="getGridNameById" parameterType="int" resultMap="gridResult">
   		select gridId,gridName,areaId from grid where areaId=#{areaId}

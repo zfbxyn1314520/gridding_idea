@@ -119,14 +119,11 @@ public class RoadAction extends CommonAction {
 	/**
 	 * 删除方法
 	 * @param deRid 道路Id组成字符串
-	 * @param session 
-	 * @param request
 	 * @return string “1”==>表示删除成功 “0”==>表示删除失败
 	 */
 	@RequestMapping(value="/deleteRoad")
 	@ResponseBody
-	public String deleteRoad(String deRid,HttpSession session,HttpServletRequest request){
-		User user=(User)session.getAttribute("user");
+	public String deleteRoad(String deRid){
 		String[] str=deRid.split(",");
 		List<Integer> roadIds=new ArrayList<Integer>();
 		for(int i=0;i<str.length;i++){

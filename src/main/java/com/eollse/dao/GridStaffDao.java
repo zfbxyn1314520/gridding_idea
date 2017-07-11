@@ -65,9 +65,9 @@ public interface GridStaffDao {
 	public List<Integer> getAllGridStaffIdByAreaId(@Param("list")List<Integer> gridIds);
 
 	public List<GridStaffApp> getAllGridStaffById(
-			@Param("list")List<Integer> gridIds, 
-			@Param("field")String field, 
-			@Param("x")Integer x, 
+			@Param("list")List<Integer> gridIds,
+			@Param("field")String field,
+			@Param("x")Integer x,
 			@Param("y")Integer y
 		);
 
@@ -76,4 +76,5 @@ public interface GridStaffDao {
 	public Integer getAllGridStaffByIdCount(@Param("list")List<Integer> gridIds, @Param("field")String field);
 
 
+	public List<Integer> getAllGridStaffByAreaIds(@Param("list")List<Integer> areaIds);
 }

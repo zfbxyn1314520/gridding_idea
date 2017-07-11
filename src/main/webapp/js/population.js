@@ -62,7 +62,7 @@ $(function(){
 	    	        {name:'popCode',label:'身份证号',align:'center',width:width*0.12,
 	    	        	render:function(value,data){
 	    	        		var codeStr=/^(.{6})(.*)(.{4})$/.exec(value);
-	    	        		if(codeStr!=null){
+	    	        		if(codeStr != "" && codeStr != null){
 	    	        			return codeStr[1]+"****"+codeStr[3];
 	    	        		}
 	    	        	}

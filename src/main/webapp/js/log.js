@@ -48,21 +48,21 @@ $(function(){
 	    	    columns: [
 	    	        {name:'user',label:'用户',align:'center',width:width*0.1,
 	    	        	render:function(value,data){
-	    	        		if(value!=""){
+	    	        		if(value != "" && value != null){
 	    	        			return value.userName;
 	    	        		}
 	    	        	}
 	    	        },
 	    	        {name:'user',label:'角色',align:'center',width:width*0.1,
 	    	        	render:function(value,data){
-	    	        		if(value!=""){
+	    	        		if(value != "" && value != null){
 	    	        			return value.role.roleName;
 	    	        		}
 	    	        	}
 	    	        },
 	    	        {name:'user',label:'所属区域',align:'center',width:width*0.2,
 	    	        	render:function(value,data){
-	    	        		if(value!=""){
+	    	        		if(value != "" && value != null){
 	    	        			return value.area.areaName;
 	    	        		}
 	    	        	}
