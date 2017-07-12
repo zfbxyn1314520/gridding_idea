@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +24,6 @@ public class AttendanceAction extends CommonAction {
     @Autowired
     private AttendanceBo attendanceBo;
     @Autowired
-    private UserBo userBo;
-    @Autowired
     private GridStaffBo gridStaffBo;
 
     @RequestMapping("/getAllAttendanceLogByAreaId")
@@ -32,7 +31,14 @@ public class AttendanceAction extends CommonAction {
     public String getAllAttendanceLogByAreaId(HttpSession session, Integer pageSize, Integer pageCurrent) {
         List<Integer> areaIds = (List<Integer>) session.getAttribute("areaIds");
         List<Integer> gridStaffIds = this.gridStaffBo.getAllGridStaffByAreaIds(areaIds);
-        Map<String, Object> map = this.attendanceBo.getAllAttendanceLogByIds(gridStaffIds, pageSize, pageCurrent);
+        Map<String, Object> map = new HashMap<String,Object>();
+        if (gridStaffIds.size() > 0) {
+            map = this.attendanceBo.getAllAttendanceLogByIds(gridStaffIds, pageSize, pageCurrent);
+        }else {
+            map.put("totalRow", 0);
+            map.put("pageCurrent", 1);
+            map.put("list", gridStaffIds);
+        }
         return this.createPageJSONString(map);
     }
 

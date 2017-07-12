@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//En"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eollse.dao.LeavesDao">
 
-	<select id="getAllLeavesType" resultType="leaves_type">
+    <resultMap type="leaves" id="leavesResult">
+        <id property="leaves_id" column="leaves_id"/>
+        <result property="leaves_auditor" column="leaves_auditor"/>
+        <result property="leaves_begin_time" column="leaves_begin_time"/>
+        <result property="leaves_end_time" column="leaves_end_time"/>
+        <result property="leaves_reason" column="leaves_reason"/>
+        <result property="end_time" column="end_time"/>
+        <result property="end_site" column="end_site"/>
+        <result property="end_memo" column="end_memo"/>
+        <result property="attendance_pic" column="attendance_pic"/>
+        <association property="area" column="areaId" javaType="area">
+            <id property="areaId" column="areaId" />
+            <result property="areaName" column="areaName" />
+        </association>
+        <association property="grid" column="gridId" javaType="grid">
+            <id property="gridId" column="gridId" />
+            <result property="gridName" column="gridName" />
+        </association>
+        <association property="gridStaff" column="gridStaffId" javaType="grid_staff">
+            <id property="gridStaffId" column="gridStaffId" />
+            <result property="gridStaffName" column="gridStaffName" />
+        </association>
+        <association property="leavesType" column="gridStaffId" javaType="Leaves_type">
+            <id property="leaves_type_id" column="leaves_type_id" />
+            <result property="leaves_type_name" column="leaves_type_name" />
+        </association>
+    </resultMap>
+
+    <select id="getAllLeavesType" resultType="leaves_type">
 		SELECT leaves_type_id,leaves_type_name FROM leaves_type
 	</select>
-	
-	<insert id="addOneLeavesInfo" parameterType="leaves" useGeneratedKeys="true" keyProperty="leaves_id">
+
+    <insert id="addOneLeavesInfo" parameterType="leaves" useGeneratedKeys="true" keyProperty="leaves_id">
 		insert into `leaves`(leaves_area_id,leaves_grid_id,leaves_gridStaff_id,leaves_type_id,leaves_auditor,leaves_begin_time,leaves_end_time,leaves_reason) 
 		values(#{leaves_area_id},#{leaves_grid_id},#{leaves_gridStaff_id},#{leaves_type_id},#{leaves_auditor},#{leaves_begin_time},#{leaves_end_time},#{leaves_reason})
 	</insert>
+
+    <select id="getAllLeavesByGsIds" resultMap="leavesResult">
+        SELECT
+        l.leaves_id,a.areaName,g.gridName,gs.gridStaffName,t.leaves_type_name,l.leaves_auditor,l.leaves_begin_time,l.leaves_end_time,l.leaves_reason
+        FROM `leaves` l,leaves_type t,`area` a,grid g,grid_staff gs
+        WHERE l.leaves_area_id=a.areaId AND l.leaves_grid_id=g.gridId AND l.leaves_gridStaff_id=gs.gridStaffId
+        AND l.leaves_type_id=t.leaves_type_id AND l.leaves_area_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by l.leaves_id desc limit #{x},#{y};
+    </select>
+
+    <select id="getAllLeavesCount" resultType="int">
+        SELECT count(*) FROM `leaves` WHERE leaves_area_id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

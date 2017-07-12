@@ -80,6 +80,7 @@ public class UserAction extends CommonAction {
                     user.setRole(role);
                 }
                 session.setAttribute("user", user);
+                this.saveUserAreaSession(session);
                 System.out.println(session.getAttribute("user"));
                 session.setMaxInactiveInterval(1800);
                 MDC.put("userId", user.getUserId());
@@ -128,7 +129,7 @@ public class UserAction extends CommonAction {
             HttpClientUtil httpClient = new HttpClientUtil();
             Map<String, String> map = new HashMap<String, String>();
             captcha = String.valueOf(random.nextInt(999999) % (900000) + 100000);
-            System.out.println("captcha:" + captcha);
+            System.out.println("captcha=========" + captcha);
 
 //			代码调试
 			map.put("type","shentong");

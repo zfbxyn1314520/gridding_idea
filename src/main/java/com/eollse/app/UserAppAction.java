@@ -78,7 +78,7 @@ public class UserAppAction extends CommonAction {
 //            map.put("postid", "3327110080673");
 //            String rows = httpClient.post("http://www.kuaidi100.com/query", "gb2312", map);
 //            System.out.println("rows:" + rows);
-            session.setAttribute("captcha", captcha);
+            session.setAttribute("captcha=========", captcha);
             session.setMaxInactiveInterval(300);
             System.out.println("newCode=" + (String) session.getAttribute("captcha"));
             MDC.put("userId", user.getUserId());

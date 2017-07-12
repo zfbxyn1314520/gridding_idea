@@ -18,6 +18,9 @@ public class Leaves implements Serializable {
     private Date leaves_end_time;
     private String leaves_reason;
     private Leaves_type leavesType;
+    private Area area;
+    private Grid grid;
+    private Grid_staff gridStaff;
 
     public Leaves() {
         super();
@@ -51,6 +54,30 @@ public class Leaves implements Serializable {
                 + leaves_auditor + ", leaves_begin_time=" + leaves_begin_time
                 + ", leaves_end_time=" + leaves_end_time + ", leaves_reason="
                 + leaves_reason + ", leavesType=" + leavesType + "]";
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public Grid_staff getGridStaff() {
+        return gridStaff;
+    }
+
+    public void setGridStaff(Grid_staff gridStaff) {
+        this.gridStaff = gridStaff;
     }
 
     public Integer getLeaves_id() {
