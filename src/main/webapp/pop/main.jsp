@@ -140,7 +140,7 @@
                 PLUGINPATH: 'B-JUI/plugins/', //[可选]插件路径
                 loginInfo: {url: '../index.html', title: '登录', width: 440, height: 240}, // 会话超时后弹出登录对话框
                 statusCode: {ok: 200, error: 300, timeout: 301}, //[可选]
-                ajaxTimeout: 3000, //[可选]全局Ajax请求超时时间(毫秒)
+                ajaxTimeout: 30000, //[可选]全局Ajax请求超时时间(毫秒)
                 alertTimeout: 3000,  //[可选]信息提示[info/correct]自动关闭延时(毫秒)
                 pageInfo: {
                     total: 'totalRow',

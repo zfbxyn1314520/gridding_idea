@@ -21,13 +21,13 @@ $(function () {
             var toolBar = true;
             for (var z = 0; z < per.length; z++) {
                 if (per[z] == "添加") {
-                    toolBarItem += "<button type='button' style='border-right:none' class='btn-blue' data-icon='plus' onclick='addWorkInfo();'>添加</button>";
+                    toolBarItem += "<button type='button' style='border-right:none' class='btn-blue' data-icon='plus' onclick='addLeavesInfo();'>添加</button>";
                 }
                 if (per[z] == "编辑") {
-                    toolBarItem += "<button type='button' style='border-right:none' class='btn-green' data-icon='edit' onclick='editWorkInfo();'>编辑</button>";
+                    toolBarItem += "<button type='button' style='border-right:none' class='btn-green' data-icon='edit' onclick='editLeavesInfo();'>编辑</button>";
                 }
                 if (per[z] == "删除") {
-                    toolBarItem += "<button type='button' style='border-right:none' class='btn-red' data-icon='trash-o' onclick='deleteWorkInfo();'>删除</button>";
+                    toolBarItem += "<button type='button' style='border-right:none' class='btn-red' data-icon='trash-o' onclick='deleteLeavesInfo();'>删除</button>";
                 }
                 if (per[z] == "查看") {
                     status = false;
@@ -39,7 +39,7 @@ $(function () {
                 toolBar = false;
             }
 
-            toolBarItem += "<button type='button' class='btn-default' data-icon='refresh' onclick='refreshWork();'>刷新</button>";
+            toolBarItem += "<button type='button' class='btn-default' data-icon='refresh' onclick='refreshLeaves();'>刷新</button>";
             //生成datagrid表格
             $.CurrentNavtab.find('#leavesInfo').datagrid({
                 height: '100%',
@@ -53,23 +53,23 @@ $(function () {
                 dataUrl: 'leaves/getAllLeavesByAreaIds.do',
                 columns: [
                     {
-                        name: 'area', label: '所在区域', align: 'center', width: width * 0.1,
+                        name: 'area', label: '所在区域', align: 'center', width: width * 0.13,
                         render: function (value, data) {
                             return value.areaName;
                         }
                     },
                     {
-                        name: 'grid', label: '所在网格', align: 'center', width: width * 0.1,
+                        name: 'grid', label: '所在网格', align: 'center', width: width * 0.12,
                         render: function (value, data) {
                             return value.gridName;
                         }
                     }, {
-                        name: 'gridStaff', label: '姓名', align: 'center', width: width * 0.1,
+                        name: 'gridStaff', label: '姓名', align: 'center', width: width * 0.08,
                         render: function (value, data) {
                             return value.gridStaffName;
                         }
                     }, {
-                        name: 'leavesType', label: '请假类型', align: 'center', width: width * 0.1,
+                        name: 'leavesType', label: '请假类型', align: 'center', width: width * 0.08,
                         render: function (value, data) {
                             return value.leaves_type_name;
                         }
@@ -91,12 +91,25 @@ $(function () {
                         width: width * 0.13
                     },
                     {
-                        name: '', label: '请假天数', align: 'center', width: width * 0.18,
+                        name: '', label: '请假天数', align: 'center', width: width * 0.1,
                         render: function (value, data) {
                             return DateDiffNoWeekDay(data.leaves_begin_time, data.leaves_end_time);
                         }
                     },
-                    {name: 'leaves_reason', label: '请假原因', align: 'center', width: width * 0.18},
+                    {name: 'leaves_reason', label: '请假原因', align: 'center', width: width * 0.13},
+                    {
+                        name: '', label: '操作', align: 'center', hide: status, width: width * 0.1,
+                        render: function (value, data) {
+                            var str = "";
+                            if (data.leavesStatus == 0) {
+                                str += "&ensp;<button type='button' class='btn-green' data-icon='check-square-o' style='font-size:12px;'" +
+                                    "onclick='auditStoreSingle(" + data.storeId + ",\"" + data.storeName + "\"," + data.storeAudit + ");'>批准</button>";
+                            } else {
+                                str += "&ensp;<button type='button' class='btn-red' style='font-size:12px;');'>批准</button>";
+                            }
+                            return str;
+                        },
+                    },
                 ],
                 paging: {pageSize: 20, selectPageSize: '10,30,40,50', pageCurrent: 1, showPagenum: 5, totalRow: 0},
                 linenumberAll: true,
@@ -109,6 +122,43 @@ $(function () {
         }
     });
 });
+
+
+function deleteLeavesInfo() {
+    var leaves = $.CurrentNavtab.find("#leavesInfo").data('selectedDatas');
+    var delId = "";
+    var nameStr = "";
+    if (typeof(leaves) == "undefined" || leaves.length == 0) {
+        BJUI.alertmsg('info', '请选择需要删除的记录');
+    } else {
+        for (var i = 0; i < leaves.length; i++) {
+            delId += leaves[i].leaves_id + ",";
+            nameStr += leaves[i].gridStaff.gridStaffName + ",";
+        }
+        nameStr = nameStr.substring(0, nameStr.length - 1);
+        BJUI.alertmsg("confirm", "你确定要删除<span style='color:orange'>" + nameStr + "</span>的请假申请吗？", {
+            okCall: function () {
+                $.ajax({
+                    type: "post",
+                    url: "leaves/deleteLeavesLogByIds.do?" + new Date().getTime(),
+                    data: {"delId": delId},
+                    dataType: "text",
+                    success: function (data) {
+                        if (data == 0) {
+                            BJUI.alertmsg('error', '删除失败');
+                        } else {
+                            $.CurrentNavtab.find('#leavesInfo').datagrid('refresh', true);
+                            BJUI.alertmsg('ok', "成功删除<span style='color:orange'>" + nameStr + "</span>考勤记录吗？", {
+                                displayPosition: 'middlecenter'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+}
 
 /*根据起始时间和结束日期计算天数*/
 function DateDiffNoWeekDay(sDate1, sDate2) {
@@ -229,4 +279,10 @@ function DateToString(oDate) {
         second = "0" + second;
     }
     return oDate.getFullYear() + "-" + month + "-" + day + " " + hour + ":" + mi + ":" + second;
+}
+
+//刷新页面
+function refreshLeaves() {
+    $.CurrentNavtab.find('#leavesInfo').datagrid('refresh', false);
+    $.CurrentNavtab.find('#leavesInfo').datagrid('selectedRows', false);
 }

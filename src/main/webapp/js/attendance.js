@@ -99,7 +99,7 @@ function deleteWorkInfo() {
     var delId = "";
     var nameStr = "";
     if (typeof(attendance) == "undefined" || attendance.length == 0) {
-        BJUI.alertmsg('info', '请选择需要删除的道路');
+        BJUI.alertmsg('info', '请选择需要删除的考勤记录');
     } else {
         for (var i = 0; i < attendance.length; i++) {
             delId += attendance[i].attendance_id + ",";

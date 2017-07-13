@@ -13,4 +13,6 @@ public interface LeavesBo {
 	public Integer addOneLeavesInfo(Leaves leaves);
 
 	public Map<String,Object> getAllLeavesByGsIds(List<Integer> areaIds, Integer pageSize, Integer pageCurrent);
+
+	public Integer deleteLeavesLogByIds(String[] delIds);
 }

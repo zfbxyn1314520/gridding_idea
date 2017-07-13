@@ -9,10 +9,7 @@
         <result property="leaves_begin_time" column="leaves_begin_time"/>
         <result property="leaves_end_time" column="leaves_end_time"/>
         <result property="leaves_reason" column="leaves_reason"/>
-        <result property="end_time" column="end_time"/>
-        <result property="end_site" column="end_site"/>
-        <result property="end_memo" column="end_memo"/>
-        <result property="attendance_pic" column="attendance_pic"/>
+        <result property="leavesStatus" column="leavesStatus"/>
         <association property="area" column="areaId" javaType="area">
             <id property="areaId" column="areaId" />
             <result property="areaName" column="areaName" />
@@ -58,5 +55,12 @@
             #{item}
         </foreach>
     </select>
+    
+    <delete id="deleteLeavesLogByIds">
+        DELETE FROM `leaves` WHERE leaves_id in
+        <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 
 </mapper>

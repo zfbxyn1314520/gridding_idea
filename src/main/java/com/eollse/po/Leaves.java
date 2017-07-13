@@ -17,6 +17,7 @@ public class Leaves implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date leaves_end_time;
     private String leaves_reason;
+    private Integer leavesStatus;
     private Leaves_type leavesType;
     private Area area;
     private Grid grid;
@@ -54,6 +55,14 @@ public class Leaves implements Serializable {
                 + leaves_auditor + ", leaves_begin_time=" + leaves_begin_time
                 + ", leaves_end_time=" + leaves_end_time + ", leaves_reason="
                 + leaves_reason + ", leavesType=" + leavesType + "]";
+    }
+
+    public Integer getLeavesStatus() {
+        return leavesStatus;
+    }
+
+    public void setLeavesStatus(Integer leavesStatus) {
+        this.leavesStatus = leavesStatus;
     }
 
     public Area getArea() {

@@ -45,4 +45,9 @@ public class LeavesBoImpl implements LeavesBo {
         return map;
     }
 
+    @Override
+    public Integer deleteLeavesLogByIds(String[] delIds) {
+        return this.leavesDao.deleteLeavesLogByIds(delIds);
+    }
+
 }

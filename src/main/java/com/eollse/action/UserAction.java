@@ -82,7 +82,7 @@ public class UserAction extends CommonAction {
                 session.setAttribute("user", user);
                 this.saveUserAreaSession(session);
                 System.out.println(session.getAttribute("user"));
-                session.setMaxInactiveInterval(1800);
+                session.setMaxInactiveInterval(60);
                 MDC.put("userId", user.getUserId());
                 MDC.put("logIP", loginIP);
                 this.logger.info("用户登录成功（PC）");

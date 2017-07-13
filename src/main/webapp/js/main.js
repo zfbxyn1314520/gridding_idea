@@ -2,50 +2,76 @@
  * main.html页面的外部js代码
  * author 李宁财
  */
-$(function(){
-	//生成main.html页面的左边导航菜单
-	$.ajax({
-		type:"get",
-		url:"user/getUserPerMenu.do?"+(new Date()).getTime(),
-	    dataType:"json",
-	    cache:false,
-	    success:function(data){
-	    	var menu="<ul class='sidebar-nav'>";
-	    	for(var i=0;i<data.length;i++){
-	    		if(data[i].parentMenuId==null){
-	    			if(data[i].menuName=="我的主页"){
-		    			menu+="<li class='sidebar-nav-link'><a href='javascript:void(0);' class='active'>" +
-		    					"<i class='"+data[i].menuIcon+" sidebar-nav-link-logo'></i>我的主页</a></li>";
-		    			continue;
-		    		}else{
-		    			menu+="<li class='sidebar-nav-link'><a href='javascript:void(0);' class='sidebar-nav-sub-title'>" +
-		    					"<i class='"+data[i].menuIcon+" sidebar-nav-link-logo'></i>"+data[i].menuName+
-		    					"<span class='am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico' style='position:absolute; left:170px;'></span></a>" +
-		    					"<ul class='sidebar-nav sidebar-nav-sub'>";
-		    		}	
-		    		for(var j=0;j<data.length;j++){	 
-		    			if(data[i].menuId==data[j].parentMenuId && data[j].menuUri!=null){ 	
-		    				menu+="<li class='sidebar-nav-link'><a href='"+data[j].menuUri+"' data-id='navTab"+data[j].menuId+"' " +
-		    					  "data-title='"+data[j].menuName+"' data-toggle='navtab'>" +
-		    					  "<span style='margin-left:10px;' class='"+data[j].menuIcon+" sidebar-nav-link-logo'></span>&nbsp;"+data[j].menuName+"</a></li>";    					
-		    			}	    			
-		    		}    
-		    		menu+="</ul></li>";
-	    		}
-	    	}
-	    	menu+="</ul>";   	
-	    	$("#navTab").html(menu);
-	    	//侧边菜单
-			$('.sidebar-nav-sub-title').on('click', function() {
-		    	$(this).siblings('.sidebar-nav-sub').slideToggle(80).end()
-		        .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
-			});	    		    	
-	    }
-	});		
-	
-	//保存用户区域信息
-	$.get("user/saveUserAreaSession.do?" + (new Date()).getTime());
+$(function () {
+    //生成main.html页面的左边导航菜单
+    $.ajax({
+        type: "get",
+        url: "user/getUserPerMenu.do?" + (new Date()).getTime(),
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            var menu = "<ul class='sidebar-nav'>";
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].parentMenuId == null) {
+                    if (data[i].menuName == "我的主页") {
+                        menu += "<li class='sidebar-nav-link'><a href='javascript:void(0);' class='active'>" +
+                            "<i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>我的主页</a></li>";
+                        continue;
+                    } else {
+                        menu += "<li class='sidebar-nav-link'><a href='javascript:void(0);' class='sidebar-nav-sub-title'>" +
+                            "<i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>" + data[i].menuName +
+                            "<span class='am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico' style='position:absolute; left:170px;'></span></a>" +
+                            "<ul class='sidebar-nav sidebar-nav-sub'>";
+                    }
+                    for (var j = 0; j < data.length; j++) {
+                        if (data[i].menuId == data[j].parentMenuId && data[j].menuUri != null) {
+                            menu += "<li class='sidebar-nav-link'><a href='" + data[j].menuUri + "' data-id='navTab" + data[j].menuId + "' " +
+                                "data-title='" + data[j].menuName + "' data-toggle='navtab'>" +
+                                "<span style='margin-left:10px;' class='" + data[j].menuIcon + " sidebar-nav-link-logo'></span>&nbsp;" + data[j].menuName + "</a></li>";
+                        }
+                    }
+                    menu += "</ul></li>";
+                }
+            }
+            menu += "</ul>";
+            $("#navTab").html(menu);
+            //侧边菜单
+            $('.sidebar-nav-sub-title').on('click', function () {
+                $(this).siblings('.sidebar-nav-sub').slideToggle(80).end()
+                    .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
+            });
+        }
+    });
+
+    //保存用户区域信息
+    $.get("user/saveUserAreaSession.do?" + (new Date()).getTime());
+
+    $(this).on(BJUI.eventType.beforeAjaxLoad, function (event) {
+
+        console.log($(event.target))
+
+        // console.log(JSON.parse(JSON.stringify(event.target.getElementsByTagName("title"))));
+        // console.log(event.target.getElementsByTagName("title"));
+        // console.log(event);
+        // console.log($(event.target).find('title'))
+        // $(event.target).find('title').each(function () {
+        //     console.log(1)
+        // });
+        // var href = window.location.href;
+        // window.location.href=href.substring(0,href.indexOf("/pop/main.jsp"));
+
+
+        // $(event.target).find('.highlight').each(function(){
+        //     var b='<div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>';
+        //     var p=$(this).find('> pre.prettyprint');
+        //     p.addClass('linenums').html($.trim(p.html()));
+        //     prettyPrint();
+        //     $(this).before(b);
+        // })
+    });
+
 });
+
 
 
 //单击事件
@@ -59,27 +85,27 @@ function S_NodeClick(event, treeId, treeNode) {
  * 区域下拉框ztree树
  * @returns {Array}
  */
-function showAreaMenu(){
-	var areaMenu=new Array();
-	$.ajax({
-		type:"get",
-		url:"user/getAreaMenuById.do?"+(new Date()).getTime(),
-		dataType:"json",
-		cache:false,
-		async:false,
-		success:function(data){
-			for(var i=0;i<data.length;i++){
-				areaMenu[i]=new area(data[i].areaCode, data[i].areaParentCode, data[i].areaName,data[i].areaId);
-			}
-		}
-	});	
-	return areaMenu;
+function showAreaMenu() {
+    var areaMenu = new Array();
+    $.ajax({
+        type: "get",
+        url: "user/getAreaMenuById.do?" + (new Date()).getTime(),
+        dataType: "json",
+        cache: false,
+        async: false,
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                areaMenu[i] = new area(data[i].areaCode, data[i].areaParentCode, data[i].areaName, data[i].areaId);
+            }
+        }
+    });
+    return areaMenu;
 }
 
 //声明区域对象
-function area(id,pId,name,areaId) {
+function area(id, pId, name, areaId) {
     this.id = id;
-    this.pId= pId;
-    this.name= name;
-    this.areaId=areaId;
+    this.pId = pId;
+    this.name = name;
+    this.areaId = areaId;
 }

@@ -47,8 +47,8 @@
     <delete id="deleteWorkByIds" parameterType="string">
         DELETE FROM attendance WHERE attendance_id in
         <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
-        #{item}
-    </foreach>
+            #{item}
+        </foreach>
     </delete>
 
 </mapper>

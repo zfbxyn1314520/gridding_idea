@@ -27,8 +27,9 @@ public class LeavesAction extends CommonAction {
 
     /**
      * 获取一个权限区域下所有请假申请
+     *
      * @param session
-     * @param pageSize 页面大小
+     * @param pageSize    页面大小
      * @param pageCurrent 页面当前页
      * @return
      */
@@ -46,5 +47,26 @@ public class LeavesAction extends CommonAction {
         }
         return createPageJSONString(map);
     }
+
+    /**
+     * 根据id删除请假申请记录
+     * @param delId
+     * @return
+     */
+    @RequestMapping("/deleteLeavesLogByIds")
+    @ResponseBody
+    public String deleteLeavesLogByIds(String delId) {
+        String[] delIds = delId.split(",");
+        Integer result = this.leavesBo.deleteLeavesLogByIds(delIds);
+        if (result > 0) {
+            logger.info("成功删除请假申请:" + delId.substring(0, delId.length() - 1));
+            return "1";
+        } else {
+            logger.info("删除考请假申请:" + delId.substring(0, delId.length() - 1) + "失败");
+            return "0";
+        }
+
+    }
+
 
 }
