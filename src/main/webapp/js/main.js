@@ -46,32 +46,33 @@ $(function () {
     //保存用户区域信息
     $.get("user/saveUserAreaSession.do?" + (new Date()).getTime());
 
-    $(this).on(BJUI.eventType.beforeAjaxLoad, function (event) {
-
-        console.log($(event.target))
-
-        // console.log(JSON.parse(JSON.stringify(event.target.getElementsByTagName("title"))));
-        // console.log(event.target.getElementsByTagName("title"));
-        // console.log(event);
-        // console.log($(event.target).find('title'))
-        // $(event.target).find('title').each(function () {
-        //     console.log(1)
-        // });
-        // var href = window.location.href;
-        // window.location.href=href.substring(0,href.indexOf("/pop/main.jsp"));
-
-
-        // $(event.target).find('.highlight').each(function(){
-        //     var b='<div class="zero-clipboard"><span class="btn-clipboard">Copy</span></div>';
-        //     var p=$(this).find('> pre.prettyprint');
-        //     p.addClass('linenums').html($.trim(p.html()));
-        //     prettyPrint();
-        //     $(this).before(b);
-        // })
+    $.ajaxSetup({
+        type: 'POST',
+        complete: function(xhr,status) {
+            var sessionStatus = xhr.getResponseHeader('sessionstatus');
+            if(sessionStatus == 'timeout') {
+                var top = getTopWinow();
+                var href = window.location.href;
+                var yes = confirm('由于您长时间没有操作, 请重新登录！');
+                if (yes) {
+                    top.location.href=href.substring(0,href.indexOf("/pop/main.jsp"));
+                }
+            }
+        }
     });
 
+    /**
+     * 在页面中任何嵌套层次的窗口中获取顶层窗口
+     * @return 当前页面的顶层窗口对象
+     */
+    function getTopWinow(){
+        var p = window;
+        while(p != p.parent){
+            p = p.parent;
+        }
+        return p;
+    }
 });
-
 
 
 //单击事件

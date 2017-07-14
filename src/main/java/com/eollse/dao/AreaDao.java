@@ -26,4 +26,6 @@ public interface AreaDao {
 	public List<Area> getAllAreaMenu();
 
 	public List<Area> getAllAreaByLevel(@Param("areaId")Integer areaId);
+
+	public Integer addNewArea(Area area);
 }

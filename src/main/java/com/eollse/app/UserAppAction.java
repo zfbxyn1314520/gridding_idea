@@ -137,6 +137,7 @@ public class UserAppAction extends CommonAction {
                 }
                 session.setAttribute("user", user);
                 session.setMaxInactiveInterval(1800);
+//                this.saveUserAreaSession(session);
                 MDC.put("userId", user.getUserId());
                 MDC.put("logIP", loginIP);
                 logger.info("用户登录成功（App）");

@@ -71,7 +71,12 @@ public class RequestFilter implements Filter {
 				if(path.contains("/app/")){
 					resp.sendError(600);
 				}else{
-					resp.sendRedirect(url);
+					//如果判断是 AJAX 请求,直接设置为session超时
+					if( req.getHeader("x-requested-with") != null && req.getHeader("x-requested-with").equals("XMLHttpRequest") ) {
+						resp.setHeader("sessionstatus", "timeout");
+					} else {
+						resp.sendRedirect(((HttpServletResponse) response).encodeURL(url));
+					}
 				}
 			}
 		}		

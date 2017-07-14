@@ -52,5 +52,10 @@
 		from `area` where areaLevel >= (select areaLevel from area where areaId=#{areaId})
 	</select>
 
+    <insert id="addNewArea" useGeneratedKeys="true" parameterType="area" keyProperty="areaId">
+        INSERT INTO `area`(areaCode,areaParentCode,areaName,shortName,areaLevel)
+        VALUES (#{areaCode},#{areaParentCode},#{areaName},#{shortName},#{areaLevel})
+    </insert>
+
 
 </mapper>

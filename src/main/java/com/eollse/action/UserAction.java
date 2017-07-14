@@ -80,9 +80,8 @@ public class UserAction extends CommonAction {
                     user.setRole(role);
                 }
                 session.setAttribute("user", user);
-                this.saveUserAreaSession(session);
-                System.out.println(session.getAttribute("user"));
-                session.setMaxInactiveInterval(60);
+//                this.saveUserAreaSession(session);
+                session.setMaxInactiveInterval(1800);
                 MDC.put("userId", user.getUserId());
                 MDC.put("logIP", loginIP);
                 this.logger.info("用户登录成功（PC）");
@@ -132,10 +131,10 @@ public class UserAction extends CommonAction {
             System.out.println("captcha=========" + captcha);
 
 //			代码调试
-			map.put("type","shentong");
-			map.put("postid","3327110080673");
-			String rows=httpClient.post("http://www.kuaidi100.com/query","gb2312",map);
-			System.out.println("rows:"+rows);
+//            map.put("type", "shentong");
+//            map.put("postid", "3327110080673");
+//            String rows = httpClient.post("http://www.kuaidi100.com/query", "gb2312", map);
+//            System.out.println("rows:" + rows);
             session.setAttribute("captcha", captcha);
             session.setMaxInactiveInterval(300);
             MDC.put("userId", user.getUserId());
@@ -188,6 +187,7 @@ public class UserAction extends CommonAction {
         String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
         return tempContextUrl;
     }
+
 
     /**
      * 获取用户权限菜单

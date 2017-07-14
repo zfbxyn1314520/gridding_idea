@@ -63,7 +63,7 @@ public class RoleAction extends CommonAction {
 	
 	@RequestMapping("/addNewRole")
 	@ResponseBody
-	public String addNewRole(Role role,HttpServletRequest request,HttpSession session) {
+	public String addNewRole(Role role,HttpSession session) {
 		User s_user=(User)session.getAttribute("user");
 		role.setEditRoleName(s_user.getUserName());
 		role.setEditRoleDate(new Date());

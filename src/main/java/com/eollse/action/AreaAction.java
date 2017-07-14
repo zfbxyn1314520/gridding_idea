@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import com.eollse.util.AreaTreeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,10 +30,15 @@ public class AreaAction extends CommonAction{
 	@RequestMapping("/getAllAreaByAreaId")
 	@ResponseBody
 	public String getAllAreaByAreaId(HttpSession session,Integer pageSize, Integer pageCurrent){
-		User user=(User)session.getAttribute("user"); 
-		List<Integer> areaIds=(List<Integer>)session.getAttribute("areaIds");
-		if(user!=null){
-			Map<String, Object> map=this.areaBo.getAllAreaByAreaId(areaIds,pageSize,pageCurrent);
+		AreaTreeUtil areaTreeUtil;
+		List<Area> areas;
+		User s_user = (User) session.getAttribute("user");
+		if(s_user!=null){
+			areaTreeUtil = new AreaTreeUtil();
+			areas = this.areaBo.getAllAreaByLevel(s_user.getAreaId());
+			areaTreeUtil.treeMenuList(areas, s_user.getArea().getAreaCode());
+			areaTreeUtil.getAreaIds().add(s_user.getAreaId());
+			Map<String, Object> map=this.areaBo.getAllAreaByAreaId(areaTreeUtil.getAreaIds(),pageSize,pageCurrent);
 			String content=this.createPageJSONString(map);
 			return content;
 		}else{
@@ -50,6 +56,19 @@ public class AreaAction extends CommonAction{
 			}
 		}
 		return areas;
+	}
+
+	@RequestMapping("addNewArea")
+	@ResponseBody
+	public String addNewArea(Area area){
+		Integer result = this.areaBo.addNewArea(area);
+		if (result >0){
+			this.logger.info("新增区域"+area.getAreaName()+"成功");
+			return "1";
+		}else{
+			this.logger.info("新增区域"+area.getAreaName()+"失败");
+			return "0";
+		}
 	}
 	
 	

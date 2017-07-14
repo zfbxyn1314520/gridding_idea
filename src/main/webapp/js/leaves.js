@@ -93,7 +93,8 @@ $(function () {
                     {
                         name: '', label: '请假天数', align: 'center', width: width * 0.1,
                         render: function (value, data) {
-                            return DateDiffNoWeekDay(data.leaves_begin_time, data.leaves_end_time);
+                            if (data.leaves_begin_time != undefined)
+                                return DateDiffNoWeekDay(data.leaves_begin_time, data.leaves_end_time);
                         }
                     },
                     {name: 'leaves_reason', label: '请假原因', align: 'center', width: width * 0.13},

@@ -73,5 +73,10 @@ public class AreaBoImpl implements AreaBo {
         return this.areaDao.getAllAreaByLevel(areaId);
     }
 
+    @Override
+    public Integer addNewArea(Area area) {
+        return this.areaDao.addNewArea(area);
+    }
+
 
 }
