@@ -58,67 +58,35 @@ public class UserAppAction extends CommonAction {
     @RequestMapping(value = "/getPhoneCaptcha", produces = {"application/json;charset=utf-8"})
     @ResponseBody
     public String getPhoneCaptcha(User u, HttpSession session, HttpServletRequest request) {
-        User user = this.userBo.validateUser(u);SMSSendUtil smsSendUtil = new SMSSendUtil();
-
+        User user = this.userBo.validateUser(u);
+        SMSSendUtil smsSendUtil = new SMSSendUtil();
+        String mobileTel = user.getMobileTel();
         String captcha = null;
         if (user != null) {
             String oldCaptcha = (String) session.getAttribute("captcha");
             String logIP = getIpAddr(request);
-            if (oldCaptcha != null) {
+            if (oldCaptcha != null && !oldCaptcha.equals("")) {
                 Integer count = this.logBo.getRequestCount(user.getUserId(), logIP);
                 if (count > 2) {
-                    return "{\"statusCode\":201,\"message\":\"你的操作过于频繁，请5分钟之后重新获取！\"}";
+                    return "{\"statusCode\":500,\"message\":\"你的操作次数过于频繁，请5分钟后再试！\"}";
                 }
             }
-            String msg = smsSendUtil.sendPhoneCode(user.getMobileTel());
-            JSONObject jsonObject = JSONObject.fromObject(msg);
-            if (jsonObject.getString("status").equals("200")) {
-                session.setAttribute("captcha", jsonObject.getString("captcha"));
-                session.setMaxInactiveInterval(300);
-                MDC.put("userId", user.getUserId());
-                MDC.put("logIP", logIP);
-                this.logger.info("获取验证码");
-                return "{\"statusCode\":200,\"message\":\"" + jsonObject.getString("msg") + "\",\"captcha\":\""+captcha+"\"}";
+            if (!mobileTel.equals("") && mobileTel != null) {
+                String msg = smsSendUtil.sendPhoneCode(mobileTel);
+                JSONObject jsonObject = JSONObject.fromObject(msg);
+                if (jsonObject.getString("status").equals("200")) {
+                    session.setAttribute("captcha", jsonObject.getString("captcha"));
+                    session.setMaxInactiveInterval(300);
+                    MDC.put("userId", user.getUserId());
+                    MDC.put("logIP", logIP);
+                    this.logger.info("获取验证码");
+                    return "{\"statusCode\":200,\"message\":\"" + jsonObject.getString("msg") + "\",\"captcha\":\"" + captcha + "\"}";
+                } else {
+                    return "{\"statusCode\":201,\"message\":\"" + jsonObject.getString("msg") + "\",\"captcha\":\"000000\"}";
+                }
             } else {
-                return "{\"statusCode\":201,\"message\":\"" + jsonObject.getString("msg") + "\",\"captcha\":\"000000\"}";
+                return "{\"statusCode\":202,\"message\":\"你的账号暂未绑定手机号码，请联系管理员！\"}";
             }
-
-
-//            Random random = new Random();
-//            HttpClientUtil httpClient = new HttpClientUtil();
-//            Map<String, String> map = new HashMap<String, String>();
-//            captcha = String.valueOf(random.nextInt(999999) % (900000) + 100000);
-
-//			调试http请求
-//            map.put("type", "shentong");
-//            map.put("postid", "3327110080673");
-//            String rows = httpClient.post("http://www.kuaidi100.com/query", "gb2312", map);
-//            System.out.println("rows:" + rows);
-//            session.setAttribute("captcha", captcha);
-//            session.setMaxInactiveInterval(300);
-//            System.out.println("newCode=" + (String) session.getAttribute("captcha"));
-//            MDC.put("userId", user.getUserId());
-//            MDC.put("logIP", getIpAddr(request));
-//            this.logger.info("获取验证码");
-//            return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\"" + captcha + "\"}";
-
-//			发送手机验证码
-//			map.put("CorpID","CQLKY00729");
-//	        map.put("Pwd","zxkj@666");
-//	        map.put("Mobile",user.getMobileTel());
-//            map.put("Content","您的手机验证码为："+captcha+"，有效时间为3分钟。请勿向任何单位及个人泄露。如非本人操作，请忽略本消息。");
-//	        String status=httpClient.post("http://yzm.mb345.com/ws/BatchSend2.aspx","gb2312",map);
-//			Integer code = Integer.parseInt(status);
-//			if(code > 0){
-//				session.setAttribute("captcha", captcha);
-//	        	session.setMaxInactiveInterval(300);
-//	        	MDC.put("userId", user.getUserId());
-//            	MDC.put("logIP", logIP);
-//	        	this.logger.info("获取验证码");
-//				return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\""+captcha+"\"}";
-//			}else{
-//				return "{\"statusCode\":201,\"message\":\""+this.getCaptchaStatus(code)+"\",\"captcha\":\"000000\"}";
-//			}
         } else {
             return "{\"statusCode\":300,\"message\":\"用户名或密码错误，请重新输入！\",\"captcha\":\"000000\"}";
         }
@@ -141,26 +109,26 @@ public class UserAppAction extends CommonAction {
         if (code == null)
             code = "";
 //        if (code.equals(captcha)) {
-            User user = this.userBo.validateUser(u);
-            if (user != null) {
-                String loginIP = getIpAddr(request);
-                user.setUser_last_login(new Date());
-                user.setUser_login_ip(loginIP);
-                this.userBo.updateUserLoginInfo(loginIP, new Date(), user.getUserId());
-                Role role = this.roleBo.getRoleById(user.getRoleId());
-                if (role != null) {
-                    user.setRole(role);
-                }
-                session.setAttribute("user", user);
-                session.setMaxInactiveInterval(72*60*60);
-//                this.saveUserAreaSession(session);
-                MDC.put("userId", user.getUserId());
-                MDC.put("logIP", loginIP);
-                logger.info("用户登录成功（App）");
-                return "{\"statusCode\":200,\"message\":\"登陆成功！\",\"roleLevel\":" + user.getRole().getRoleLevel() + ",\"areaName\":\"" + user.getArea().getAreaName() + "\"}";
-            } else {
-                return "{\"statusCode\":300,\"message\":\"用户名或密码错误！\"}";
+        User user = this.userBo.validateUser(u);
+        if (user != null) {
+            String loginIP = getIpAddr(request);
+            user.setUser_last_login(new Date());
+            user.setUser_login_ip(loginIP);
+            this.userBo.updateUserLoginInfo(loginIP, new Date(), user.getUserId());
+            Role role = this.roleBo.getRoleById(user.getRoleId());
+            if (role != null) {
+                user.setRole(role);
             }
+            session.setAttribute("user", user);
+            session.setMaxInactiveInterval(72 * 60 * 60);
+//                this.saveUserAreaSession(session);
+            MDC.put("userId", user.getUserId());
+            MDC.put("logIP", loginIP);
+            logger.info("用户登录成功（App）");
+            return "{\"statusCode\":200,\"message\":\"登陆成功！\",\"roleLevel\":" + user.getRole().getRoleLevel() + ",\"areaName\":\"" + user.getArea().getAreaName() + "\"}";
+        } else {
+            return "{\"statusCode\":300,\"message\":\"用户名或密码错误！\"}";
+        }
 //        } else {
 //            return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
 //        }

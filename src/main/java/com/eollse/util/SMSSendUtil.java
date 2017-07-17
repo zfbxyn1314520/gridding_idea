@@ -32,6 +32,7 @@ public class SMSSendUtil {
             map.put("Content", "您的手机验证码为：" + captcha + "，有效时间为3分钟。请勿向任何单位及个人泄露。如非本人操作，请忽略本消息。");
             String str = httpClient.post("http://yzm.mb345.com/ws/BatchSend2.aspx", "gb2312", map);
             Integer code = Integer.parseInt(str);
+//            Integer code = Integer.parseInt(captcha);
             if (code > 0) {
                 return "{\"status\":\"200\",\"msg\":\"验证码已发送至你的手机，请注意查收！\",\"captcha\":\"" + captcha + "\"}";
             } else {
@@ -128,7 +129,7 @@ public class SMSSendUtil {
                     String[] nums = code.split(",");
                     for (int i = 0; i < nums.length; i++) {
                         if (nums[i].equals(mobileTel)) {
-                            message = "您的手机号码发送验证码次数过多，请一小时后再试！";
+                            message = "你的操作次数过于频繁，请1小时后再试！";
                         }
                     }
                 } else {
@@ -137,5 +138,6 @@ public class SMSSendUtil {
         }
         return message;
     }
+
 
 }
