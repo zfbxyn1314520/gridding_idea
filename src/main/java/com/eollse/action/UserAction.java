@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.eollse.util.AreaTreeUtil;
+import com.eollse.util.SMSSendUtil;
+import net.sf.json.JSONObject;
 import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -106,6 +108,7 @@ public class UserAction extends CommonAction {
     @ResponseBody
     public String getPhoneCaptcha(User u, HttpSession session, HttpServletRequest request) {
         User user = this.userBo.validateUser(u);
+        SMSSendUtil smsSendUtil = new SMSSendUtil();
         String captcha = null;
         if (user != null) {
 
@@ -124,23 +127,37 @@ public class UserAction extends CommonAction {
                 }
             }
 
-            Random random = new Random();
-            HttpClientUtil httpClient = new HttpClientUtil();
-            Map<String, String> map = new HashMap<String, String>();
-            captcha = String.valueOf(random.nextInt(999999) % (900000) + 100000);
-            System.out.println("captcha=========" + captcha);
+            String msg = smsSendUtil.sendPhoneCode(user.getMobileTel());
+            JSONObject jsonObject = JSONObject.fromObject(msg);
+            if (jsonObject.getString("status").equals("200")) {
+                session.setAttribute("captcha", jsonObject.getString("captcha"));
+                session.setMaxInactiveInterval(300);
+                MDC.put("userId", user.getUserId());
+                MDC.put("logIP", logIP);
+                this.logger.info("获取验证码");
+                return "{\"statusCode\":200,\"message\":\"" + jsonObject.getString("msg") + "\"}";
+            } else {
+                return "{\"statusCode\":201,\"message\":\"" + jsonObject.getString("msg") + "\"}";
+            }
+
+
+//            Random random = new Random();
+//            HttpClientUtil httpClient = new HttpClientUtil();
+//            Map<String, String> map = new HashMap<String, String>();
+//            captcha = String.valueOf(random.nextInt(999999) % (900000) + 100000);
+//            System.out.println("captcha=========" + captcha);
 
 //			代码调试
 //            map.put("type", "shentong");
 //            map.put("postid", "3327110080673");
 //            String rows = httpClient.post("http://www.kuaidi100.com/query", "gb2312", map);
 //            System.out.println("rows:" + rows);
-            session.setAttribute("captcha", captcha);
-            session.setMaxInactiveInterval(300);
-            MDC.put("userId", user.getUserId());
-            MDC.put("logIP", logIP);
-            this.logger.info("获取验证码");
-            return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\"}";
+//            session.setAttribute("captcha", captcha);
+//            session.setMaxInactiveInterval(300);
+//            MDC.put("userId", user.getUserId());
+//            MDC.put("logIP", logIP);
+//            this.logger.info("获取验证码");
+//            return "{\"statusCode\":200,\"message\":\"验证码已发送至你的手机，请注意查收！\"}";
 
 //			发送手机验证码
 //			map.put("CorpID","CQLKY00729");

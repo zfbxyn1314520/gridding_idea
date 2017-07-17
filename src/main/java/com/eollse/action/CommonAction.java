@@ -100,54 +100,6 @@ public class CommonAction {
     }
 
 
-    /**
-     * 发送短信验证返回消息判断
-     *
-     * @param code 返回状态值信息
-     * @return
-     */
-    public String getCaptchaStatus(Integer code) {
-        String message = "";
-        switch (code) {
-            case -1:
-                message = "账号未注册！";
-                break;
-            case -2:
-                message = "网络访问超时，请稍后再试！";
-                break;
-            case -3:
-                message = "帐号或密码错误！";
-                break;
-            case -4:
-                message = "只支持单发！";
-                break;
-            case -5:
-                message = "余额不足，请充值！";
-                break;
-            case -6:
-                message = "定时发送时间不是有效的时间格式！";
-                break;
-            case -7:
-                message = "提交信息末尾未签名，请添加中文的企业签名【 】或未采用gb2312编码！";
-                break;
-            case -8:
-                message = "发送内容需在1到300字之间！";
-                break;
-            case -9:
-                message = "发送号码为空！";
-                break;
-            case -10:
-                message = "定时时间不能小于系统当前时间！";
-                break;
-            case -11:
-                message = "屏蔽手机号码！";
-                break;
-            case -100:
-                message = "限制IP访问！";
-                break;
-        }
-        return message;
-    }
 
     /**
      * 上传单张图片方法

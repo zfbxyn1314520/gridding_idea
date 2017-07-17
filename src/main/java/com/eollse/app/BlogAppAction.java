@@ -94,7 +94,7 @@ public class BlogAppAction extends CommonAction{
 	 * @param blogContent 日志内容
 	 * @return string “1”==>表示保存成功 “0”==>表示保存失败
 	 */
-	@RequestMapping(value="/addOneBlog", produces = {"application/json;charset=utf-8"})
+	@RequestMapping(value="/0", produces = {"application/json;charset=utf-8"})
 	@ResponseBody
 	public String saveBlog(Blog blog, HttpSession session){
 		User user = (User) session.getAttribute("user");
