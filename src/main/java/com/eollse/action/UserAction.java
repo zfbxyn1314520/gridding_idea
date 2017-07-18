@@ -110,13 +110,13 @@ public class UserAction extends CommonAction {
     public String getPhoneCaptcha(User u, HttpSession session, HttpServletRequest request) {
         User user = this.userBo.validateUser(u);
         SMSSendUtil smsSendUtil = new SMSSendUtil();
-        String mobileTel = user.getMobileTel();
         if (user != null) {
             Integer roleLevel = this.roleBo.getRoleById(user.getRoleId()).getRoleLevel();
             if (roleLevel > 5) {
                 return "{\"statusCode\":201,\"message\":\"你的账号暂无此权限登录本系统！\"}";
             }
 
+            String mobileTel = user.getMobileTel();
             String oldCaptcha = (String) session.getAttribute("captcha");
             String logIP = getIpAddr(request);
 

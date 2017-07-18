@@ -60,9 +60,9 @@ public class UserAppAction extends CommonAction {
     public String getPhoneCaptcha(User u, HttpSession session, HttpServletRequest request) {
         User user = this.userBo.validateUser(u);
         SMSSendUtil smsSendUtil = new SMSSendUtil();
-        String mobileTel = user.getMobileTel();
         String captcha = null;
         if (user != null) {
+            String mobileTel = user.getMobileTel();
             String oldCaptcha = (String) session.getAttribute("captcha");
             String logIP = getIpAddr(request);
             if (oldCaptcha != null && !oldCaptcha.equals("")) {

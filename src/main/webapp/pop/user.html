@@ -33,11 +33,21 @@
 		        	<input type="hidden" name="userId" id="userId" value=""> 
 		    	</div>
 		    	<div class="row-input required evendiv">
-		        	<label class="row-label">密　　码&nbsp;</label>
-		        	<input type="password" name="password" class="input-nm" id="password" size="20" value="" placeholder="必填项" 
+		        	<label class="row-label">真实姓名&nbsp;</label>
+		        	<input type="password" name="realName" class="input-nm" id="realName" size="20" value="" placeholder="必填项"
 		        		data-rule="密码:required; password;filter(`%<>\/)"/>
 		    	</div>
-	        	<div class="row-input required odddiv" >
+				<div class="row-input required odddiv">
+		        	<label class="row-label">密　　码&nbsp;</label>
+		        	<input type="password" name="password" class="input-nm" id="password" size="20" value="" placeholder="必填项"
+		        		data-rule="密码:required; password;filter(`%<>\/)"/>
+		    	</div>
+				<div class="row-input required evendiv">
+		        	<label class="row-label">确认密码&nbsp;</label>
+		        	<input type="password" name="confirmPwd" class="input-nm" id="confirmPwd" size="20" value="" placeholder="必填项"
+		        		data-rule="确认密码: match(password);"/>
+		    	</div>
+	        	<div class="row-input required odddiv">
 	        		<label class="row-label">所属区域&nbsp;</label>
 	            	<input type="text" class="input-nm" id="areaName" size="20" value="" data-rule="所属区域:required" placeholder="必填项"
 	            		readonly data-toggle="selectztree" data-tree="#areaNameMenu"/>
