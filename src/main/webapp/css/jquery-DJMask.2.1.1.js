@@ -179,7 +179,7 @@ DJMask={
 				alertMaskDomLoaded.show(); 
 				var alertDom='<div class="dj-mask-alert-'+Math.floor(Math.random()*1000000)+'"></div>';
 				$(alertDom).css({
-					"width":"250px",
+					"width":"300px",
 					"overflow":"hidden",
 					"border":"1px solid #ddd",					
 					"z-index":"300",
