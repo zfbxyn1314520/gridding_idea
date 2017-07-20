@@ -115,13 +115,13 @@ public class EventAppAction extends CommonAction {
     /**
      * 添加事件方法
      *
-     * @param eventLevelId 事件等级id
-     * @param sourceTypeId 事件来源id
-     * @param eventTypeId  事件类型id
-     * @param eventTitle   事件标题
-     * @param eventContent 事件内容
-     * @param isImportant  重点督办 1 ==>是，0 ==>否
-     * @param eventPic     事件相关图片
+     * @param event ==> eventLevelId 事件等级id
+     * @param event ==> sourceTypeId 事件来源id
+     * @param event ==> eventTypeId  事件类型id
+     * @param event ==> eventTitle   事件标题
+     * @param event ==> eventContent 事件内容
+     * @param event ==> isImportant  重点督办 1 ==>是，0 ==>否
+     * @param event ==> eventPic     事件相关图片
      * @return
      */
     @RequestMapping(value = "/addNewEventInfo", produces = "application/json;charset=UTF-8")
@@ -198,11 +198,7 @@ public class EventAppAction extends CommonAction {
     /**
      * 上传App事件图片信息
      *
-     * @param request
-     * @param mainName 用户上传图片文件夹名称 not null
-     * @param picName  如果是上传多张图片应该传图片名称用户生成文件夹
      * @return
-     * @throws IOException
      */
     @RequestMapping(value = "/uploadEventImg", produces = {"application/json;charset=utf-8"})
     @ResponseBody

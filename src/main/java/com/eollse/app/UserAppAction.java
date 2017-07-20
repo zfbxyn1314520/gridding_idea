@@ -74,8 +74,9 @@ public class UserAppAction extends CommonAction {
             if (!mobileTel.equals("") && mobileTel != null) {
                 String msg = smsSendUtil.sendPhoneCode(mobileTel);
                 JSONObject jsonObject = JSONObject.fromObject(msg);
+                captcha = jsonObject.getString("captcha");
                 if (jsonObject.getString("status").equals("200")) {
-                    session.setAttribute("captcha", jsonObject.getString("captcha"));
+                    session.setAttribute("captcha", captcha);
                     session.setMaxInactiveInterval(300);
                     MDC.put("userId", user.getUserId());
                     MDC.put("logIP", logIP);
@@ -121,7 +122,6 @@ public class UserAppAction extends CommonAction {
             }
             session.setAttribute("user", user);
             session.setMaxInactiveInterval(72 * 60 * 60);
-//                this.saveUserAreaSession(session);
             MDC.put("userId", user.getUserId());
             MDC.put("logIP", loginIP);
             logger.info("用户登录成功（App）");
@@ -159,7 +159,7 @@ public class UserAppAction extends CommonAction {
      */
     @RequestMapping(value = "/loginOut", produces = {"application/json;charset=utf-8"})
     @ResponseBody
-    private String loginOut(HttpServletRequest request, HttpSession session) {
+    private String loginOut(HttpServletRequest request) {
         //存储日志信息到数据库
         logger.info("退出系统成功！");
         // 清除session
