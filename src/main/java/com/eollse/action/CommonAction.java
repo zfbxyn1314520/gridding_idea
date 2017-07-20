@@ -18,6 +18,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 
 import com.eollse.util.DateJsonValueProcessor;
+import net.coobird.thumbnailator.Thumbnails;
 import net.sf.json.JSONObject;
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.log4j.Logger;
@@ -98,7 +99,6 @@ public class CommonAction {
         content += liststr + "}";
         return content;
     }
-
 
 
     /**
@@ -216,16 +216,20 @@ public class CommonAction {
                                 errorImg += file.getOriginalFilename() + ";";
                                 continue;
                             }
-                            // 文件大小限制
-                            if (file.getSize() > 1 * 1024 * 1024) {
-                                errorImg += file.getOriginalFilename() + ";";
-                                continue;
-                            }
+
                             String fileName = sdf.format(new Date()) + (random.nextInt(999) % (900) + 100);
                             String name = file.getOriginalFilename();
                             imgPath = path + fileName + name.substring(name.lastIndexOf("."), name.length());
                             imgsUrl += imgPath.substring(imgPath.indexOf("images/"), imgPath.length()) + ";";
-                            Streams.copy(file.getInputStream(), new FileOutputStream(imgPath), true);
+                            long size = file.getSize();
+                            // 文件大小限制
+                            if (size > 1 * 1024 * 1024) {
+                                double scale = (1024 * 1024f) / size;
+                                Thumbnails.of(file.getInputStream()).scale(scale).outputQuality(scale).toFile(imgPath);
+                            } else {
+                                Streams.copy(file.getInputStream(), new FileOutputStream(imgPath), true);
+                            }
+
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
