@@ -72,29 +72,36 @@ public class UserAction extends CommonAction {
         String captcha = (String) session.getAttribute("captcha");
         if (code == null)
             code = "";
-        if (code.equals(captcha)) {
-            User user = this.userBo.validateUser(u);
-            if (user != null) {
-                String loginIP = getIpAddr(request);
-                user.setUser_last_login(new Date());
-                user.setUser_login_ip(loginIP);
-                this.userBo.updateUserLoginInfo(getIpAddr(request), new Date(), user.getUserId());
-                Role role = this.roleBo.getRoleById(user.getRoleId());
-                if (role != null) {
-                    user.setRole(role);
+        if (captcha == null)
+            captcha = "";
+        if (!(captcha.equals("") && code.equals(""))) {
+            if (code.equals(captcha)) {
+                User user = this.userBo.validateUser(u);
+                if (user != null) {
+                    String loginIP = getIpAddr(request);
+                    user.setUser_last_login(new Date());
+                    user.setUser_login_ip(loginIP);
+                    this.userBo.updateUserLoginInfo(getIpAddr(request), new Date(), user.getUserId());
+                    Role role = this.roleBo.getRoleById(user.getRoleId());
+                    if (role != null) {
+                        user.setRole(role);
+                    }
+                    session.setAttribute("user", user);
+                    session.setMaxInactiveInterval(1800);
+                    MDC.put("userId", user.getUserId());
+                    MDC.put("logIP", loginIP);
+                    this.logger.info("用户登录成功（PC）");
+                    return "{\"statusCode\":200,\"message\":\"用户登录成功！\"}";
+                } else {
+                    return "{\"statusCode\":300,\"message\":\"用户名或密码错误，请重新输入！\"}";
                 }
-                session.setAttribute("user", user);
-                session.setMaxInactiveInterval(1800);
-                MDC.put("userId", user.getUserId());
-                MDC.put("logIP", loginIP);
-                this.logger.info("用户登录成功（PC）");
-                return "{\"statusCode\":200,\"message\":\"用户登录成功！\"}";
             } else {
-                return "{\"statusCode\":300,\"message\":\"用户名或密码错误，请重新输入！\"}";
+                return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
             }
         } else {
-            return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
+            return "{\"statusCode\":300,\"message\":\"验证码不能为空！\"}";
         }
+
     }
 
     /**
@@ -139,7 +146,7 @@ public class UserAction extends CommonAction {
                 } else {
                     return "{\"statusCode\":202,\"message\":\"" + jsonObject.getString("msg") + "\"}";
                 }
-            }else{
+            } else {
                 return "{\"statusCode\":203,\"message\":\"你的账号暂未绑定手机号码，请联系管理员！\"}";
             }
         } else {

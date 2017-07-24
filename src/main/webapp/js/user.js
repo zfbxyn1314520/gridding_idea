@@ -142,7 +142,7 @@ function addUserInfo() {
         id: 'addUser',
         target: $.CurrentNavtab.find("#addUser"),
         title: '添加用户信息',
-        width: 655,
+        width: 755,
         height: 380,
         mask: true,
         resizable: false,
@@ -162,9 +162,9 @@ function addUserInfo() {
                 $dialog.find('> .dialogContent').css({height: (550 - $dialog.find('> .dialogHeader').outerHeight())});
                 $("#userUploadArea").removeClass("hide");
                 $.CurrentDialog.find("#filePicker div:last").css({
-                    "left": "220px",
-                    "width": "156px",
-                    "height": "25px",
+                    "left": "269px",
+                    "width": "157px",
+                    "height": "24px",
                     "bottom": "auto",
                     "right": "auto"
                 });
@@ -202,7 +202,7 @@ function editUserInfo() {
                 id: 'addUser',
                 target: $.CurrentNavtab.find("#addUser"),
                 title: '编辑用户信息',
-                width: 655,
+                width: 755,
                 height: 550,
                 mask: true,
                 resizable: false,
@@ -362,7 +362,7 @@ function saveUserInfo() {
         }
         var nameStr = "";
         // 判断图片是否上传到服务器中
-        if (ajaxFileUpload()) {
+        // if (ajaxFileUpload()) {
             // 验证表单数据是否合法
             if ($.CurrentDialog.find("#addUserInfo").isValid()) {
                 if ($.CurrentDialog.find("#userBtn > span").text().trim() == "提交") {
@@ -413,9 +413,9 @@ function saveUserInfo() {
                     }
                 });
             }
-        } else {
-            BJUI.alertmsg('error', '图片上传失败！');
-        }
+        // } else {
+        //     BJUI.alertmsg('error', '图片上传失败！');
+        // }
     });
 }
 

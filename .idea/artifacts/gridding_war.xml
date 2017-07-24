@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
   <artifact type="war" build-on-make="true" name="gridding:war">
-    <output-path>$PROJECT_DIR$/target/</output-path>
-    <root id="archive" name="grid.war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="gridding.war">
       <element id="artifact" artifact-name="gridding:war exploded" />
     </root>
   </artifact>

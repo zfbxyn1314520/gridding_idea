@@ -109,29 +109,36 @@ public class UserAppAction extends CommonAction {
         String captcha = (String) session.getAttribute("captcha");
         if (code == null)
             code = "";
-//        if (code.equals(captcha)) {
-        User user = this.userBo.validateUser(u);
-        if (user != null) {
-            String loginIP = getIpAddr(request);
-            user.setUser_last_login(new Date());
-            user.setUser_login_ip(loginIP);
-            this.userBo.updateUserLoginInfo(loginIP, new Date(), user.getUserId());
-            Role role = this.roleBo.getRoleById(user.getRoleId());
-            if (role != null) {
-                user.setRole(role);
+        if (captcha == null)
+            captcha = "";
+        if (!(captcha.equals("") && code.equals(""))) {
+            if (code.equals(captcha)) {
+                User user = this.userBo.validateUser(u);
+                if (user != null) {
+                    String loginIP = getIpAddr(request);
+                    user.setUser_last_login(new Date());
+                    user.setUser_login_ip(loginIP);
+                    this.userBo.updateUserLoginInfo(loginIP, new Date(), user.getUserId());
+                    Role role = this.roleBo.getRoleById(user.getRoleId());
+                    if (role != null) {
+                        user.setRole(role);
+                    }
+                    session.setAttribute("user", user);
+                    session.setMaxInactiveInterval(72 * 60 * 60);
+                    MDC.put("userId", user.getUserId());
+                    MDC.put("logIP", loginIP);
+                    logger.info("用户登录成功（App）");
+                    return "{\"statusCode\":200,\"message\":\"登陆成功！\",\"roleLevel\":" + user.getRole().getRoleLevel() + ",\"areaName\":\"" + user.getArea().getAreaName() + "\"}";
+                } else {
+                    return "{\"statusCode\":300,\"message\":\"用户名或密码错误！\"}";
+                }
+            } else {
+                return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
             }
-            session.setAttribute("user", user);
-            session.setMaxInactiveInterval(72 * 60 * 60);
-            MDC.put("userId", user.getUserId());
-            MDC.put("logIP", loginIP);
-            logger.info("用户登录成功（App）");
-            return "{\"statusCode\":200,\"message\":\"登陆成功！\",\"roleLevel\":" + user.getRole().getRoleLevel() + ",\"areaName\":\"" + user.getArea().getAreaName() + "\"}";
-        } else {
-            return "{\"statusCode\":300,\"message\":\"用户名或密码错误！\"}";
+        }else{
+            return "{\"statusCode\":300,\"message\":\"验证码不能为空！\"}";
         }
-//        } else {
-//            return "{\"statusCode\":300,\"message\":\"验证码错误！\"}";
-//        }
+
     }
 
     /**
