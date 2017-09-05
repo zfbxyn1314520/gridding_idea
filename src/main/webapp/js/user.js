@@ -65,7 +65,8 @@ $(function () {
                             return "<img src='" + headIcon + "'class='tpl-user-panel-profile-picture' style='width:30px;height:30px;margin:0px;'/>";
                         }
                     },
-                    {name: 'userName', label: '用户名', align: 'center', width: width * 0.1},
+                    {name: 'userName', label: '用户名', align: 'center', width: width * 0.09},
+                    {name: 'realName', label: '姓名', align: 'center', width: width * 0.09},
                     {
                         name: 'role', label: '角色', align: 'center', width: width * 0.1,
                         render: function (value, data) {
@@ -73,7 +74,7 @@ $(function () {
                         }
                     },
                     {
-                        name: 'area', label: '所属区域', align: 'center', width: width * 0.21,
+                        name: 'area', label: '所属区域', align: 'center', width: width * 0.15,
                         render: function (value, data) {
                             return value.areaName;
                         }
@@ -90,7 +91,7 @@ $(function () {
                         align: 'center',
                         type: 'date',
                         pattern: 'yyyy-MM-dd HH:mm:ss',
-                        width: width * 0.12
+                        width: width * 0.1
                     },
                     {name: 'user_login_ip', label: 'IP地址', align: 'center', width: width * 0.1},
                     {
@@ -197,7 +198,7 @@ function editUserInfo() {
                 '<i class="am-icon-map-marker sidebar-nav-link-logo"></i>辖区概况&emsp;' +
                 '<i class="am-icon-angle-double-right sidebar-nav-link-logo"></i>' +
                 '<i class="am-icon-align-center sidebar-nav-link-logo"></i>网格员信息&emsp;</span>中修改此用户信息！');
-        }else{
+        } else {
             BJUI.dialog({
                 id: 'addUser',
                 target: $.CurrentNavtab.find("#addUser"),
@@ -229,8 +230,11 @@ function editUserInfo() {
                     var node = zTree.getNodeByParam("areaId", data.areaId);
                     $.CurrentDialog.find('#userId').val(data.userId);
                     $.CurrentDialog.find('#userName').val(data.userName);
-                    $.CurrentDialog.find('#password').val("*********");
-                    $.CurrentDialog.find('#password').attr("disabled", "disabled");
+                    $.CurrentDialog.find('#realName').val(data.realName);
+                    $.CurrentDialog.find('#password').attr({"readonly":"readonly","placeholder":"双击可修改密码"});
+                    $.CurrentDialog.find('#confirmPwd').attr({"readonly": "readonly","placeholder":"可选填"});
+                    $.CurrentDialog.find("#password").attr("novalidate", "novalidate");
+                    $.CurrentDialog.find("#confirmPwd").attr("novalidate", "novalidate");
                     $.CurrentDialog.find('#mobileTel').val(data.mobileTel);
                     $.CurrentDialog.find('#officeTel').val(data.officeTel);
                     $.CurrentDialog.find('#roleId').selectpicker('val', data.roleId);
@@ -258,6 +262,12 @@ function editUserInfo() {
                 $.CurrentDialog.find('#userName').on('valid.field', function (e, result) {
 
                 });
+            });
+            $.CurrentDialog.find("#password").dblclick(function(){
+                $.CurrentDialog.find("#password").removeAttr("readonly");
+                $.CurrentDialog.find("#confirmPwd").removeAttr("readonly");
+                $.CurrentDialog.find("#password").removeAttr("novalidate");
+                $.CurrentDialog.find("#confirmPwd").removeAttr("novalidate");
             });
             saveUserInfo();
         }
@@ -328,7 +338,7 @@ function getOneUserDetail(e) {
         cache: false,
         success: function (data) {
             $.CurrentDialog.find('#d_userName').text(data.userName);
-            $.CurrentDialog.find('#d_password').text("*********");
+            $.CurrentDialog.find('#d_realName').text(data.realName);
             $.CurrentDialog.find('#d_area').text(data.area.areaName);
             $.CurrentDialog.find('#d_role').text(data.role.roleName);
             if (data.user_enable == 1) {
@@ -363,56 +373,56 @@ function saveUserInfo() {
         var nameStr = "";
         // 判断图片是否上传到服务器中
         // if (ajaxFileUpload()) {
-            // 验证表单数据是否合法
-            if ($.CurrentDialog.find("#addUserInfo").isValid()) {
-                if ($.CurrentDialog.find("#userBtn > span").text().trim() == "提交") {
-                    nameStr += $.CurrentDialog.find('#userName').val();
-                    $.ajax({
-                        type: "post",
-                        url: "user/addNewUser.do?" + new Date(),
-                        data: $.CurrentDialog.find("#addUserInfo").serialize(),
-                        dataType: "json",
-                        cache: false,
-                        success: function (data) {
-                            if (data == "1") {
-                                BJUI.dialog('closeCurrent');
-                                $.CurrentNavtab.find('#userInfo').datagrid('refresh', true);
-                                BJUI.alertmsg('ok', "成功添加用户<span style='color:green'>" + nameStr + "<span>！", {
-                                    displayPosition: 'middlecenter'
-                                });
-                            } else {
-                                BJUI.alertmsg('error', '添加失败！');
-                            }
+        // 验证表单数据是否合法
+        if ($.CurrentDialog.find("#addUserInfo").isValid()) {
+            if ($.CurrentDialog.find("#userBtn > span").text().trim() == "提交") {
+                nameStr += $.CurrentDialog.find('#userName').val();
+                $.ajax({
+                    type: "post",
+                    url: "user/addNewUser.do?" + new Date(),
+                    data: $.CurrentDialog.find("#addUserInfo").serialize(),
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        if (data == "1") {
+                            BJUI.dialog('closeCurrent');
+                            $.CurrentNavtab.find('#userInfo').datagrid('refresh', true);
+                            BJUI.alertmsg('ok', "成功添加用户<span style='color:green'>" + nameStr + "<span>！", {
+                                displayPosition: 'middlecenter'
+                            });
+                        } else {
+                            BJUI.alertmsg('error', '添加失败！');
                         }
-                    });
-                } else {
-                    nameStr += $.CurrentDialog.find('#userName').val();
-                    $.ajax({
-                        type: "post",
-                        url: "user/alterUserInfo.do?" + new Date(),
-                        data: $.CurrentDialog.find("#addUserInfo").serialize(),
-                        dataType: "text",
-                        cache: false,
-                        success: function (data) {
-                            if (data == "1") {
-                                BJUI.dialog('closeCurrent');
-                                $.CurrentNavtab.find('#userInfo').datagrid('refresh', false);
-                                BJUI.alertmsg('ok', "成功修改用户<span style='color:green'>" + nameStr + "</span>！", {
-                                    displayPosition: 'middlecenter'
-                                });
-                            } else {
-                                BJUI.alertmsg('error', '修改失败！');
-                            }
-                        }
-                    });
-                }
+                    }
+                });
             } else {
-                BJUI.alertmsg('warn', '验证未通过！', {
-                    okCall: function () {
-                        $('#addUserInfo').validator('cleanUp');
+                nameStr += $.CurrentDialog.find('#userName').val();
+                $.ajax({
+                    type: "post",
+                    url: "user/alterUserInfo.do?" + new Date(),
+                    data: $.CurrentDialog.find("#addUserInfo").serialize(),
+                    dataType: "text",
+                    cache: false,
+                    success: function (data) {
+                        if (data == "1") {
+                            BJUI.dialog('closeCurrent');
+                            $.CurrentNavtab.find('#userInfo').datagrid('refresh', false);
+                            BJUI.alertmsg('ok', "成功修改用户<span style='color:green'>" + nameStr + "</span>！", {
+                                displayPosition: 'middlecenter'
+                            });
+                        } else {
+                            BJUI.alertmsg('error', '修改失败！');
+                        }
                     }
                 });
             }
+        } else {
+            BJUI.alertmsg('warn', '验证未通过！', {
+                okCall: function () {
+                    $('#addUserInfo').validator('cleanUp');
+                }
+            });
+        }
         // } else {
         //     BJUI.alertmsg('error', '图片上传失败！');
         // }
@@ -483,48 +493,50 @@ function convertDate(value) {
     var minute = "";
     var second = "";
     var currentDate = "";
-    if (typeof(value) == 'object') {
-        year = value.year + 1900;
-        month = value.month + 1;
-        day = value.date;
-        hour = value.hours;
-        minute = value.minutes;
-        second = value.seconds;
-    } else {
-        //时间戳
-        var time = new Date(value);
-        year = time.getYear() + 1900;
-        month = time.getMonth() + 1;
-        day = time.getDate();
-        hour = time.getHours();
-        minute = time.getMinutes();
-        second = time.getSeconds();
-    }
-    currentDate = year + "年";
-    if (month >= 10) {
-        currentDate = currentDate + month + "月";
-    } else {
-        currentDate = currentDate + "0" + month + "月";
-    }
-    if (day >= 10) {
-        currentDate = currentDate + day + "日";
-    } else {
-        currentDate = currentDate + "0" + day + "日";
-    }
-    if (hour >= 10) {
-        currentDate = currentDate + " " + hour;
-    } else {
-        currentDate = currentDate + " 0" + hour;
-    }
-    if (minute >= 10) {
-        currentDate = currentDate + ":" + minute;
-    } else {
-        currentDate = currentDate + ":0" + minute;
-    }
-    if (second >= 10) {
-        currentDate = currentDate + ":" + second;
-    } else {
-        currentDate = currentDate + ":0" + second;
+    if (value != null) {
+        if (typeof(value) == 'object') {
+            year = value.year + 1900;
+            month = value.month + 1;
+            day = value.date;
+            hour = value.hours;
+            minute = value.minutes;
+            second = value.seconds;
+        } else {
+            //时间戳
+            var time = new Date(value);
+            year = time.getYear() + 1900;
+            month = time.getMonth() + 1;
+            day = time.getDate();
+            hour = time.getHours();
+            minute = time.getMinutes();
+            second = time.getSeconds();
+        }
+        currentDate = year + "年";
+        if (month >= 10) {
+            currentDate = currentDate + month + "月";
+        } else {
+            currentDate = currentDate + "0" + month + "月";
+        }
+        if (day >= 10) {
+            currentDate = currentDate + day + "日";
+        } else {
+            currentDate = currentDate + "0" + day + "日";
+        }
+        if (hour >= 10) {
+            currentDate = currentDate + " " + hour;
+        } else {
+            currentDate = currentDate + " 0" + hour;
+        }
+        if (minute >= 10) {
+            currentDate = currentDate + ":" + minute;
+        } else {
+            currentDate = currentDate + ":0" + minute;
+        }
+        if (second >= 10) {
+            currentDate = currentDate + ":" + second;
+        } else {
+            currentDate = currentDate + ":0" + second;
+        }
     }
     return currentDate;
 }

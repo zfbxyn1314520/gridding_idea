@@ -8,6 +8,7 @@
         <result property="areaId" column="areaId"/>
         <result property="roleId" column="roleId"/>
         <result property="userName" column="userName"/>
+        <result property="realName" column="realName"/>
         <result property="headIcon" column="headIcon"/>
         <result property="mobileTel" column="mobileTel"/>
         <result property="officeTel" column="officeTel"/>
@@ -31,7 +32,7 @@
 
 
     <select id="validateUser" parameterType="user" resultMap="userResult">
-    	SELECT u.userId,a.areaId,a.areaName,a.areaLevel,a.areaCode,u.roleId,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
+    	SELECT u.userId,a.areaId,a.areaName,a.areaLevel,a.areaCode,u.roleId,u.userName,u.realName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
 		FROM `user` u,`area` a WHERE u.areaId=a.areaId 
 			AND (userName=#{userName} OR mobileTel=#{userName}) AND PASSWORD=#{password} AND user_enable=1
   	</select>
@@ -42,7 +43,7 @@
 
     <select id="getAllUserByAreaId" resultMap="userResult">
         select
-        u.userId,a.areaName,r.roleName,r.roleLevel,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.user_enable,u.user_last_login,u.user_login_ip
+        u.userId,a.areaName,r.roleName,r.roleLevel,u.userName,u.realName,u.headIcon,u.mobileTel,u.officeTel,u.user_enable,u.user_last_login,u.user_login_ip
         from `user` u,`area` a,role r where a.areaId=u.areaId and u.roleId=r.roleId and u.areaId in
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item}
@@ -71,7 +72,7 @@
 
     <select id="getOneUserInfo" parameterType="user" resultType="user">
         select
-        userId,areaId,roleId,userName,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable,user_last_login,user_login_ip
+        userId,areaId,roleId,userName,realName,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable,user_last_login,user_login_ip
         from `user`
         <where>
             <if test="userId==null">
@@ -84,20 +85,23 @@
     </select>
 
     <select id="getAppUserInfo" parameterType="int" resultMap="userResult">
-   		SELECT u.userId,a.areaId,a.areaName,u.roleId,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserDate,u.user_enable
+   		SELECT u.userId,a.areaId,a.areaName,u.roleId,u.userName,u.realName,u.headIcon,u.mobileTel,u.officeTel,u.editUserDate,u.user_enable
 		FROM `user` u,`area` a WHERE u.areaId=a.areaId AND u.userId=#{userId}
     </select>
 
     <insert id="addNewUser" parameterType="user" useGeneratedKeys="true" keyProperty="userId">
-  		insert into `user`(areaId,roleId,userName,password,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable) 
-    	values(#{areaId},#{roleId},#{userName},#{password},#{headIcon},#{mobileTel},#{officeTel},#{editUserName},#{editUserDate},#{user_enable})
+  		insert into `user`(areaId,roleId,userName,realName,password,headIcon,mobileTel,officeTel,editUserName,editUserDate,user_enable)
+    	values(#{areaId},#{roleId},#{userName},#{realName},#{password},#{headIcon},#{mobileTel},#{officeTel},#{editUserName},#{editUserDate},#{user_enable})
   	</insert>
 
     <update id="alterUserInfo" parameterType="user">
-    	update `user` set areaId=#{areaId},roleId=#{roleId},userName=#{userName},headIcon=#{headIcon},
-    	mobileTel=#{mobileTel},officeTel=#{officeTel},editUserName=#{editUserName},editUserDate=#{editUserDate},user_enable=#{user_enable}
-    	where userId=#{userId}
-  	</update>
+        update `user` set areaId=#{areaId},roleId=#{roleId},userName=#{userName},realName=#{realName},headIcon=#{headIcon},
+        mobileTel=#{mobileTel},officeTel=#{officeTel},editUserName=#{editUserName},editUserDate=#{editUserDate},user_enable=#{user_enable}
+        <if test="password!=null and password!=''">
+            ,password=#{password}
+        </if>
+        where userId=#{userId}
+    </update>
 
     <update id="alterAuditStatus" parameterType="user">
     	update `user` set user_enable=#{user_enable} where userId=#{userId}
@@ -120,7 +124,7 @@
 
     <select id="userCountByRoleId" resultMap="userResult">
         select
-        u.userId,a.areaName,r.roleName,u.userName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
+        u.userId,a.areaName,r.roleName,u.userName,u.realName,u.headIcon,u.mobileTel,u.officeTel,u.editUserName,u.editUserDate,u.user_enable
         from `user` u,`area` a,role r where a.areaId=u.areaId and u.roleId=r.roleId and r.roleId=#{role.roleId} and
         u.areaId in
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">

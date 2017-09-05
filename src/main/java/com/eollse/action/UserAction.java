@@ -310,13 +310,12 @@ public class UserAction extends CommonAction {
      * 添加用户信息
      *
      * @param user    用户实体类
-     * @param request
      * @param session 用户登陆session
      * @return
      */
     @RequestMapping("/addNewUser")
     @ResponseBody
-    public String addNewUser(User user, HttpServletRequest request, HttpSession session) {
+    public String addNewUser(User user, HttpSession session) {
         User s_user = (User) session.getAttribute("user");
         user.setEditUserName(s_user.getUserName());
         user.setEditUserDate(new Date());

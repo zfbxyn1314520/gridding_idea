@@ -1,160 +1,195 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>用户信息</title>
-	
+
     <meta name="keywords" content="keyword1,keyword2,keyword3">
     <meta name="description" content="this is my page">
     <meta name="content-type" content="text/html; charset=UTF-8">
-    
+
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
     <script type="text/javascript" src="js/user.js"></script>
     <style type="text/css">
-    	#userDetailTab{border:1px #E5E5E5 solid; width: 555px;margin: -5px;}
-    	#userDetailTab td:nth-child(odd){width:100px;height: 30px;text-align: center;background-color: #F7F7F9;}
-    	#userDetailTab td:nth-child(even){padding-left:5px;}
-    	#addUserInfo .odddiv{display: inline-block;width: 355px;}
-    	#addUserInfo .evendiv{float: right;width: 355px;}
+        #userDetailTab {
+            border: 1px #E5E5E5 solid;
+            width: 555px;
+            margin: -5px;
+        }
+
+        #userDetailTab td:nth-child(odd) {
+            width: 100px;
+            height: 30px;
+            text-align: center;
+            background-color: #F7F7F9;
+        }
+
+        #userDetailTab td:nth-child(even) {
+            padding-left: 5px;
+        }
+
+        #addUserInfo .odddiv {
+            display: inline-block;
+            width: 355px;
+        }
+
+        #addUserInfo .evendiv {
+            float: right;
+            width: 355px;
+        }
     </style>
-    
-  </head>
-  
-  <body>
-  	<table id="userInfo" class="table table-bordered"></table>
-  	
-  	<!-- 增加/编辑 弹框容器 -->
-     <div id="addUser" data-noinit="true" class="hide">
-     	<div class="bjui-pageContent">
-	  		<form id="addUserInfo" enctype="multipart/form-data">
-		    	<div class="row-input required odddiv">
-		        	<label class="row-label">用&ensp;户&ensp;名&nbsp;</label>
-		        	<input type="text" name="userName" class="input-nm" id="userName" size="25" value="" placeholder="必填项"
-		        		data-rule="用户名:required; username; remote[user/validateUsername.do, userName]"/>
-		        	<input type="hidden" name="userId" id="userId" value=""> 
-		    	</div>
-		    	<div class="row-input required evendiv">
-		        	<label class="row-label">真实姓名&nbsp;</label>
-		        	<input type="password" name="realName" class="input-nm" id="realName" size="25" value="" placeholder="必填项"
-		        		data-rule="密码:required; password;filter(`%<>\/)"/>
-		    	</div>
-				<div class="row-input required odddiv">
-		        	<label class="row-label">密　　码&nbsp;</label>
-		        	<input type="password" name="password" class="input-nm" id="password" size="25" value="" placeholder="必填项"
-		        		data-rule="密码:required; password;filter(`%<>\/)"/>
-		    	</div>
-				<div class="row-input required evendiv">
-		        	<label class="row-label">确认密码&nbsp;</label>
-		        	<input type="password" name="confirmPwd" class="input-nm" id="confirmPwd" size="25" value="" placeholder="必填项"
-		        		data-rule="确认密码: match(password);"/>
-		    	</div>
-	        	<div class="row-input required odddiv">
-	        		<label class="row-label">所属区域&nbsp;</label>
-	            	<input type="text" class="input-nm" id="areaName" size="25" value="" data-rule="所属区域:required" placeholder="必填项"
-	            		readonly data-toggle="selectztree" data-tree="#areaNameMenu"/>
-	            	<ul id="areaNameMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
-	            		data-radio-type="all" data-on-check="User_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'showAreaMenu'}">
-	            	</ul>          	
-	            	<input type="hidden" name="areaId" id="areaId" value="">
-	        	</div>
-	        	<div class="row-input required evendiv">
-	        		<label class="row-label">角色名称&nbsp;</label>
-	            	<select data-toggle="selectpicker" id="roleId" name="roleId" data-rule="checked" data-width="250"></select>
-	        	</div>
-	        	<div class="row-input odddiv">
-		    		<label class="row-label">移动电话&nbsp;</label>
-		        	<input type="text" name="mobileTel" class="input-nm" id="mobileTel" data-rule="required(from, input[id$=Tel]); mobile" size="25" value="" data-msg-required="请至少填写一种联系方式" />
-		   		</div>
-		   		<div class="row-input evendiv">
-		        	<label class="row-label">办公电话&nbsp;</label>
-		        	<input type="text" name="officeTel" class="input-nm" id="officeTel" data-rule="required(from, input[id$=Tel]); tel" size="25" value="" />
-		   		</div>
-		   		<div class="row-input odddiv">
-		    		<label class="row-label">编辑时间&nbsp;</label>
-		    		<input type="text" data-toggle="datepicker" id="editUserDate" class="input-nm" size="25" data-pattern="yyyy年MM月dd日 HH:mm:ss" value="" >
-		    	</div>
-		   		<div class="row-input evendiv" >
-		   			<label class="row-label">是否启用&nbsp;</label>　
-	        		<input type="radio" name="user_enable" id="user_enable" value="1" data-rule="checked" data-toggle="icheck" checked="checked" data-label="启用">　
-	        		<input type="radio" name="user_enable" id="user_disable" value="0" data-toggle="icheck" data-label="禁用">
-		   		</div>
-		   		<div class="row-input">
-		    		<label class="row-label">上传头像&nbsp;</label>
-		   			<input type="text" name="headIcon" class="input-nm" id="headIcon" size="63" value="" readonly placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传1张！"/>
-		   		</div>
-	            <div id="userUploadArea" class="hide" style="margin-left:16px; margin-top:25px; width: 698px;">
-	            	<input type="file"  id="headPicUplod" data-name="user" data-toggle="webuploader" data-options="{
+
+</head>
+
+<body>
+<table id="userInfo" class="table table-bordered"></table>
+
+<!-- 增加/编辑 弹框容器 -->
+<div id="addUser" data-noinit="true" class="hide">
+    <div class="bjui-pageContent">
+        <form id="addUserInfo" enctype="multipart/form-data">
+            <div class="row-input required odddiv">
+                <label class="row-label">用&ensp;户&ensp;名&nbsp;</label>
+                <input type="text" name="userName" class="input-nm" id="userName" size="25" value="" placeholder="必填项"
+                       data-rule="用户名:required; username; remote[user/validateUsername.do, userName]"/>
+                <input type="hidden" name="userId" id="userId" value="">
+            </div>
+            <div class="row-input evendiv">
+                <label class="row-label">真实姓名&nbsp;</label>
+                <input type="text" name="realName" class="input-nm" id="realName" size="25" value=""
+                       placeholder="必填项"/>
+            </div>
+            <div class="row-input required odddiv">
+                <label class="row-label">密　　码&nbsp;</label>
+                <input type="password" name="password" class="input-nm" id="password" size="25" value=""
+                       placeholder="必填项"
+                       data-rule="密码:required; password;filter(`%<>\/)"/>
+            </div>
+            <div class="row-input required evendiv">
+                <label class="row-label">确认密码&nbsp;</label>
+                <input type="password" name="confirmPwd" class="input-nm" id="confirmPwd" size="25" value=""
+                       placeholder="必填项"
+                       data-rule="确认密码: match(password);"/>
+            </div>
+            <div class="row-input required odddiv">
+                <label class="row-label">所属区域&nbsp;</label>
+                <input type="text" class="input-nm" id="areaName" size="25" value="" data-rule="所属区域:required"
+                       placeholder="必填项"
+                       readonly data-toggle="selectztree" data-tree="#areaNameMenu"/>
+                <ul id="areaNameMenu" class="ztree hide" data-toggle="ztree" data-check-enable="true"
+                    data-chk-style="radio"
+                    data-radio-type="all" data-on-check="User_NodeCheck" data-on-click="S_NodeClick"
+                    data-options="{nodes:'showAreaMenu'}">
+                </ul>
+                <input type="hidden" name="areaId" id="areaId" value="">
+            </div>
+            <div class="row-input required evendiv">
+                <label class="row-label">角色名称&nbsp;</label>
+                <select data-toggle="selectpicker" id="roleId" name="roleId" data-rule="checked"
+                        data-width="250"></select>
+            </div>
+            <div class="row-input odddiv">
+                <label class="row-label">移动电话&nbsp;</label>
+                <input type="text" name="mobileTel" class="input-nm" id="mobileTel"
+                       data-rule="required(from, input[id$=Tel]); mobile" size="25" value=""
+                       data-msg-required="请至少填写一种联系方式"/>
+            </div>
+            <div class="row-input evendiv">
+                <label class="row-label">办公电话&nbsp;</label>
+                <input type="text" name="officeTel" class="input-nm" id="officeTel"
+                       data-rule="required(from, input[id$=Tel]); tel" size="25" value=""/>
+            </div>
+            <div class="row-input odddiv">
+                <label class="row-label">编辑时间&nbsp;</label>
+                <input type="text" data-toggle="datepicker" id="editUserDate" class="input-nm" size="25"
+                       data-pattern="yyyy年MM月dd日 HH:mm:ss" value="">
+            </div>
+            <div class="row-input evendiv">
+                <label class="row-label">是否启用&nbsp;</label>　
+                <input type="radio" name="user_enable" id="user_enable" value="1" data-rule="checked"
+                       data-toggle="icheck" checked="checked" data-label="启用">　
+                <input type="radio" name="user_enable" id="user_disable" value="0" data-toggle="icheck" data-label="禁用">
+            </div>
+            <div class="row-input">
+                <label class="row-label">上传头像&nbsp;</label>
+                <input type="text" name="headIcon" class="input-nm" id="headIcon" size="63" value="" readonly
+                       placeholder="请上传单张图片大小不超过1M（.jpg/.jpeg/.png格式），最多可上传1张！"/>
+            </div>
+            <div id="userUploadArea" class="hide" style="margin-left:16px; margin-top:25px; width: 698px;">
+                <input type="file" id="headPicUplod" data-name="user" data-toggle="webuploader" data-options="{
 	                    pick: {label: '点击选择图片'},server: 'user/uploadHeadIcon.do',fileNumLimit: 1,fileSingleSizeLimit: 1024*1024,
 	                    duplicate: true,formData: {mainName:'user'},required: true,uploaded: 'images/user/default.png',basePath: '',
 	                    accept: {
 	                    	title: '图片',extensions: 'jpg,jpeg,png',mimeTypes: '.jpg,.png'
 	                    }
 	                }">
-	        	</div>
-	  		</form>
-	  	</div>
-  		<div class="bjui-pageFooter">
-  			<div class="dialogFooterBtn">
-	  			<button type="button" id="userBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
-	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
-			</div>
-		</div>
-  	</div>
-  	
-  	<!-- 查看 弹框容器 -->
-     <div id="userDetail" class="hide">
-     	<div class="bjui-pageContent">
-	     	<table id="userDetailTab" border="1">
-	     		<tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
-    				<td colspan="4">用&ensp;户&ensp;基&ensp;本&ensp;信&ensp;息</td>
-    			</tr>
-	     		<tr>
-	     			<td><label class="row-label">用&nbsp;&nbsp;户&nbsp;&nbsp;名</label></td>
-	     			<td colspan="2" id="d_userName"> </td>
-	     			<td id="d_headIcon" rowspan="4" style="width: 120px;height:120px; padding: 3px;background-color: white;">
-	     				<img src="" alt="暂无头像" style="width: 120px;height:120px;color: gray;">
-	     			</td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">密　　码</label></td>
-	     			<td colspan="2" id="d_password"> </td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">角色名称</label></td>
-	     			<td  colspan="2" id="d_role"> </td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">编辑时间</label></td>
-	     			<td colspan="2" id="d_editTime"> </td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">编&nbsp;&nbsp;辑&nbsp;&nbsp;人</label></td>
-	     			<td id="d_editTor"> </td>
-	     			<td><label class="row-label">使用状态</label></td>
-	     			<td id="d_enable"></td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">移动电话</label></td>
-	     			<td id="d_mobileTel"> </td>
-	     			<td><label class="row-label">办公电话</label></td>
-	     			<td id="d_officeTel"> </td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">最近登录</label></td>
-	     			<td id="d_user_last_login"> </td>
-	     			<td><label class="row-label">I&ensp;P&ensp;地址</label></td>
-	     			<td id="d_user_login_ip"> </td>
-	     		</tr>
-	     		<tr>
-	     			<td><label class="row-label">所属区域</label></td>
-	     			<td colspan="3" id="d_area"> </td>
-	     		</tr>
-	     	</table>
-	     </div>
-     	<div class="bjui-pageFooter">
-  			<div class="dialogFooterBtn">
-	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
-			</div>
-		</div>
-  	</div>
-  </body>
+            </div>
+        </form>
+    </div>
+    <div class="bjui-pageFooter">
+        <div class="dialogFooterBtn">
+            <button type="button" id="userBtn" class="btn-blue" data-icon="check"><span>提交</span></button>
+            　
+            <button type="button" class="btn-close" data-icon="close">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- 查看 弹框容器 -->
+<div id="userDetail" class="hide">
+    <div class="bjui-pageContent">
+        <table id="userDetailTab" border="1">
+            <tr style="color: #d9534f;font-weight: bolder;height: 40px;font-family: 幼圆;">
+                <td colspan="4">用&ensp;户&ensp;基&ensp;本&ensp;信&ensp;息</td>
+            </tr>
+            <tr>
+                <td><label class="row-label">用&nbsp;&nbsp;户&nbsp;&nbsp;名</label></td>
+                <td colspan="2" id="d_userName"></td>
+                <td id="d_headIcon" rowspan="4"
+                    style="width: 120px;height:120px; padding: 3px;background-color: white;">
+                    <img src="" alt="暂无头像" style="width: 120px;height:120px;color: gray;">
+                </td>
+            </tr>
+            <tr>
+                <td><label class="row-label">姓　　名</label></td>
+                <td colspan="2" id="d_realName"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">角色名称</label></td>
+                <td colspan="2" id="d_role"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">编辑时间</label></td>
+                <td colspan="2" id="d_editTime"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">编&nbsp;&nbsp;辑&nbsp;&nbsp;人</label></td>
+                <td id="d_editTor"></td>
+                <td><label class="row-label">使用状态</label></td>
+                <td id="d_enable"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">移动电话</label></td>
+                <td id="d_mobileTel"></td>
+                <td><label class="row-label">办公电话</label></td>
+                <td id="d_officeTel"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">最近登录</label></td>
+                <td id="d_user_last_login"></td>
+                <td><label class="row-label">I&ensp;P&ensp;地址</label></td>
+                <td id="d_user_login_ip"></td>
+            </tr>
+            <tr>
+                <td><label class="row-label">所属区域</label></td>
+                <td colspan="3" id="d_area"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="bjui-pageFooter">
+        <div class="dialogFooterBtn">
+            <button type="button" class="btn-close" data-icon="close">关闭</button>
+        </div>
+    </div>
+</div>
+</body>
 </html>

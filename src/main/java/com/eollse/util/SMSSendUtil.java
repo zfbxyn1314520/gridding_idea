@@ -66,7 +66,7 @@ public class SMSSendUtil {
                 message = "只支持单发！";
                 break;
             case -5:
-                message = "余额不足，请充值！";
+                message = "短信平台余额不足，请联系管理员！";
                 break;
             case -6:
                 message = "定时发送时间不是有效的时间格式！";
