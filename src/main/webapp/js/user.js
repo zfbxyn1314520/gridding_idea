@@ -231,7 +231,7 @@ function editUserInfo() {
                     $.CurrentDialog.find('#userId').val(data.userId);
                     $.CurrentDialog.find('#userName').val(data.userName);
                     $.CurrentDialog.find('#realName').val(data.realName);
-                    $.CurrentDialog.find('#password').attr({"readonly":"readonly","placeholder":"双击可修改密码"});
+                    $.CurrentDialog.find('#password').attr({"readonly":"readonly","placeholder":"双击可修改原密码"});
                     $.CurrentDialog.find('#confirmPwd').attr({"readonly": "readonly","placeholder":"可选填"});
                     $.CurrentDialog.find("#password").attr("novalidate", "novalidate");
                     $.CurrentDialog.find("#confirmPwd").attr("novalidate", "novalidate");
