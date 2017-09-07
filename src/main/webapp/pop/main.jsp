@@ -131,6 +131,11 @@
             float: right;
             margin-right: 25px;
         }
+
+        .am-fr ul li a:first-child:hover {
+            color: red;
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -156,7 +161,7 @@
                     overwriteHomeTab: false //[可选]当打开一个未定义id的navtab时，是否可以覆盖主navtab(我的主页)
                 },
                 debug: true,    // [可选]调试模式 [true|false，默认false]
-                theme: 'purple' // 若有Cookie['bjui_theme'],优先选择Cookie['bjui_theme']。皮肤[五种皮肤:default, orange, purple, blue, red, green]
+                theme: 'blue' // 若有Cookie['bjui_theme'],优先选择Cookie['bjui_theme']。皮肤[五种皮肤:default, orange, purple, blue, red, green]
             });
             //时钟
             var today = new Date();
@@ -216,6 +221,7 @@
                 return false;
             }
         }
+
         //禁止后退键 作用于Firefox、Opera
         document.onkeypress = forbidBackSpace;
         //禁止后退键  作用于IE、Chrome
@@ -316,15 +322,15 @@
                         <li><a href="javascript:;" class="theme_default" data-toggle="theme" data-theme="default">&nbsp;<i class="fa fa-tree"></i> 黑白分明&nbsp;&nbsp;</a></li>
                         <li><a href="javascript:;" class="theme_orange" data-toggle="theme" data-theme="orange">&nbsp;<i class="fa fa-tree"></i> 橘子红了</a></li>
                         -->
-                        <li class="active">
+                        <li>
                             <a href="javascript:;" class="theme_purple" data-toggle="theme" data-theme="purple"
                                style="color: purple;">&nbsp;
                                 <i class="fa fa-tree"></i> 紫罗兰
                             </a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="javascript:;" class="theme_blue" data-toggle="theme" data-theme="blue"
-                               style="color: blue;">&nbsp;
+                               style="color: #0e90d2;">&nbsp;
                                 <i class="fa fa-tree"></i> 天空蓝
                             </a>
                         </li>
@@ -378,7 +384,7 @@
                                     <img src="<%=headIcon %>" alt="头像">
                                 </div>
                                 <div style="margin-left: 80px;margin-top: -60px;">
-										<span class="user-panel-logged-in-text"> 
+										<span class="user-panel-logged-in-text">
 											<i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>&nbsp;${sessionScope.user.role.roleName}
 										</span>
                                     <a href="javascript:;" class="tpl-user-panel-action-link">

@@ -166,6 +166,7 @@
     $("#validate").click(function () {
         $("#captcha").removeAttr("novalidate");
         if ($("#loginForm").isValid()) {
+            DJMask.loadingCss();
             $.ajax({
                 url: "user/login.do?" + (new Date()).getTime(), // 加随机数防止缓存
                 type: "POST",
@@ -173,6 +174,7 @@
                 dataType: "json",
                 cache: false,
                 success: function (result) {
+                    DJMask.loading("close");
                     if (result.statusCode == "200") {
                         if (location.pathname == "/grid/index.html") {
                             var url = window.location.href.substring(0, window.location.href.indexOf("index.html", 0));

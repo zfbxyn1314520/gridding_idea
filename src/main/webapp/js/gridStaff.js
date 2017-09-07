@@ -689,6 +689,7 @@ function addOneStaffAppStaff(e) {
     var gridPostName = e.gridPostName;
 
 	if(gridPostName=="网格员"){
+
 	}
 	// var count=$("#app_roleId").options.length;
 	// console.log(count)

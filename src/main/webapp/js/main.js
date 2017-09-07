@@ -3,6 +3,22 @@
  * author 李宁财
  */
 $(function () {
+
+    var themeName = $.cookie('bjui_theme') || 'blue';
+    var color = "";
+    switch (themeName) {
+        case "blue":
+            color = "#0e90d2";
+            break;
+        case "purple":
+            color = "#573e7e";
+            break;
+        case "green":
+            color = "#008000";
+            break;
+    }
+    $(".am-fr>ul>li>a:first-child").css("color", color);
+
     //生成main.html页面的左边导航菜单
     $.ajax({
         type: "get",
@@ -11,34 +27,55 @@ $(function () {
         cache: false,
         success: function (data) {
             var menu = "<ul class='sidebar-nav'>";
+            var str = "";
+            var num = 0;
             for (var i = 0; i < data.length; i++) {
                 if (data[i].parentMenuId == null) {
-                    if (data[i].menuName == "我的主页") {
-                        menu += "<li class='sidebar-nav-link'><a href='javascript:void(0);' class='active'>" +
-                            "<i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>我的主页</a></li>";
-                        continue;
-                    } else {
-                        menu += "<li class='sidebar-nav-link'><a href='javascript:void(0);' class='sidebar-nav-sub-title'>" +
-                            "<i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>" + data[i].menuName +
-                            "<span class='am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico' style='position:absolute; left:170px;'></span></a>" +
-                            "<ul class='sidebar-nav sidebar-nav-sub'>";
+
+                    menu += "<li class='sidebar-nav-link sidebar-nav-link-" + themeName + "'><a href='javascript:void(0);' class='sidebar-nav-sub-title";
+                    if (num == 0) {
+                        menu += " active";
                     }
+                    menu += "'><i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>" + data[i].menuName;
+
                     for (var j = 0; j < data.length; j++) {
                         if (data[i].menuId == data[j].parentMenuId && data[j].menuUri != null) {
-                            menu += "<li class='sidebar-nav-link'><a href='" + data[j].menuUri + "' data-id='navTab" + data[j].menuId + "' " +
-                                "data-title='" + data[j].menuName + "' data-toggle='navtab'>" +
-                                "<span style='margin-left:10px;' class='" + data[j].menuIcon + " sidebar-nav-link-logo'></span>&nbsp;" + data[j].menuName + "</a></li>";
+                            str += "<li class='sidebar-nav-link sidebar-nav-link-" + themeName + "'><a href='" + data[j].menuUri +
+                                "' data-id='navTab" + data[j].menuId + "' data-title='" + data[j].menuName + "' data-toggle='navtab' " +
+                                "class='sidebar-nav-sub-title'><span style='margin-left:10px;' class='" + data[j].menuIcon +
+                                " sidebar-nav-link-logo'></span>&nbsp;" + data[j].menuName + "</a></li>";
                         }
                     }
-                    menu += "</ul></li>";
+
+                    if (str != "") {
+                        menu += "<span class='am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico' style='position:absolute; left:170px;'>" +
+                            "</span></a><ul class='sidebar-nav sidebar-nav-sub'>" + str + "</ul></li>";
+                    } else {
+                        menu += "</a></li>";
+                    }
+                    str = "";
+                    num++;
                 }
             }
             menu += "</ul>";
             $("#navTab").html(menu);
+
             //侧边菜单
             $('.sidebar-nav-sub-title').on('click', function () {
+                $('.sidebar-nav-sub-title').removeClass("active");
+                $('.sidebar-nav-sub-title').removeClass("sub-active-" + themeName);
+                if ($(this).parent().parent().attr("class").trim() == "sidebar-nav sidebar-nav-sub") {
+                    $(this).addClass("sub-active-" + themeName);
+                    $(this).parent().parent().parent().children("a").addClass("active");
+                } else {
+                    $(this).parent().children("a").addClass("active");
+                }
                 $(this).siblings('.sidebar-nav-sub').slideToggle(80).end()
                     .find('.sidebar-nav-sub-ico').toggleClass('sidebar-nav-sub-ico-rotate');
+            });
+
+            $('#bjui-themes > li > a').on('click', function () {
+                window.location.reload();
             });
         }
     });
@@ -48,14 +85,14 @@ $(function () {
 
     $.ajaxSetup({
         type: 'POST',
-        complete: function(xhr,status) {
+        complete: function (xhr, status) {
             var sessionStatus = xhr.getResponseHeader('sessionstatus');
-            if(sessionStatus == 'timeout') {
+            if (sessionStatus == 'timeout') {
                 var top = getTopWinow();
                 var href = window.location.href;
                 var yes = confirm('由于您长时间没有操作, 请重新登录！');
                 if (yes) {
-                    top.location.href=href.substring(0,href.indexOf("/pop/main.jsp"));
+                    top.location.href = href.substring(0, href.indexOf("/pop/main.jsp"));
                 }
             }
         }
@@ -65,15 +102,14 @@ $(function () {
      * 在页面中任何嵌套层次的窗口中获取顶层窗口
      * @return 当前页面的顶层窗口对象
      */
-    function getTopWinow(){
+    function getTopWinow() {
         var p = window;
-        while(p != p.parent){
+        while (p != p.parent) {
             p = p.parent;
         }
         return p;
     }
 });
-
 
 //单击事件
 function S_NodeClick(event, treeId, treeNode) {
