@@ -17,7 +17,32 @@ $(function () {
             color = "#008000";
             break;
     }
+
     $(".am-fr>ul>li>a:first-child").css("color", color);
+    $('body').loading({
+        loadingWidth: 300,
+        title: '',
+        name: 'loading',
+        titleColor: '#fff',
+        discColor: color,
+        discription: '请稍后，见证奇迹的时刻马上揭晓......',
+        direction: 'column',
+        type: 'origin',
+        originBg: color,
+        originDivWidth: 40,
+        originDivHeight: 40,
+        originWidth: 6,
+        originHeight: 6,
+        smallLoading: false,
+        loadingBg: 'rgba(0,0,0,0)',
+        loadingMaskBg: 'rgba(22,22,22,0.2)'
+    });
+    document.onreadystatechange = function () {
+        console.log("Load status is "+document.readyState)
+        if (document.readyState == "complete") {
+            removeLoading('loading');
+        }
+    }
 
     //生成main.html页面的左边导航菜单
     $.ajax({

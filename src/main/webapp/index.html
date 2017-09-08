@@ -7,13 +7,15 @@
     <link rel="shortcut icon" href="images/favicon.ico"/>
     <link rel="bookmark" href="images/favicon.ico"/>
     <link href="css/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="B-JUI/assets/css/loading.css">
     <!-- 引入jquery.js库 -->
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
     <!-- 提示插件 -->
-    <script type="text/javascript" src="css/jquery-DJMask.2.1.1.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="B-JUI/assets/js/jquery-DJMask.2.1.1.js" charset="UTF-8"></script>
     <!-- 引入 nice validate 表单验证-->
-    <script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.js?local=zh-CN"></script>
-    <script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
+    <script type="text/javascript" src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.js?local=zh-CN"></script>
+    <script type="text/javascript" src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
+    <script type="text/javascript" src="B-JUI/assets/js/loading.js"></script>
 
     <!-- 引入封装了failback的接口--initGeetest -->
     <!-- <script src="http://static.geetest.com/static/tools/gt.js"></script> -->
@@ -63,6 +65,7 @@
     <!-- <h3>网&ensp;格&ensp;信&ensp;息&ensp;化&ensp;管&ensp;理&ensp;系&ensp;统</h3> -->
 </div>
 <form id="loginForm">
+    <div class="fakeloader"></div>
     <div style="background: rgb(255, 255, 255); margin: -160px auto auto; border: 1px solid rgb(231, 231, 231); border-image: none; width: 400px; height: 260px; text-align: center;">
         <div style="width: 165px; height: 96px; position: absolute;">
             <div class="tou"></div>
@@ -166,7 +169,26 @@
     $("#validate").click(function () {
         $("#captcha").removeAttr("novalidate");
         if ($("#loginForm").isValid()) {
-            DJMask.loadingCss();
+
+            $('body').loading({
+                loadingWidth: 300,
+                title: '',
+                name: 'loading',
+                titleColor: '#fff',
+                discColor: '#f8f8f8',
+                discription: '请稍后，见证奇迹的时刻马上揭晓......',
+                direction: 'column',
+                type: 'origin',
+//                originBg: '#008ead',
+                originDivWidth: 40,
+                originDivHeight: 40,
+                originWidth: 6,
+                originHeight: 6,
+                smallLoading: false,
+                loadingBg: 'rgba(0,0,0,0)',
+                loadingMaskBg:'rgba(0,0,0,0.4)'
+            });
+
             $.ajax({
                 url: "user/login.do?" + (new Date()).getTime(), // 加随机数防止缓存
                 type: "POST",
@@ -174,7 +196,6 @@
                 dataType: "json",
                 cache: false,
                 success: function (result) {
-                    DJMask.loading("close");
                     if (result.statusCode == "200") {
                         if (location.pathname == "/grid/index.html") {
                             var url = window.location.href.substring(0, window.location.href.indexOf("index.html", 0));
@@ -183,6 +204,7 @@
                             window.location.href += "pop/main.jsp";
                         }
                     } else {
+                        removeLoading('loading');
                         DJMask.alert(result.message);
                     }
                 }

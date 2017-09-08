@@ -35,68 +35,69 @@
     <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
     <link href="B-JUI/assets/css/ZeroClipboard.css" rel="stylesheet">
     <!-- 垂直、水平导航条样式 -->
-    <link rel="stylesheet" href="B-JUI/assets/css/amazeui.min.css"/>
-    <link rel="stylesheet" href="B-JUI/assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="B-JUI/assets/css/amazeui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="B-JUI/assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="B-JUI/assets/css/loading.css">
     <!-- 图片上传插件 -->
-    <link href="B-JUI/plugins/uploadify/css/uploadify.css" rel="stylesheet">
+    <%--<link href="B-JUI/plugins/uploadify/css/uploadify.css" rel="stylesheet">--%>
     <link rel="stylesheet" type="text/css" href="B-JUI/plugins/wangEditor/css/wangEditor.min.css">
-
-    <!-- 垂直、水平导航 -->
-    <script src="B-JUI/assets/js/jquery.min.js"></script>
-    <script src="B-JUI/assets/js/amazeui.min.js"></script>
     <!--[if lte IE 7]>
     <link href="B-JUI/themes/css/ie7.css" rel="stylesheet">
     <![endif]-->
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lte IE 9]>
-    <script src="B-JUI/other/html5shiv.min.js"></script>
-    <script src="B-JUI/other/respond.min.js"></script>
-    <![endif]-->
+
+    <!-- 垂直、水平导航 -->
+    <script type="text/javascript" src="B-JUI/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="B-JUI/assets/js/amazeui.min.js"></script>
     <!-- JQuery -->
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
-    <script src="B-JUI/js/jquery.cookie.js"></script>
-    <!--[if lte IE 9]>
-    <script src="B-JUI/other/jquery.iframe-transport.js"></script>
-    <![endif]-->
+    <script type="text/javascript" src="B-JUI/js/jquery.cookie.js"></script>
     <!-- B-JUI -->
-    <script src="B-JUI/js/bjui-all.min.js"></script>
+    <script type="text/javascript" src="B-JUI/js/bjui-all.min.js"></script>
+    <!-- 提示插件 -->
+    <script type="text/javascript" src="B-JUI/assets/js/loading.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <!--[if lte IE 9]>
+    <script type="text/javascript" defer src="B-JUI/other/html5shiv.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/other/respond.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/other/jquery.iframe-transport.js"></script>
+    <![endif]-->
     <!-- plugins -->
     <!-- swfupload for kindeditor -->
-    <script src="B-JUI/plugins/swfupload/swfupload.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/swfupload/swfupload.min.js"></script>
     <!-- Webuploader 图片上传-->
-    <script src="B-JUI/plugins/webuploader/webuploader.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/webuploader/webuploader.min.js"></script>
     <!-- kindeditor -->
-    <script src="B-JUI/plugins/kindeditor_4.1.11/kindeditor-all-min.js"></script>
-    <script src="B-JUI/plugins/kindeditor_4.1.11/lang/zh-CN.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/kindeditor_4.1.11/kindeditor-all-min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/kindeditor_4.1.11/lang/zh-CN.js"></script>
     <!-- wangEditor 在线html编辑器-->
-    <script type="text/javascript" src="B-JUI/plugins/wangEditor/js/wangEditor.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/wangEditor/js/wangEditor.min.js"></script>
 
     <!-- colorpicker -->
-    <script src="B-JUI/plugins/colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/colorpicker/js/bootstrap-colorpicker.min.js"></script>
     <!-- ztree jquery树-->
-    <script src="B-JUI/plugins/ztree/jquery.ztree.all-3.5.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/ztree/jquery.ztree.all-3.5.min.js"></script>
     <!-- nice validate -->
-    <script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.js"></script>
-    <script src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/nice-validator-1.0.7/jquery.validator.themes.js"></script>
     <!-- bootstrap plugins -->
-    <script src="B-JUI/plugins/bootstrap.min.js"></script>
-    <script src="B-JUI/plugins/bootstrapSelect/bootstrap-select.min.js"></script>
-    <script src="B-JUI/plugins/bootstrapSelect/defaults-zh_CN.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/bootstrap.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/bootstrapSelect/bootstrap-select.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/bootstrapSelect/defaults-zh_CN.min.js"></script>
     <!-- icheck -->
-    <script src="B-JUI/plugins/icheck/icheck.min.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/icheck/icheck.min.js"></script>
     <!-- HighCharts 图表插件-->
-    <script src="B-JUI/plugins/highcharts/highcharts.js"></script>
-    <script src="B-JUI/plugins/highcharts/highcharts-3d.js"></script>
-    <script src="B-JUI/plugins/highcharts/themes/gray.js"></script>
+    <%--<script src="B-JUI/plugins/highcharts/highcharts.js"></script>--%>
+    <%--<script src="B-JUI/plugins/highcharts/highcharts-3d.js"></script>--%>
+    <%--<script src="B-JUI/plugins/highcharts/themes/gray.js"></script>--%>
     <!-- ECharts -->
-    <script src="B-JUI/plugins/echarts/echarts.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/echarts/echarts.js"></script>
     <!-- other plugins -->
-    <script src="B-JUI/plugins/other/jquery.autosize.js"></script>
+    <script type="text/javascript" defer src="B-JUI/plugins/other/jquery.autosize.js"></script>
     <!-- 图片上传 -->
-    <script src="B-JUI/plugins/uploadify/scripts/jquery.uploadify.min.js"></script>
-    <script src="B-JUI/plugins/download/jquery.fileDownload.js"></script>
+    <%--<script src="B-JUI/plugins/uploadify/scripts/jquery.uploadify.min.js"></script>--%>
+    <script type="text/javascript" defer src="B-JUI/plugins/download/jquery.fileDownload.js"></script>
 
-    <script type="text/javascript" src="js/main.js"></script>
 
     <!-- init -->
     <style type="text/css">
@@ -226,6 +227,7 @@
         document.onkeypress = forbidBackSpace;
         //禁止后退键  作用于IE、Chrome
         document.onkeydown = forbidBackSpace;
+
     </script>
 </head>
 
