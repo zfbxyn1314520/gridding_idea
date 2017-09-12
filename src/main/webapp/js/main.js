@@ -1,6 +1,6 @@
 /**
  * main.html页面的外部js代码
- * author 李宁财
+ * author lnc
  */
 $(function () {
 
@@ -38,7 +38,6 @@ $(function () {
         loadingMaskBg: 'rgba(22,22,22,0.2)'
     });
     document.onreadystatechange = function () {
-        console.log("Load status is "+document.readyState)
         if (document.readyState == "complete") {
             removeLoading('loading');
         }
@@ -149,6 +148,23 @@ function S_NodeClick(event, treeId, treeNode) {
  */
 function showAreaMenu() {
     var areaMenu = new Array();
+    // BJUI.ajax('doajax', {
+    //     url: 'user/getAreaMenuById.do?' + (new Date()).getTime(),
+    //     type:'GET',
+    //     data:{"blockId":data.blockId},
+    //     // async : false,
+    //     okalert:false,
+    //     okCallback: function(json,options) {
+    //         console.log(111)
+    //         console.log(json)
+    //         console.log(json.data)
+    //         console.log(eval(json))
+    //         var data = eval(json.data);
+    //         for (var i = 0; i < data.length; i++) {
+    //             areaMenu[i] = new area(data[i].areaCode, data[i].areaParentCode, data[i].areaName, data[i].areaId);
+    //         }
+    //     }
+    // });
     $.ajax({
         type: "get",
         url: "user/getAreaMenuById.do?" + (new Date()).getTime(),

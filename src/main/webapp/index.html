@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="B-JUI/assets/css/loading.css">
     <!-- 引入jquery.js库 -->
     <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="B-JUI/js/jquery.cookie.js"></script>
     <!-- 提示插件 -->
     <script type="text/javascript" src="B-JUI/assets/js/jquery-DJMask.2.1.1.js" charset="UTF-8"></script>
     <!-- 引入 nice validate 表单验证-->
@@ -114,9 +115,9 @@
                href="http://ipr.zbj.com/?_union_uid=7223946&_union_itemid=136886">网格信息化服务群众平台</a>
             <a data-linkid="footer-exlink-2" target="_blank" href="https://shangbiLINKEXCHANGE&utm_campaign=ZBJ2YBJ">渝北群团网</a>
             <a data-linkid="footer-exlink-3" target="_blank" href="http://china.findlaw.cn/">法律咨询</a>
-            <a data-linkid="footer-exlink-4" target="_blank" href="http://task.zbj.com">需求市场</a>
-            <a data-linkid="footer-exlink-5" target="_blank" href="http://www.tianpeng.com">天蓬网</a>
-            <a data-linkid="footer-exlink-6" target="_blank" href="http://www.yzmg.com/">亿智蘑菇</a>
+            <a data-linkid="footer-exlink-4" target="_blank" href="http://www.b-jui.com/">B-JUI</a>
+            <a data-linkid="footer-exlink-5" target="_blank" href="http://layer.layui.com/">LayerUI</a>
+            <a data-linkid="footer-exlink-6" target="_blank" href="http://amazeui.org/">AmazeUI</a>
         </div>
 
     </div>
@@ -169,7 +170,6 @@
     $("#validate").click(function () {
         $("#captcha").removeAttr("novalidate");
         if ($("#loginForm").isValid()) {
-
             $('body').loading({
                 loadingWidth: 300,
                 title: '',
@@ -186,7 +186,7 @@
                 originHeight: 6,
                 smallLoading: false,
                 loadingBg: 'rgba(0,0,0,0)',
-                loadingMaskBg:'rgba(0,0,0,0.4)'
+                loadingMaskBg: 'rgba(0,0,0,0.4)'
             });
 
             $.ajax({

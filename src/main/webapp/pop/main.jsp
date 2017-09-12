@@ -145,7 +145,7 @@
                 JSPATH: 'B-JUI/',         //[可选]框架路径
                 PLUGINPATH: 'B-JUI/plugins/', //[可选]插件路径
                 loginInfo: {url: '../index.html', title: '登录', width: 440, height: 240}, // 会话超时后弹出登录对话框
-                statusCode: {ok: 200, error: 300, timeout: 301}, //[可选]
+                statusCode: {ok: 200, error: 400, timeout: 502}, //[可选]
                 ajaxTimeout: 30000, //[可选]全局Ajax请求超时时间(毫秒)
                 alertTimeout: 3000,  //[可选]信息提示[info/correct]自动关闭延时(毫秒)
                 pageInfo: {
@@ -473,13 +473,15 @@
 <script src="B-JUI/other/ie10-viewport-bug-workaround.js"></script>
 <script type="text/javascript">
     function quitLogin() {
-        $.ajax({
-            type: "get",
-            url: "user/loginOut.do",
-            success: function (data) {
-                window.location.href = data + "/grid";
+        BJUI.ajax('doajax', {
+            url: 'user/loginOut.do',
+            confirmMsg: '你确定要退出本系统？',
+            okalert: false,
+            loadingmask: true,
+            okCallback: function (json, options) {
+                window.location.href = json.url + "/grid";
             }
-        });
+        })
     }
 </script>
 </body>

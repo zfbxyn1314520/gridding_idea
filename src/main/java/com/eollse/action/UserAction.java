@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import com.eollse.util.AreaTreeUtil;
 import com.eollse.util.SMSSendUtil;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,7 +175,7 @@ public class UserAction extends CommonAction {
         //项目域名地址
         StringBuffer url = request.getRequestURL();
         String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
-        return tempContextUrl;
+        return "{\"statusCode\" : 200,\"message\" : \"处理成功！\",\"url\" : \"" + tempContextUrl + "\" }";
     }
 
 
@@ -295,15 +296,8 @@ public class UserAction extends CommonAction {
     @RequestMapping("/getAreaMenuById")
     @ResponseBody
     public List<Area> getAreaMenuById(HttpSession session) {
-        User user = (User) session.getAttribute("user");
         List<Integer> areaIds = (List<Integer>) session.getAttribute("areaIds");
-        if (user != null) {
-            List<Area> areas = this.areaBo.getAreaMenuById(areaIds);
-            return areas;
-        } else {
-            return null;
-        }
-
+        return this.areaBo.getAreaMenuById(areaIds);
     }
 
     /**
@@ -317,15 +311,19 @@ public class UserAction extends CommonAction {
     @ResponseBody
     public String addNewUser(User user, HttpSession session) {
         User s_user = (User) session.getAttribute("user");
+        Map params = new HashMap();
         user.setEditUserName(s_user.getUserName());
         user.setEditUserDate(new Date());
         Integer result = this.userBo.addNewUser(user);
         if (result > 0) {
             logger.info("成功添加用户" + user.getUserName() + "！");
-            return "1";
+            params.put("statusCode", 200);
+            params.put("message", "添加成功!");
         } else {
-            return "0";
+            params.put("statusCode", 400);
+            params.put("message", "添加失败!");
         }
+        return JSONObject.fromObject(params).toString();
     }
 
     /**
@@ -425,13 +423,19 @@ public class UserAction extends CommonAction {
     @ResponseBody
     public String alterUserInfo(User user, HttpSession session) {
         User s_user = (User) session.getAttribute("user");
+        Map params = new HashMap();
         user.setEditUserName(s_user.getUserName());
         user.setEditUserDate(new Date());
         Integer result = this.userBo.alterUserInfo(user);
         if (result > 0) {
             logger.info("成功修改用户" + user.getUserName() + "的基本信息！");
+            params.put("statusCode", 200);
+            params.put("message", "修改成功!");
+        } else {
+            params.put("statusCode", 400);
+            params.put("message", "修改失败!");
         }
-        return result > 0 ? "1" : "0";
+        return JSONObject.fromObject(params).toString();
     }
 
 
@@ -466,8 +470,17 @@ public class UserAction extends CommonAction {
      */
     @RequestMapping("/alterAuditStatus")
     @ResponseBody
-    public void alterAuditStatus(User user) {
-        this.userBo.alterAuditStatus(user);
+    public String alterAuditStatus(User user) {
+        Map params = new HashMap();
+        Integer result = this.userBo.alterAuditStatus(user);
+        if (result > 0) {
+            params.put("statusCode", 200);
+            params.put("message", "修改成功!");
+        } else {
+            params.put("statusCode", 400);
+            params.put("message", "修改失败!");
+        }
+        return JSONObject.fromObject(params).toString();
     }
 
     /**
@@ -497,7 +510,7 @@ public class UserAction extends CommonAction {
             return "{\"statusCode\":200,\"message\":\"成功删除用户" + user.getUserName() + "的信息!\"}";
         } else {
             logger.error("删除用户" + user.getUserName() + "的信息失败！");
-            return "{\"statusCode\":300,\"message\":\"删除用户" + user.getUserName() + "的信息失败！\"}";
+            return "{\"statusCode\":400,\"message\":\"删除用户" + user.getUserName() + "的信息失败！\"}";
         }
     }
 

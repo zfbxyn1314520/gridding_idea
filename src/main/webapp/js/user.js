@@ -377,41 +377,43 @@ function saveUserInfo() {
         if ($.CurrentDialog.find("#addUserInfo").isValid()) {
             if ($.CurrentDialog.find("#userBtn > span").text().trim() == "提交") {
                 nameStr += $.CurrentDialog.find('#userName').val();
-                $.ajax({
-                    type: "post",
-                    url: "user/addNewUser.do?" + new Date(),
+                BJUI.ajax('ajaxform', {
+                    url: 'user/addNewUser.do?' + (new Date()).getTime(),
+                    form: $.CurrentDialog.find("#addUserInfo"),
+                    type: 'POST',
                     data: $.CurrentDialog.find("#addUserInfo").serialize(),
-                    dataType: "json",
                     cache: false,
-                    success: function (data) {
-                        if (data == "1") {
+                    okalert: false,
+                    callback: function (json) {
+                        if (json.statusCode == 200) {
                             BJUI.dialog('closeCurrent');
                             $.CurrentNavtab.find('#userInfo').datagrid('refresh', true);
                             BJUI.alertmsg('ok', "成功添加用户<span style='color:green'>" + nameStr + "<span>！", {
                                 displayPosition: 'middlecenter'
                             });
                         } else {
-                            BJUI.alertmsg('error', '添加失败！');
+                            BJUI.alertmsg('error', json.message);
                         }
                     }
                 });
             } else {
                 nameStr += $.CurrentDialog.find('#userName').val();
-                $.ajax({
-                    type: "post",
-                    url: "user/alterUserInfo.do?" + new Date(),
+                BJUI.ajax('ajaxform', {
+                    url: 'user/alterUserInfo.do?' + (new Date()).getTime(),
+                    form: $.CurrentDialog.find("#addUserInfo"),
+                    type: 'POST',
                     data: $.CurrentDialog.find("#addUserInfo").serialize(),
-                    dataType: "text",
                     cache: false,
-                    success: function (data) {
-                        if (data == "1") {
+                    okalert: false,
+                    callback: function (json) {
+                        if (json.statusCode == 200) {
                             BJUI.dialog('closeCurrent');
                             $.CurrentNavtab.find('#userInfo').datagrid('refresh', false);
                             BJUI.alertmsg('ok', "成功修改用户<span style='color:green'>" + nameStr + "</span>！", {
                                 displayPosition: 'middlecenter'
                             });
                         } else {
-                            BJUI.alertmsg('error', '修改失败！');
+                            BJUI.alertmsg('error', json.message);
                         }
                     }
                 });
@@ -443,12 +445,11 @@ function changeUserStatus(e, userId, userName) {
     }
     BJUI.alertmsg('confirm', infoContent, {
         okCall: function () {
-            $.ajax({
-                type: "post",
-                url: "user/alterAuditStatus.do?" + new Date(),
+            BJUI.ajax('doajax', {
+                url: "user/alterAuditStatus.do?" + (new Date()).getTime(),
                 data: {"user_enable": user_enable, "userId": userId},
                 cache: false,
-                success: function (data) {
+                callback: function (json) {
                     $.CurrentNavtab.find('#userInfo').datagrid('refresh', false);
                 }
             });
