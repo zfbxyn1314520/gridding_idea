@@ -56,10 +56,12 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].parentMenuId == null) {
 
-                    menu += "<li class='sidebar-nav-link sidebar-nav-link-" + themeName + "'><a href='javascript:void(0);' class='sidebar-nav-sub-title";
-                    if (num == 0) {
+                    menu += "<li class='sidebar-nav-link sidebar-nav-link-" + themeName + "'><a href='javascript:void(0);' ";
+                    if (data[i].menuName == "我的主页")
+                        menu += "onclick='switchTab()'";
+                    menu += "class='sidebar-nav-sub-title";
+                    if (num == 0)
                         menu += " active";
-                    }
                     menu += "'><i class='" + data[i].menuIcon + " sidebar-nav-link-logo'></i>" + data[i].menuName;
 
                     for (var j = 0; j < data.length; j++) {
@@ -87,11 +89,12 @@ $(function () {
             //侧边菜单
             $('.sidebar-nav-sub-title').on('click', function () {
                 $('.sidebar-nav-sub-title').removeClass("active");
-                $('.sidebar-nav-sub-title').removeClass("sub-active-" + themeName);
                 if ($(this).parent().parent().attr("class").trim() == "sidebar-nav sidebar-nav-sub") {
+                    $('.sidebar-nav-sub-title').removeClass("sub-active-" + themeName);
                     $(this).addClass("sub-active-" + themeName);
                     $(this).parent().parent().parent().children("a").addClass("active");
                 } else {
+                    $('.sidebar-nav-sub').not($(this).siblings('.sidebar-nav-sub')).slideUp(80);
                     $(this).parent().children("a").addClass("active");
                 }
                 $(this).siblings('.sidebar-nav-sub').slideToggle(80).end()
@@ -148,23 +151,6 @@ function S_NodeClick(event, treeId, treeNode) {
  */
 function showAreaMenu() {
     var areaMenu = new Array();
-    // BJUI.ajax('doajax', {
-    //     url: 'user/getAreaMenuById.do?' + (new Date()).getTime(),
-    //     type:'GET',
-    //     data:{"blockId":data.blockId},
-    //     // async : false,
-    //     okalert:false,
-    //     okCallback: function(json,options) {
-    //         console.log(111)
-    //         console.log(json)
-    //         console.log(json.data)
-    //         console.log(eval(json))
-    //         var data = eval(json.data);
-    //         for (var i = 0; i < data.length; i++) {
-    //             areaMenu[i] = new area(data[i].areaCode, data[i].areaParentCode, data[i].areaName, data[i].areaId);
-    //         }
-    //     }
-    // });
     $.ajax({
         type: "get",
         url: "user/getAreaMenuById.do?" + (new Date()).getTime(),
@@ -178,6 +164,10 @@ function showAreaMenu() {
         }
     });
     return areaMenu;
+}
+
+function switchTab() {
+    BJUI.navtab('switchTab', 'main')
 }
 
 //声明区域对象
