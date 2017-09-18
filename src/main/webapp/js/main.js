@@ -5,6 +5,8 @@
 $(function () {
 
     var themeName = $.cookie('bjui_theme') || 'blue';
+    var $tabs = $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab');
+
     var color = "";
     switch (themeName) {
         case "blue":
@@ -88,6 +90,9 @@ $(function () {
 
             //侧边菜单
             $('.sidebar-nav-sub-title').on('click', function () {
+                $tabs = $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab');
+                // console.log($tabs.html());
+
                 $('.sidebar-nav-sub-title').removeClass("active");
                 if ($(this).parent().parent().attr("class").trim() == "sidebar-nav sidebar-nav-sub") {
                     $('.sidebar-nav-sub-title').removeClass("sub-active-" + themeName);
@@ -102,14 +107,26 @@ $(function () {
             });
 
             $('#bjui-themes > li > a').on('click', function () {
-                window.location.reload();
+                // window.location.reload();
+                $('#bjui-themes').find('a.theme_'+ themeName).trigger('click')
             });
+
+            // $tabs.on('ready', function (e) {
+            //     console.log(12322432)
+            //     console.log($tabs.html())
+            // });
+            // $tabs.find('> li > a > span').on('ready', function (e) {
+            //     console.log(12322432)
+            //     console.log($tabs.html())
+            // });
+            // $(document).ready(function () {
+            //     console.log($tabs.html())
+            // });
         }
     });
 
     //保存用户区域信息
     $.get("user/saveUserAreaSession.do?" + (new Date()).getTime());
-
     $.ajaxSetup({
         type: 'POST',
         complete: function (xhr, status) {

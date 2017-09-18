@@ -238,13 +238,19 @@ function editblogInfo() {
                 getAllGridOfBlog(data.areaId);
                 $.CurrentDialog.find('#blog_areaName').val(node.name);
                 $.CurrentDialog.find('#blog_areaId').val(data.areaId);
-                $.CurrentDialog.find('#blog_gridId').selectpicker('val', data.gridId);
+                $.CurrentDialog.find('#blog_gridId').selectp2wsicker('val', data.gridId);
                 getGridStaffByGridIdOfBlog(data.gridId);
                 $.CurrentDialog.find('#blog_gridStaffId').selectpicker('val', data.gridStaffId);
                 $.CurrentDialog.find("#blogName").attr("value", data.blogName);
                 $.CurrentDialog.find("#blogId").attr("value", data.blogId);
                 $.CurrentDialog.find('#editBlogDate').val(convertDate(data.editBlogDate));
                 $.CurrentDialog.find("#blogContent").text(editor.$txt.html(data.blogContent));
+                var blogPic = data.blogPic;
+                var pics =  blogPic.split(";");
+                for(var i=0;i<pics.length;i++){
+                    $.CurrentDialog.find("#blogContent").text(editor.$txt.append("<p><img style='max-width: 300px;max-height: 300px' src='http://localhost:8080/grid/"+pics[i]+"' /></p>"));
+                }
+
                 if (data.blogType != null) {
                     var blogType = data.blogType.split(",");
                     if (blogType.length > 0) {

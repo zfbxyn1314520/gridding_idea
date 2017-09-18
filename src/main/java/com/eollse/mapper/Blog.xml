@@ -102,7 +102,7 @@
 	</insert>
 	
 	<select id="getBlogById" resultType="blog">
-		select blogId,areaId,gridId,gridStaffId,blogName,blogType,blogContent,editBlogDate from blog where blogId=#{0}
+		select blogId,areaId,gridId,gridStaffId,blogName,blogType,blogContent,blogPic,editBlogDate from blog where blogId=#{0}
 	</select>
 	
 	<update id="editBlogById" parameterType="blog">

@@ -113,7 +113,7 @@ function addAreaInfo() {
         target: $.CurrentNavtab.find("#addArea"),
         title: '添加行政区划',
         width: 475,
-        height: 340,
+        height: 450,
         mask: true,
         resizable: false,
         onClose: function () {

@@ -1,65 +1,77 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>区域管理</title>
-	
+
     <meta name="keywords" content="keyword1,keyword2,keyword3">
     <meta name="description" content="this is my page">
     <meta name="content-type" content="text/html; charset=UTF-8">
-    
+
     <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
     <script type="text/javascript" src="js/area.js"></script>
 
-  </head>
-  
-  <body>
-    <table id="areaInfo" class="table table-bordered"></table>
-    
-    <!-- 增加/编辑 弹框容器 -->
-    <div id="addArea" data-noinit="true" class="hide">
-    	<div class="bjui-pageContent">
-	  		<form id="addAreaInfo">
-	  			<div class="row-input required">
-		        	<label class="row-label">行政区划名称&nbsp;</label>
-		        	<input type="text" name="areaName" class="input-nm" id="areaName" size="32" value="" data-rule="行政区划名称:required" 
-		        		placeholder="点击文本框选择区域名称">
-		        	<input type="hidden" name="areaId" id="areaId" value=""> 
-		    	</div>
-				<!--<div class="row-input required">-->
-		        	<!--<label class="row-label">行政区划名称&nbsp;</label>-->
-		        	<!--<input type="text" name="areaName" class="input-nm" id="areaName" size="32" value="" data-rule="行政区划名称:required" -->
-		        		<!--onclick="getAllAreaName(this);" placeholder="点击文本框选择区域名称">-->
-		        	<!--<input type="hidden" name="areaId" id="areaId" value=""> -->
-		    	<!--</div>-->
-		    	<div class="row-input required">
-		        	<label class="row-label">行政区划简拼&nbsp;</label>
-		        	<input type="text" name="shortName" class="input-nm" id="shortName" size="32" value="" data-rule="行政区划简拼:required">
-		    	</div>
-		    	<div class="row-input required">
-		        	<label class="row-label">行政区划代码&nbsp;</label>
-		        	<input type="text" name="areaCode" class="input-nm" id="areaCode" size="32" value="" data-rule="行政区划代码:required">
-		    	</div>
-		    	<div class="row-input required">
-		    		<label class="row-label">父级区划代码&nbsp;</label>
-	            	<input type="text" name="areaParentCode" class="input-nm" id="areaParentCode" size="32" value="" data-rule="父级区划代码:required"
-	            		readonly data-toggle="selectztree" data-tree="#areaMenu"/>
-	            	<ul id="areaMenu"  class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio" 
-	            		data-radio-type="all" data-on-check="Area_NodeCheck" data-on-click="S_NodeClick" data-options="{nodes:'getAllAreaMenu'}">
-	            	</ul>       
-		    	</div>
-		    	<div class="row-input required">
-		        	<label class="row-label">行政区划级别&nbsp;</label>
-		        	<input type="text" name="areaLevel" class="input-nm" id="areaLevel" size="32" value="" readonly data-rule="行政区划简拼:required">
-		    	</div>
-	  		</form>
-  		</div>
-  		<div class="bjui-pageFooter">
-  			<div class="dialogFooterBtn">
-	  			<button type="button" id="areaBtn" class="btn-blue" data-icon="check"><span>提交</span></button>　
-	  			<button type="button" class="btn-close" data-icon="close">关闭</button>
-			</div>
-		</div>
-  	</div>
-  	
-  </body>
+</head>
+
+<body>
+<table id="areaInfo" class="table table-bordered"></table>
+
+<!-- 增加/编辑 弹框容器 -->
+<div id="addArea" data-noinit="true" class="hide">
+    <div class="bjui-pageContent">
+        <form id="addAreaInfo">
+            <div class="row-input required">
+                <label class="row-label">行政区划名称&nbsp;</label>
+                <input type="text" name="areaName" class="input-nm" id="areaName" size="32" value=""
+                       data-rule="行政区划名称:required"
+                       placeholder="点击文本框选择区域名称">
+                <input type="hidden" name="areaId" id="areaId" value="">
+            </div>
+            <!--<div class="row-input required">-->
+            <!--<label class="row-label">行政区划名称&nbsp;</label>-->
+            <!--<input type="text" name="areaName" class="input-nm" id="areaName" size="32" value="" data-rule="行政区划名称:required" -->
+            <!--onclick="getAllAreaName(this);" placeholder="点击文本框选择区域名称">-->
+            <!--<input type="hidden" name="areaId" id="areaId" value=""> -->
+            <!--</div>-->
+            <div class="row-input required">
+                <label class="row-label">行政区划简拼&nbsp;</label>
+                <input type="text" name="shortName" class="input-nm" id="shortName" size="32" value=""
+                       data-rule="行政区划简拼:required">
+            </div>
+            <div class="row-input required">
+                <label class="row-label">行政区划代码&nbsp;</label>
+                <input type="text" name="areaCode" class="input-nm" id="areaCode" size="32" value=""
+                       data-rule="行政区划代码:required">
+            </div>
+            <div class="row-input required">
+                <label class="row-label">父级区划代码&nbsp;</label>
+                <input type="text" name="areaParentCode" class="input-nm" id="areaParentCode" size="32" value=""
+                       data-rule="父级区划代码:required"
+                       readonly data-toggle="selectztree" data-tree="#areaMenu"/>
+                <ul id="areaMenu" class="ztree hide" data-toggle="ztree" data-check-enable="true" data-chk-style="radio"
+                    data-radio-type="all" data-on-check="Area_NodeCheck" data-on-click="S_NodeClick"
+                    data-options="{nodes:'getAllAreaMenu'}">
+                </ul>
+            </div>
+            <div class="row-input required">
+                <label class="row-label">行政区划级别&nbsp;</label>
+                <input type="text" name="areaLevel" class="input-nm" id="areaLevel" size="32" value="" readonly
+                       data-rule="行政区划简拼:required">
+            </div>
+            <div class="row-input" style="padding-left: 12px;padding-right: 12px;color: #d9534f;">
+                <h4>
+                    <p>特别说明：</p>
+                    <p>&emsp;&emsp;<a href="http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2016/index.html">详情请单击</a></p>
+                </h4>
+            </div>
+        </form>
+    </div>
+    <div class="bjui-pageFooter">
+        <div class="dialogFooterBtn">
+            <button type="button" id="areaBtn" class="btn-blue" data-icon="check"><span>提交</span></button>
+            <button type="button" class="btn-close" data-icon="close">关闭</button>
+        </div>
+    </div>
+</div>
+
+</body>
 </html>
