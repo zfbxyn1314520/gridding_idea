@@ -25,6 +25,7 @@ import org.apache.log4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.eollse.bo.AreaBo;
@@ -39,6 +40,7 @@ import com.eollse.po.Role;
 import com.eollse.po.Role_per;
 import com.eollse.po.User;
 import com.eollse.util.HttpClientUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/user")

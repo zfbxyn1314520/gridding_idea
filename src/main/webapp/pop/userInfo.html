@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="bjui-pageContent">
+    <form id="userSettingInfo" enctype="multipart/form-data">
+        <div style="margin:20px auto;width:100px;height:120px;">
+            <div class="tpl-user-panel-profile-picture" style="width: 100px;height: 100px">
+                <a href="javascript:void(0);" id="clickBtn">
+                    <img src="" alt="头像" style="width: 100px;height: 100px">
+                </a>
+                <input type="file" id="icon_btn" name="image" style="display:none;"
+                       accept="image/jpg,image/jpeg,image/png" value=""/>
+                <input type="hidden" name="headIcon" id="icon_path" value="">
+            </div>
+            <div style="font-size: 14px;text-align: center;padding-top: 5px">
+                <p>你好,
+                    <span id="user_name_setting"></span>!
+                </p>
+            </div>
+        </div>
+        <div class="row-input">
+            <label class="row-label">用&ensp;户&ensp;名&nbsp;</label>
+            <input type="text" name="userName" class="input-nm" id="userName_setting" size="25" value=""
+                   placeholder="必填项"
+                   data-rule="用户名:required; username; remote[user/validateUsername.do, userName]"/>
+            <input type="hidden" name="userId" id="userId_setting" value="">
+        </div>
+        <div class="row-input">
+            <label class="row-label">真实姓名&nbsp;</label>
+            <input type="text" name="realName" class="input-nm" id="realName_setting" size="25" value=""
+                   placeholder="选填项"/>
+        </div>
+        <div class="row-input">
+            <label class="row-label">密　　码&nbsp;</label>
+            <input type="password" name="password" class="input-nm" id="password_setting" size="25" value=""
+                   placeholder="双击可修改原密码"
+                   data-rule="密码:required; password;filter(`%<>\/)"/>
+        </div>
+        <div class="row-input hide" id="pwd_edit">
+            <label class="row-label">确认密码&nbsp;</label>
+            <input type="password" name="confirmPwd" class="input-nm" id="confirmPwd_setting" size="25" value=""
+                   placeholder="必填项"
+                   data-rule="确认密码: match(password);"/>
+        </div>
+        <div class="row-input">
+            <label class="row-label">移动电话&nbsp;</label>
+            <input type="text" name="mobileTel" class="input-nm" id="mobileTel_setting"
+                   data-rule="required(from, input[id$=Tel_setting]); mobile" size="25" value=""
+                   data-msg-required="请至少填写一种联系方式"/>
+        </div>
+        <div class="row-input">
+            <label class="row-label">办公电话&nbsp;</label>
+            <input type="text" name="officeTel" class="input-nm" id="officeTel_setting"
+                   data-rule="required(from, input[id$=Tel_setting]); tel" size="25" value=""/>
+        </div>
+    </form>
+</div>
+<div class="bjui-pageFooter">
+    <div class="dialogFooterBtn">
+        <button type="button" id="userSettingBtn" class="btn-blue" data-icon="check"><span>保存</span></button>
+        <button type="button" class="btn-close" data-icon="close">关闭</button>
+    </div>
+</div>
+<script>
+    $("#clickBtn").click(function () {
+        $("#icon_btn").trigger("click");
+        $('#icon_btn').change(function (e) {
+            var formData = new FormData();
+            formData.append('file', $("#icon_btn")[0].files[0]); // 将文件转成二进制形式
+            formData.append("mainName","user");
+            $.ajax({
+                type: "post",
+                url: "user/uploadHeadIcon.do",
+                async: false,
+                contentType: false, // 这个一定要写
+                processData: false, // 这个也一定要写，不然会报错
+                data: formData,
+                dataType: 'text', // 返回类型，有json，text，HTML。这里并没有json格式，所以别妄想能用json做跨域了。
+                success: function (data) {
+                    var json = data.toJson();
+                    $('#icon_path').val(json.filename);
+                    $("#clickBtn > img").attr("src",json.filename)
+                }
+            });
+        })
+
+    });
+</script>
+
+</body>
+</html>

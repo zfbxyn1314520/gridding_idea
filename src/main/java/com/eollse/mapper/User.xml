@@ -95,8 +95,34 @@
   	</insert>
 
     <update id="alterUserInfo" parameterType="user">
-        update `user` set areaId=#{areaId},roleId=#{roleId},userName=#{userName},realName=#{realName},headIcon=#{headIcon},
-        mobileTel=#{mobileTel},officeTel=#{officeTel},editUserName=#{editUserName},editUserDate=#{editUserDate},user_enable=#{user_enable}
+        update `user` set userName=#{userName}
+        <if test="areaId!=null and areaId!=''">
+            ,areaId=#{areaId}
+        </if>
+        <if test="roleId!=null and roleId!=''">
+            ,roleId=#{roleId}
+        </if>
+        <if test="realName!=null and realName!=''">
+            ,realName=#{realName}
+        </if>
+        <if test="headIcon!=null and headIcon!=''">
+            ,headIcon=#{headIcon}
+        </if>
+        <if test="mobileTel!=null and mobileTel!=''">
+            ,mobileTel=#{mobileTel}
+        </if>
+        <if test="officeTel!=null and officeTel!=''">
+            ,officeTel=#{officeTel}
+        </if>
+        <if test="editUserName!=null and editUserName!=''">
+            ,editUserName=#{editUserName}
+        </if>
+        <if test="editUserDate!=null and editUserDate!=''">
+            ,editUserDate=#{editUserDate}
+        </if>
+        <if test="user_enable!=null and user_enable!=''">
+            ,user_enable=#{user_enable}
+        </if>
         <if test="password!=null and password!=''">
             ,password=#{password}
         </if>

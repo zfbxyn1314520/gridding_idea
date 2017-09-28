@@ -5,22 +5,10 @@
 $(function () {
 
     var themeName = $.cookie('bjui_theme') || 'blue';
-    var $tabs = $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab');
-
-    var color = "";
-    switch (themeName) {
-        case "blue":
-            color = "#0e90d2";
-            break;
-        case "purple":
-            color = "#573e7e";
-            break;
-        case "green":
-            color = "#008000";
-            break;
-    }
-
+    // var $tabs = $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab');
+    var color = themeColor(themeName);
     $(".am-fr>ul>li>a:first-child").css("color", color);
+
     $('body').loading({
         loadingWidth: 300,
         title: '',
@@ -39,6 +27,7 @@ $(function () {
         loadingBg: 'rgba(0,0,0,0)',
         loadingMaskBg: 'rgba(22,22,22,0.2)'
     });
+
     document.onreadystatechange = function () {
         if (document.readyState == "complete") {
             removeLoading('loading');
@@ -91,8 +80,7 @@ $(function () {
             //侧边菜单
             $('.sidebar-nav-sub-title').on('click', function () {
                 $tabs = $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab');
-                // console.log($tabs.html());
-
+                console.log($tabs.html());
                 $('.sidebar-nav-sub-title').removeClass("active");
                 if ($(this).parent().parent().attr("class").trim() == "sidebar-nav sidebar-nav-sub") {
                     $('.sidebar-nav-sub-title').removeClass("sub-active-" + themeName);
@@ -107,21 +95,20 @@ $(function () {
             });
 
             $('#bjui-themes > li > a').on('click', function () {
-                // window.location.reload();
-                $('#bjui-themes').find('a.theme_'+ themeName).trigger('click')
+                var $active = $("#navTab a[class='sidebar-nav-sub-title sub-active-" + themeName + "']");
+                $('#navTab li').removeClass('sidebar-nav-link-' + themeName);
+                $active.removeClass('sub-active-' + themeName)
+
+                themeName = $(this).data('theme');
+                $active.addClass('sub-active-' + themeName)
+                $('#navTab li').toggleClass('sidebar-nav-link-' + themeName);
+                $(".am-fr>ul>li>a:first-child").css("color", themeColor(themeName));
             });
 
-            // $tabs.on('ready', function (e) {
-            //     console.log(12322432)
-            //     console.log($tabs.html())
-            // });
-            // $tabs.find('> li > a > span').on('ready', function (e) {
-            //     console.log(12322432)
-            //     console.log($tabs.html())
-            // });
-            // $(document).ready(function () {
-            //     console.log($tabs.html())
-            // });
+            $('#bjui-navtab > .tabsPageHeader > .tabsPageHeaderContent > .navtab-tab > li').on('click', function () {
+                // this.getMoreLi().removeClass('active').eq(iTabIndex).addClass('active')
+                // console.log(this.getTabs());
+            });
         }
     });
 
@@ -185,6 +172,22 @@ function showAreaMenu() {
 
 function switchTab() {
     BJUI.navtab('switchTab', 'main')
+}
+
+function themeColor(theme) {
+    var color = "";
+    switch (theme) {
+        case "blue":
+            color = "#0e90d2";
+            break;
+        case "purple":
+            color = "#573e7e";
+            break;
+        case "green":
+            color = "#008000";
+            break;
+    }
+    return color;
 }
 
 //声明区域对象

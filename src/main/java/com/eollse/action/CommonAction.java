@@ -154,15 +154,25 @@ public class CommonAction {
                     File toFile = new File(path + str);
                     newPath = (path + str);
                     newPath = newPath.substring(newPath.indexOf("images/"), newPath.length());
-                    // 将当前上传文件的内容输出到toFile指向的目的地
-                    try {
-                        mf.transferTo(toFile);
-                    } catch (IllegalStateException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                    long size = mf.getSize();
+                    // 文件大小限制
+                    if (size > 1 * 1024 * 1024) {
+                        double scale = (1024 * 1024f) / size;
+                        try {
+                            Thumbnails.of(mf.getInputStream()).scale(scale).outputQuality(scale).toFile(toFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            mf.transferTo(toFile); // 将当前上传文件的内容输出到toFile指向的目的地
+                        } catch (IllegalStateException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

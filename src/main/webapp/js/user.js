@@ -231,8 +231,8 @@ function editUserInfo() {
                     $.CurrentDialog.find('#userId').val(data.userId);
                     $.CurrentDialog.find('#userName').val(data.userName);
                     $.CurrentDialog.find('#realName').val(data.realName);
-                    $.CurrentDialog.find('#password').attr({"readonly":"readonly","placeholder":"双击可修改原密码"});
-                    $.CurrentDialog.find('#confirmPwd').attr({"readonly": "readonly","placeholder":"可选填"});
+                    $.CurrentDialog.find('#password').attr({"readonly": "readonly", "placeholder": "双击可修改原密码"});
+                    $.CurrentDialog.find('#confirmPwd').attr({"readonly": "readonly", "placeholder": "可选填"});
                     $.CurrentDialog.find("#password").attr("novalidate", "novalidate");
                     $.CurrentDialog.find("#confirmPwd").attr("novalidate", "novalidate");
                     $.CurrentDialog.find('#mobileTel').val(data.mobileTel);
@@ -257,13 +257,17 @@ function editUserInfo() {
             });
 
             $.CurrentDialog.find('#userName').change(function () {
-                $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", null);
-                $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", "用户名:required; username; remote[user/validateUsername.do, userName]");
-                $.CurrentDialog.find('#userName').on('valid.field', function (e, result) {
+                    if ($.CurrentDialog.find('#userName').val() == userName) {
+                        $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", null);
+                        $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", "用户名:required; username;");
+                    } else {
+                        $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", null);
+                        $.CurrentDialog.find('#addUserInfo').validator("setField", "userName", "用户名:required; username; remote[user/validateUsername.do, userName]");
+                    }
+                }
+            );
 
-                });
-            });
-            $.CurrentDialog.find("#password").dblclick(function(){
+            $.CurrentDialog.find("#password").dblclick(function () {
                 $.CurrentDialog.find("#password").removeAttr("readonly");
                 $.CurrentDialog.find("#confirmPwd").removeAttr("readonly");
                 $.CurrentDialog.find("#password").removeAttr("novalidate");
@@ -604,7 +608,6 @@ function User_NodeCheck(e, treeId, treeNode) {
         $from.val(names);
         $("#areaId").val(areaId);
     }
-    ;
 }
 
 

@@ -389,7 +389,8 @@
 										<span class="user-panel-logged-in-text">
 											<i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>&nbsp;${sessionScope.user.role.roleName}
 										</span>
-                                    <a href="javascript:;" class="tpl-user-panel-action-link">
+                                    <a href="javascript:;" class="tpl-user-panel-action-link"
+                                       onclick="userSetting(${sessionScope.user.userId});">
                                         <span class="am-icon-pencil"></span>&nbsp;&nbsp;账号设置
                                     </a>
                                 </div>
@@ -472,6 +473,10 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="B-JUI/other/ie10-viewport-bug-workaround.js"></script>
 <script type="text/javascript">
+    $('img').error(function () {
+        $(this).attr("src", "images/user/default.png");
+    });
+
     function quitLogin() {
         BJUI.ajax('doajax', {
             url: 'user/loginOut.do',
@@ -482,6 +487,98 @@
                 window.location.href = json.url + "/grid";
             }
         })
+    }
+
+    function userSetting(e) {
+        var userName = "";
+        BJUI.dialog({
+            id: 'userSetting',
+            url: 'pop/userInfo.html',
+            title: '账号设置',
+            width: 370,
+            height: 550,
+            mask: true,
+            resizable: false,
+            onLoad: function () {
+
+                $('img').error(function () {
+                    $(this).attr("src", "images/user/default.png");
+                });
+
+                $.CurrentDialog.find("#password_setting").dblclick(function () {
+                    $.CurrentDialog.find("#pwd_edit").removeClass("hide");
+                    $.CurrentDialog.find("#password_setting").removeAttr("readonly");
+                    $.CurrentDialog.find("#confirmPwd_setting").removeAttr("readonly");
+                    $.CurrentDialog.find("#password_setting").removeAttr("novalidate");
+                    $.CurrentDialog.find("#confirmPwd_setting").removeAttr("novalidate");
+                    $.CurrentDialog.find('#password_setting').attr({"placeholder": "必填项"});
+                });
+
+                $.CurrentDialog.find('#userName_setting').change(function () {
+                    if ($.CurrentDialog.find('#userName_setting').val() == userName) {
+                        $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", null);
+                        $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", "用户名:required; username;");
+                    } else {
+                        $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", null);
+                        $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", "用户名:required; username; remote[user/validateUsername.do, userName]");
+                    }
+                });
+
+                $.CurrentDialog.find("#userSettingBtn").click(function () {
+                    BJUI.ajax('ajaxform', {
+                        url: 'user/alterUserInfo.do?' + (new Date()).getTime(),
+                        form: $.CurrentDialog.find("#userSettingInfo"),
+                        type: 'POST',
+                        data: $.CurrentDialog.find("#userSettingInfo").serialize(),
+                        cache: false,
+                        okalert: false,
+                        callback: function (json) {
+                            if (json.statusCode == 200) {
+                                BJUI.dialog('closeCurrent');
+                                BJUI.alertmsg('ok', "成功修改个人信息！", {
+                                    displayPosition: 'middlecenter'
+                                });
+                            } else {
+                                BJUI.alertmsg('error', json.message);
+                            }
+                        }
+                    });
+                });
+            },
+            onClose: function () {
+                BJUI.dialog('refresh', 'dialog-userSetting-1')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "user/getOneUserInfo.do?" + (new Date()).getTime(),
+            data: {"userId": e},
+            dataType: "json",
+            cache: false,
+            success: function (data) {
+                var path = "images/user/default.png";
+                userName = data.userName;
+                $.CurrentDialog.find('#userId_setting').val(data.userId);
+                $.CurrentDialog.find('#userName_setting').val(userName);
+                $.CurrentDialog.find('#realName_setting').val(data.realName);
+                $.CurrentDialog.find('#user_name_setting').text(userName);
+                $.CurrentDialog.find('#password_setting').attr({"readonly": "readonly"});
+                $.CurrentDialog.find('#confirmPwd_setting').attr({"readonly": "readonly"});
+                $.CurrentDialog.find('#password_setting').attr("novalidate", "novalidate");
+                $.CurrentDialog.find('#confirmPwd_setting').attr("novalidate", "novalidate");
+                $.CurrentDialog.find('#mobileTel_setting').val(data.mobileTel);
+                $.CurrentDialog.find('#officeTel_setting').val(data.officeTel);
+                if (data.headIcon != null && data.headIcon != "") {
+                    path = data.headIcon;
+                }
+                $.CurrentDialog.find('#clickBtn > img').attr("src", path)
+                if ($.CurrentDialog.find('#userName_setting').val() == userName) {
+                    $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", null);
+                    $.CurrentDialog.find('#userSettingInfo').validator("setField", "userName", "用户名:required; username;");
+                }
+            }
+        });
     }
 </script>
 </body>
